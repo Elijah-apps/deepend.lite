@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Order Tracking - DEEPEND Entertainment</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet" type="text/css">
+    
+    <!-- FontAwesome Icons -->
+    <link href="assets/fontawesome/all.css" rel="stylesheet" type="text/css">
+    
+    <!-- Leaflet CSS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Custom CSS -->
+    <link href="styles.css" rel="stylesheet" type="text/css">
+    <style>
+        /* Tracking Page Styles */
+        .tracking-container {
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        .tracking-header {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .order-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .order-id-display {
+            color: #FF3B30;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .estimated-time {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        .progress-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 24px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-title {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+            transition: all 0.5s ease;
+            position: relative;
+        }
+
+        .step-icon.completed {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            animation: completedPulse 2s ease-in-out infinite;
+        }
+
+        .step-icon.current {
+            background: linear-gradient(135deg, #FF3B30, #FF6B6B);
+            animation: currentPulse 1.5s ease-in-out infinite;
+        }
+
+        .step-icon.pending {
+            background: rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes completedPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 8px rgba(76, 175, 80, 0);
+            }
+        }
+
+        @keyframes currentPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.7);
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 0 0 10px rgba(255, 59, 48, 0);
+            }
+        }
+
+        .step-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            text-align: center;
+            font-weight: 500;
+            max-width: 80px;
+        }
+
+        .step-label.completed {
+            color: #4CAF50;
+        }
+
+        .step-label.current {
+            color: #FF3B30;
+            font-weight: 600;
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 25px;
+            left: 60px;
+            right: 60px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: 1;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #FF3B30);
+            border-radius: 2px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .progress-fill.completed {
+            width: 100%;
+        }
+
+        .progress-fill.current {
+            width: 50%;
+        }
+
+        .map-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .map-title {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .map-container {
+            height: 300px;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+
+        .map-placeholder {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .rider-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .rider-title {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rider-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .rider-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF3B30, #FF6B6B);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .rider-details {
+            flex: 1;
+        }
+
+        .rider-name {
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .rider-status {
+            color: #4CAF50;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .rider-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 10px 16px;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: white;
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, #FF3B30, #FF6B6B);
+            border-color: transparent;
+        }
+
+        .action-btn.primary:hover {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+        }
+
+        .order-details-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .order-items {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 16px;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-item-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 12px;
+        }
+
+        .order-item-details {
+            flex: 1;
+        }
+
+        .order-item-name {
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .order-item-extras {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+        }
+
+        .order-item-price {
+            color: #FF3B30;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #4CAF50;
+            border-radius: 50%;
+            animation: livePulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes livePulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(1.2);
+            }
+        }
+
+        .status-update {
+            background: rgba(255, 59, 48, 0.1);
+            border: 1px solid rgba(255, 59, 48, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            color: white;
+        }
+
+        .status-time {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .status-message {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .tracking-container {
+                padding: 16px;
+            }
+
+            .progress-steps {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .progress-line {
+                display: none;
+            }
+
+            .rider-actions {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid tracking-container">
+        <!-- Header Section -->
+        <div class="row align-items-center mb-4">
+            <div class="col-auto">
+                <a href="order-success.html" class="back-link">
+                    <i class="fa-regular fa-arrow-left"></i>
+                </a>
+            </div>
+            <div class="col">
+                <div class="d-flex align-items-center">
+                    <div>
+                        <h1 class="food-title mb-0">Live Tracking</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    LIVE
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Info Header -->
+        <div class="tracking-header">
+            <div class="order-info">
+                <div>
+                    <div class="order-id-display" id="orderId">ORD-123456789</div>
+                    <div class="estimated-time" id="estimatedTime">Estimated delivery: 25-35 minutes</div>
+                </div>
+                <div class="text-end">
+                    <div style="color: rgba(255, 255, 255, 0.7); font-size: 12px;">Order placed</div>
+                    <div style="color: white; font-size: 14px;" id="orderTime">2:30 PM</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="progress-section">
+            <div class="progress-title">
+                <i class="fa-regular fa-clock"></i>
+                Order Progress
+            </div>
+            <div class="progress-steps">
+                <div class="progress-line">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-step">
+                    <div class="step-icon completed" id="step1">
+                        <i class="fa-regular fa-check"></i>
+                    </div>
+                    <div class="step-label completed">Order Placed</div>
+                </div>
+                <div class="progress-step">
+                    <div class="step-icon current" id="step2">
+                        <i class="fa-regular fa-utensils"></i>
+                    </div>
+                    <div class="step-label current">Preparing</div>
+                </div>
+                <div class="progress-step">
+                    <div class="step-icon pending" id="step3">
+                        <i class="fa-regular fa-motorcycle"></i>
+                    </div>
+                    <div class="step-label">On the Way</div>
+                </div>
+                <div class="progress-step">
+                    <div class="step-icon pending" id="step4">
+                        <i class="fa-regular fa-home"></i>
+                    </div>
+                    <div class="step-label">Delivered</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Update -->
+        <div class="status-update" id="statusUpdate">
+            <div class="status-time" id="statusTime">2:35 PM</div>
+            <div class="status-message" id="statusMessage">Your order is being prepared with care!</div>
+        </div>
+
+        <!-- Map Section -->
+        <div class="map-section">
+            <div class="map-title">
+                <i class="fa-regular fa-map-marker-alt"></i>
+                Live Location
+            </div>
+            <div class="map-container">
+                <div id="map" class="map-placeholder">
+                    <div>
+                        <i class="fa-regular fa-map" style="font-size: 48px; margin-bottom: 16px; display: block;"></i>
+                        <div>Live map will appear when rider picks up your order</div>
+                        <div style="font-size: 12px; margin-top: 8px; color: rgba(255, 255, 255, 0.5);">
+                            Real-time location tracking coming soon
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rider Section -->
+        <div class="rider-section" id="riderSection" style="display: none;">
+            <div class="rider-title">
+                <i class="fa-regular fa-user"></i>
+                Your Rider
+            </div>
+            <div class="rider-info">
+                <div class="rider-avatar">
+                    <i class="fa-regular fa-user"></i>
+                </div>
+                <div class="rider-details">
+                    <div class="rider-name" id="riderName">Alex Johnson</div>
+                    <div class="rider-status" id="riderStatus">On the way to restaurant</div>
+                </div>
+            </div>
+            <div class="rider-actions">
+                <a href="tel:+1234567890" class="action-btn">
+                    <i class="fa-regular fa-phone"></i>
+                    Call Rider
+                </a>
+                <a href="sms:+1234567890" class="action-btn">
+                    <i class="fa-regular fa-comment"></i>
+                    Message
+                </a>
+                <a href="#" class="action-btn primary" onclick="shareLocation()">
+                    <i class="fa-regular fa-share"></i>
+                    Share Location
+                </a>
+            </div>
+        </div>
+
+        <!-- Order Details Section -->
+        <div class="order-details-section">
+            <div class="progress-title">
+                <i class="fa-regular fa-receipt"></i>
+                Order Details
+            </div>
+            <div class="order-items" id="orderItems">
+                <!-- Order items will be populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- FontAwesome JS -->
+    <script src="assets/fontawesome/all.js" type="text/javascript"></script>
+    
+    <!-- Leaflet JS for Map -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // Tracking state
+        let currentStep = 1;
+        let orderId = '';
+        let orderItems = [];
+        let map = null;
+        let riderMarker = null;
+        let restaurantMarker = null;
+        let deliveryMarker = null;
+
+        // Sample rider data
+        const riderData = {
+            name: 'Alex Johnson',
+            phone: '+1234567890',
+            vehicle: 'Motorcycle',
+            rating: 4.8,
+            status: 'On the way to restaurant'
+        };
+
+        // Sample order items
+        const sampleOrderItems = [
+            {
+                name: 'Margherita Pizza',
+                image: 'https://picsum.photos/40/40?random=1',
+                price: 12.99,
+                extras: 'Large, Extra cheese'
+            },
+            {
+                name: 'Chicken Wings',
+                image: 'https://picsum.photos/40/40?random=2',
+                price: 8.99,
+                extras: 'BBQ sauce, 6 pieces'
+            },
+            {
+                name: 'Caesar Salad',
+                image: 'https://picsum.photos/40/40?random=3',
+                price: 6.99,
+                extras: 'Fresh vegetables'
+            }
+        ];
+
+        // Initialize tracking page
+        function initializeTracking() {
+            loadOrderDetails();
+            populateOrderItems();
+            startProgressSimulation();
+            initializeMap();
+        }
+
+        // Load order details from URL parameters
+        function loadOrderDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            orderId = urlParams.get('orderId') || 'ORD-' + Date.now();
+            const total = urlParams.get('total') || '$24.99';
+            const deliveryTime = urlParams.get('deliveryTime') || '';
+            
+            document.getElementById('orderId').textContent = orderId;
+            
+            // Set order time
+            const now = new Date();
+            document.getElementById('orderTime').textContent = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+            
+            // Set estimated delivery time
+            if (deliveryTime) {
+                document.getElementById('estimatedTime').textContent = `Estimated delivery: ${deliveryTime}`;
+            } else {
+                const estimatedDelivery = new Date(now.getTime() + (30 * 60000));
+                document.getElementById('estimatedTime').textContent = `Estimated delivery: ${estimatedDelivery.toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                })}`;
+            }
+        }
+
+        // Populate order items
+        function populateOrderItems() {
+            const orderItemsContainer = document.getElementById('orderItems');
+            
+            // Try to get order items from localStorage first
+            const storedCartItems = JSON.parse(localStorage.getItem('lastOrderItems')) || [];
+            
+            let itemsToDisplay = sampleOrderItems;
+            
+            if (storedCartItems.length > 0) {
+                itemsToDisplay = storedCartItems;
+            }
+            
+            orderItemsContainer.innerHTML = itemsToDisplay.map(item => `
+                <div class="order-item">
+                    <img src="${item.image || 'https://picsum.photos/40/40?random=1'}" alt="${item.name}" class="order-item-image">
+                    <div class="order-item-details">
+                        <div class="order-item-name">${item.name}</div>
+                        <div class="order-item-extras">
+                            ${item.package ? `Size: ${item.package}` : ''}
+                            ${item.toppings && item.toppings.length > 0 ? 
+                                `Toppings: ${item.toppings.join(', ')}` : ''}
+                            ${item.extras || ''}
+                        </div>
+                    </div>
+                    <div class="order-item-price">$${item.price.toFixed(2)}</div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize map
+        function initializeMap() {
+            // For now, we'll use a placeholder
+            // In a real implementation, you would initialize Leaflet here
+            console.log('Map initialization ready');
+        }
+
+        // Start progress simulation
+        function startProgressSimulation() {
+            // Simulate order progress
+            setTimeout(() => {
+                updateProgress(2, 'Your order is being prepared with care!');
+            }, 3000);
+
+            setTimeout(() => {
+                updateProgress(3, 'Rider is on the way to pick up your order!');
+                showRiderSection();
+            }, 8000);
+
+            setTimeout(() => {
+                updateProgress(4, 'Rider has picked up your order and is on the way!');
+                updateRiderStatus('On the way to you');
+            }, 12000);
+
+            setTimeout(() => {
+                updateProgress(4, 'Order delivered! Enjoy your meal!');
+                updateRiderStatus('Delivered');
+                showDeliveryComplete();
+            }, 20000);
+        }
+
+        // Update progress
+        function updateProgress(step, message) {
+            currentStep = step;
+            
+            // Update progress fill
+            const progressFill = document.getElementById('progressFill');
+            const progressPercentage = ((step - 1) / 3) * 100;
+            progressFill.style.width = progressPercentage + '%';
+            
+            if (step >= 4) {
+                progressFill.classList.add('completed');
+            } else if (step >= 2) {
+                progressFill.classList.add('current');
+            }
+
+            // Update step icons
+            for (let i = 1; i <= 4; i++) {
+                const stepIcon = document.getElementById(`step${i}`);
+                const stepLabel = stepIcon.nextElementSibling;
+                
+                if (i < step) {
+                    stepIcon.className = 'step-icon completed';
+                    stepLabel.className = 'step-label completed';
+                } else if (i === step) {
+                    stepIcon.className = 'step-icon current';
+                    stepLabel.className = 'step-label current';
+                } else {
+                    stepIcon.className = 'step-icon pending';
+                    stepLabel.className = 'step-label';
+                }
+            }
+
+            // Update status message
+            document.getElementById('statusMessage').textContent = message;
+            document.getElementById('statusTime').textContent = new Date().toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+        }
+
+        // Show rider section
+        function showRiderSection() {
+            document.getElementById('riderSection').style.display = 'block';
+            document.getElementById('riderName').textContent = riderData.name;
+            document.getElementById('riderStatus').textContent = riderData.status;
+        }
+
+        // Update rider status
+        function updateRiderStatus(status) {
+            document.getElementById('riderStatus').textContent = status;
+        }
+
+        // Show delivery complete
+        function showDeliveryComplete() {
+            const statusUpdate = document.getElementById('statusUpdate');
+            statusUpdate.style.background = 'rgba(76, 175, 80, 0.1)';
+            statusUpdate.style.borderColor = 'rgba(76, 175, 80, 0.3)';
+            
+            setTimeout(() => {
+                alert('Order delivered successfully! Thank you for choosing DEEPEND Entertainment!');
+                window.location.href = 'index.html';
+            }, 2000);
+        }
+
+        // Share location function
+        function shareLocation() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My delivery location',
+                    text: 'Track my order delivery',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                const locationUrl = window.location.href;
+                navigator.clipboard.writeText(locationUrl).then(() => {
+                    alert('Location link copied to clipboard!');
+                });
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializeTracking);
+    </script>
+</body>
+</html> 

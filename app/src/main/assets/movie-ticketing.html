@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Ticketing - DEEPEND Entertainment</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link href="assets/fontawesome/all.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="styles.css" rel="stylesheet">
+    <style>
+        body {
+            background: #18181c;
+        }
+        .cinema-hero-slider {
+            position: relative;
+            margin-bottom: 2rem;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .cinema-slider-container {
+            position: relative;
+            height: 220px;
+            overflow: hidden;
+        }
+        
+        .cinema-slider-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 100%;
+        }
+        
+        .cinema-slide {
+            min-width: 100%;
+            position: relative;
+            height: 100%;
+        }
+        
+        .cinema-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .cinema-slide-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            color: white;
+            padding: 1rem 2rem;
+        }
+        
+        .cinema-slide-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .cinema-slide-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .cinema-slider-indicators {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .cinema-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .cinema-indicator.active {
+            background: white;
+            transform: scale(1.2);
+        }
+        
+        .cinema-slider-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .cinema-slider-nav:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+        
+        .cinema-slider-nav.prev {
+            left: 1rem;
+        }
+        
+        .cinema-slider-nav.next {
+            right: 1rem;
+        }
+        .movie-list {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            margin-bottom: 2rem;
+        }
+        .movie-card {
+            min-width: 160px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        .movie-card:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 8px 32px rgba(255,59,48,0.15);
+            border-color: rgba(255,255,255,0.2);
+        }
+        .movie-poster {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .movie-title {
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0.5rem 0 0.25rem 0;
+            text-align: center;
+        }
+        .movie-genre {
+            color: #FF3B30;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .movie-filter-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .movie-filter-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 0.75rem 1.5rem;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .movie-filter-btn:hover,
+        .movie-filter-btn.active {
+            background: linear-gradient(135deg, #FF3B30 0%, #C62828 100%);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 59, 48, 0.3);
+        }
+        
+        .movie-card.hidden {
+            display: none;
+        }
+        .picker-container {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.13);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+        .seat-map {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .seat-row {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .seat {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.08);
+            border: 2px solid rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .seat.selected {
+            background: linear-gradient(135deg, #FF3B30 0%, #C62828 100%);
+            border-color: #FF3B30;
+            color: #fff;
+        }
+        .seat.occupied {
+            background: rgba(255,255,255,0.2);
+            color: #888;
+            cursor: not-allowed;
+        }
+        .screen {
+            width: 80%;
+            height: 18px;
+            background: linear-gradient(90deg, #FF3B30 0%, #C62828 100%);
+            border-radius: 8px 8px 20px 20px;
+            margin: 0 auto 1.5rem auto;
+            text-align: center;
+            color: #fff;
+            font-size: 0.9rem;
+            line-height: 18px;
+            letter-spacing: 2px;
+        }
+        .reserve-btn {
+            background: linear-gradient(135deg, #FF3B30 0%, #C62828 100%);
+            border: none;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+        .reserve-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .reserve-btn:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255,59,48,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid px-3 py-3">
+        <!-- Header Section -->
+        <div class="row align-items-center mb-4">
+            <div class="col-auto">
+                <a href="index.html" class="back-link">
+                    <i class="fa-regular fa-arrow-left"></i>
+                </a>
+            </div>
+            <div class="col">
+                <h1 class="food-title mb-0">Movie Ticketing</h1>
+            </div>
+            <div class="col-auto d-flex gap-2">
+                <div class="icon-btn notification-icon">
+                    <i class="fa-regular fa-bell text-white"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+                <!-- Remove or comment out the settings icon/button that links to settings.html -->
+            </div>
+        </div>
+        <!-- Movie Hero Slider -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="cinema-hero-slider">
+                    <div class="cinema-slider-container">
+                        <div class="cinema-slider-track" id="cinemaSliderTrack">
+                            <!-- Slide 1 -->
+                            <div class="cinema-slide">
+                                <img src="https://images.unsplash.com/photo-1517602302552-471fe67acf66?auto=format&fit=crop&w=800&q=80" alt="Cinema Experience">
+                                <div class="cinema-slide-content">
+                                    <div class="cinema-slide-title">Experience Movies Like Never Before</div>
+                                    <div class="cinema-slide-subtitle">Reserve your seat, pick your time, and enjoy the show!</div>
+                                </div>
+                            </div>
+                            <!-- Slide 2 -->
+                            <div class="cinema-slide">
+                                <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=800&q=80" alt="Premium Seating">
+                                <div class="cinema-slide-content">
+                                    <div class="cinema-slide-title">Premium Seating</div>
+                                    <div class="cinema-slide-subtitle">Choose your perfect spot for the ultimate viewing experience</div>
+                                </div>
+                            </div>
+                            <!-- Slide 3 -->
+                            <div class="cinema-slide">
+                                <img src="https://images.unsplash.com/photo-1574267432553-4b4629121d54?auto=format&fit=crop&w=800&q=80" alt="Latest Movies">
+                                <div class="cinema-slide-content">
+                                    <div class="cinema-slide-title">Latest Movies</div>
+                                    <div class="cinema-slide-subtitle">Watch the newest releases in stunning quality</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Slider Navigation -->
+                        <button class="cinema-slider-nav prev" id="cinemaPrevBtn">
+                            <i class="fa-regular fa-chevron-left"></i>
+                        </button>
+                        <button class="cinema-slider-nav next" id="cinemaNextBtn">
+                            <i class="fa-regular fa-chevron-right"></i>
+                        </button>
+                        
+                        <!-- Slider Indicators -->
+                        <div class="cinema-slider-indicators" id="cinemaIndicators">
+                            <span class="cinema-indicator active"></span>
+                            <span class="cinema-indicator"></span>
+                            <span class="cinema-indicator"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Movie Filter Buttons -->
+        <div class="row mb-4">
+            <div class="col">
+                <div class="movie-filter-container">
+                    <button class="movie-filter-btn active" data-filter="now-showing">
+                        <i class="fa-regular fa-play me-2"></i>
+                        Now Showing
+                    </button>
+                    <button class="movie-filter-btn" data-filter="coming-soon">
+                        <i class="fa-regular fa-calendar me-2"></i>
+                        Coming Soon
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Movie List -->
+        <div class="movie-list mb-4" id="movieList">
+            <div class="movie-card" data-movie="The Batman" data-category="now-showing">
+                <img src="https://m.media-amazon.com/images/I/81p+xe8cbnL._AC_SY679_.jpg" class="movie-poster" alt="The Batman">
+                <div class="movie-title">The Batman</div>
+                <div class="movie-genre">Action, Crime</div>
+            </div>
+            <div class="movie-card" data-movie="Dune" data-category="now-showing">
+                <img src="https://m.media-amazon.com/images/I/91z7n0QpKcL._AC_SY679_.jpg" class="movie-poster" alt="Dune">
+                <div class="movie-title">Dune</div>
+                <div class="movie-genre">Sci-Fi, Adventure</div>
+            </div>
+            <div class="movie-card" data-movie="Encanto" data-category="now-showing">
+                <img src="https://m.media-amazon.com/images/I/81Q1b6Q1KGL._AC_SY679_.jpg" class="movie-poster" alt="Encanto">
+                <div class="movie-title">Encanto</div>
+                <div class="movie-genre">Animation, Family</div>
+            </div>
+            <div class="movie-card" data-movie="No Time To Die" data-category="now-showing">
+                <img src="https://m.media-amazon.com/images/I/81nCqYwQJzL._AC_SY679_.jpg" class="movie-poster" alt="No Time To Die">
+                <div class="movie-title">No Time To Die</div>
+                <div class="movie-genre">Action, Thriller</div>
+            </div>
+            <div class="movie-card" data-movie="Black Panther" data-category="coming-soon">
+                <img src="https://m.media-amazon.com/images/I/91z7n0QpKcL._AC_SY679_.jpg" class="movie-poster" alt="Black Panther">
+                <div class="movie-title">Black Panther</div>
+                <div class="movie-genre">Action, Adventure</div>
+            </div>
+            <div class="movie-card" data-movie="Avatar 2" data-category="coming-soon">
+                <img src="https://m.media-amazon.com/images/I/81Q1b6Q1KGL._AC_SY679_.jpg" class="movie-poster" alt="Avatar 2">
+                <div class="movie-title">Avatar 2</div>
+                <div class="movie-genre">Sci-Fi, Fantasy</div>
+            </div>
+            <div class="movie-card" data-movie="Mission Impossible" data-category="coming-soon">
+                <img src="https://m.media-amazon.com/images/I/81nCqYwQJzL._AC_SY679_.jpg" class="movie-poster" alt="Mission Impossible">
+                <div class="movie-title">Mission Impossible</div>
+                <div class="movie-genre">Action, Thriller</div>
+            </div>
+        </div>
+        <!-- Date & Time Picker -->
+        <div class="picker-container mb-4">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4 col-12">
+                    <label class="form-label text-white-50">Date</label>
+                    <input type="date" class="form-control" id="movieDate">
+                </div>
+                <div class="col-md-4 col-12">
+                    <label class="form-label text-white-50">Time</label>
+                    <select class="form-select" id="movieTime">
+                        <option>12:00 PM</option>
+                        <option>3:00 PM</option>
+                        <option>6:00 PM</option>
+                        <option>9:00 PM</option>
+                    </select>
+                </div>
+                <div class="col-md-4 col-12">
+                    <label class="form-label text-white-50">Movie</label>
+                    <input type="text" class="form-control" id="selectedMovie" readonly value="The Batman">
+                </div>
+            </div>
+        </div>
+        <!-- Seat Map -->
+        <div class="screen">SCREEN</div>
+        <div class="seat-map mb-4" id="seatMap">
+            <!-- Seat rows will be generated by JS -->
+        </div>
+        <div class="d-flex justify-content-center mb-4">
+            <button class="reserve-btn" id="reserveBtn" disabled>Reserve Selected Seats</button>
+        </div>
+        <!-- Bottom Navigation Bar -->
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item" data-nav="home">
+                <i class="fa-regular fa-home"></i>
+            </a>
+            <a href="#" class="nav-item active" data-nav="cart">
+                <i class="fa-regular fa-shopping-cart"></i>
+            </a>
+            <a href="#" class="nav-item" data-nav="profile">
+                <i class="fa-regular fa-user"></i>
+            </a>
+        </nav>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- FontAwesome JS -->
+    <script src="assets/fontawesome/all.js"></script>
+    <script>
+        // Cinema Slider functionality
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.cinema-slide');
+        const indicators = document.querySelectorAll('.cinema-indicator');
+        const sliderTrack = document.getElementById('cinemaSliderTrack');
+        const prevBtn = document.getElementById('cinemaPrevBtn');
+        const nextBtn = document.getElementById('cinemaNextBtn');
+
+        function updateSlider() {
+            sliderTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // Update indicators
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            updateSlider();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            updateSlider();
+        }
+
+        // Event listeners for slider
+        if (prevBtn && nextBtn) {
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+        }
+
+        // Indicator clicks
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                currentSlide = index;
+                updateSlider();
+            });
+        });
+
+        // Auto-slide every 5 seconds
+        setInterval(nextSlide, 5000);
+
+        // Movie filter functionality
+        const filterBtns = document.querySelectorAll('.movie-filter-btn');
+        const movieCards = document.querySelectorAll('.movie-card');
+        const selectedMovieInput = document.getElementById('selectedMovie');
+        let selectedMovie = 'The Batman';
+        let currentFilter = 'now-showing';
+        
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filter = btn.getAttribute('data-filter');
+                
+                // Update active button
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Filter movies
+                movieCards.forEach(card => {
+                    const category = card.getAttribute('data-category');
+                    if (filter === 'all' || category === filter) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+                
+                currentFilter = filter;
+            });
+        });
+        
+        // Movie selection
+        movieCards.forEach(card => {
+            card.addEventListener('click', () => {
+                movieCards.forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                selectedMovie = card.getAttribute('data-movie');
+                selectedMovieInput.value = selectedMovie;
+            });
+        });
+        
+        // Set default date to today
+        const movieDateInput = document.getElementById('movieDate');
+        const today = new Date();
+        movieDateInput.value = today.toISOString().split('T')[0];
+        
+        // Seat map generation
+        const seatMap = document.getElementById('seatMap');
+        const rows = 6;
+        const seatsPerRow = 10;
+        const occupiedSeats = [3, 4, 12, 13, 25, 26, 40]; // Example occupied seats
+        let selectedSeats = [];
+        
+        function renderSeats() {
+            seatMap.innerHTML = '';
+            let seatNumber = 1;
+            for (let r = 0; r < rows; r++) {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'seat-row';
+                for (let s = 0; s < seatsPerRow; s++) {
+                    const seatDiv = document.createElement('div');
+                    seatDiv.className = 'seat';
+                    seatDiv.textContent = seatNumber;
+                    if (occupiedSeats.includes(seatNumber)) {
+                        seatDiv.classList.add('occupied');
+                    } else if (selectedSeats.includes(seatNumber)) {
+                        seatDiv.classList.add('selected');
+                    }
+                    seatDiv.addEventListener('click', () => {
+                        if (seatDiv.classList.contains('occupied')) return;
+                        if (seatDiv.classList.contains('selected')) {
+                            selectedSeats = selectedSeats.filter(n => n !== seatNumber);
+                            seatDiv.classList.remove('selected');
+                        } else {
+                            selectedSeats.push(seatNumber);
+                            seatDiv.classList.add('selected');
+                        }
+                        document.getElementById('reserveBtn').disabled = selectedSeats.length === 0;
+                    });
+                    rowDiv.appendChild(seatDiv);
+                    seatNumber++;
+                }
+                seatMap.appendChild(rowDiv);
+            }
+        }
+        renderSeats();
+        
+        // Reserve button
+        document.getElementById('reserveBtn').addEventListener('click', () => {
+            if (selectedSeats.length === 0) return;
+            alert(`You have reserved seat(s): ${selectedSeats.join(', ')} for "${selectedMovie}" on ${movieDateInput.value} at ${document.getElementById('movieTime').value}`);
+            selectedSeats = [];
+            renderSeats();
+            document.getElementById('reserveBtn').disabled = true;
+        });
+    </script>
+</body>
+</html> 

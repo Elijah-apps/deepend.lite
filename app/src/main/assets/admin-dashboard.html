@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - DEEPEND Entertainment</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link href="assets/fontawesome/all.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="styles.css" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            min-height: 100vh;
+        }
+        body {
+            background: linear-gradient(120deg, #23272A 0%, #181A1B 100%);
+            color: #fff;
+            font-family: 'Open Sans', 'Roboto', sans-serif;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .admin-sidebar {
+            background: #23272A;
+            min-height: 100vh;
+            padding: 2rem 1rem 1rem 1rem;
+            border-radius: 0 24px 24px 0;
+            box-shadow: 2px 0 24px rgba(0,0,0,0.12);
+        }
+        .admin-sidebar .nav-link {
+            color: #fff;
+            font-weight: 500;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            transition: background 0.2s;
+        }
+        .admin-sidebar .nav-link.active, .admin-sidebar .nav-link:hover {
+            background: linear-gradient(135deg, #FF3B30 0%, #C62828 100%);
+            color: #fff;
+        }
+        .admin-header {
+            padding: 2.5rem 0 1.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            margin-bottom: 2.5rem;
+        }
+        .admin-content {
+            padding: 2.5rem 3.5rem 2.5rem 2.5rem;
+            min-height: 100vh;
+        }
+        .dashboard-cards {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 2.5rem;
+        }
+        .dashboard-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 18px;
+            padding: 2rem 2.5rem;
+            min-width: 220px;
+            flex: 1 1 220px;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+        }
+        .dashboard-card .icon {
+            font-size: 2.3rem;
+            color: #FF3B30;
+            background: rgba(255,59,48,0.10);
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .dashboard-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .dashboard-card .label {
+            font-size: 1.1rem;
+            color: #bbb;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #fff;
+        }
+        .admin-table {
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+        }
+        .admin-table th, .admin-table td {
+            color: #fff;
+            background: transparent;
+            vertical-align: middle;
+            font-size: 1.05rem;
+        }
+        .admin-table th {
+            background: rgba(255,255,255,0.06);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .admin-table td .btn {
+            font-size: 1rem;
+        }
+        .add-btn {
+            background: linear-gradient(135deg, #FF3B30 0%, #C62828 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 0.7rem 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+        .add-btn:hover {
+            background: linear-gradient(135deg, #C62828 0%, #FF3B30 100%);
+        }
+        @media (max-width: 1200px) {
+            .admin-content { padding: 1.5rem 0.5rem; }
+            .dashboard-cards { gap: 1rem; }
+        }
+        @media (max-width: 900px) {
+            .dashboard-cards { flex-direction: column; }
+            .admin-content { padding: 1rem 0.5rem; }
+        }
+        @media (max-width: 700px) {
+            .admin-header { padding: 1.2rem 0 1rem 0; }
+            .admin-content { padding: 0.5rem 0.2rem; }
+            .dashboard-card { padding: 1.2rem 1rem; min-width: 140px; }
+            .section-title { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid" style="padding:0;max-width:100vw;">
+    <div class="row g-0" style="min-height:100vh;">
+        <!-- Sidebar -->
+        <nav class="col-md-2 admin-sidebar d-flex flex-column">
+            <div class="mb-4 text-center">
+                <img src="assets/logo.png" alt="Logo" style="width: 60px; border-radius: 12px;">
+                <h4 class="mt-2 mb-0" style="font-weight: 700; font-size: 1.2rem; letter-spacing: 1px;">DEEPEND Admin</h4>
+            </div>
+            <a class="nav-link active" href="#dashboard" id="nav-dashboard"><i class="fa-regular fa-chart-bar me-2"></i>Dashboard</a>
+            <a class="nav-link" href="#studios" id="nav-studios"><i class="fa-regular fa-microphone-alt me-2"></i>Studios</a>
+            <a class="nav-link" href="#equipment" id="nav-equipment"><i class="fa-regular fa-tools me-2"></i>Equipment</a>
+            <a class="nav-link" href="#food" id="nav-food"><i class="fa-regular fa-utensils me-2"></i>Food</a>
+            <a class="nav-link" href="#hotels" id="nav-hotels"><i class="fa-regular fa-hotel me-2"></i>Hotels</a>
+            <a class="nav-link" href="#movies" id="nav-movies"><i class="fa-regular fa-film me-2"></i>Movies</a>
+            <a class="nav-link" href="#users" id="nav-users"><i class="fa-regular fa-user me-2"></i>Users</a>
+            <a class="nav-link" href="#orders" id="nav-orders"><i class="fa-regular fa-receipt me-2"></i>Orders</a>
+            <a class="nav-link" href="#ads" id="nav-ads"><i class="fa-regular fa-bullhorn me-2"></i>Ads</a>
+        </nav>
+        <!-- Main Content -->
+        <main class="col-md-10 admin-content">
+            <!-- Header -->
+            <div class="admin-header d-flex justify-content-between align-items-center">
+                <h2 class="mb-0" style="font-weight: 700;">Admin Dashboard</h2>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="text-white-50">Welcome, Admin</span>
+                    <img src="https://i.pravatar.cc/60" alt="Admin Avatar" style="width: 40px; height: 40px; border-radius: 50%;">
+                </div>
+            </div>
+            <!-- Dashboard Overview -->
+            <section id="dashboard-section">
+                <div class="mb-4">
+                    <canvas id="dashboardChart" style="max-width:100%;background:rgba(255,255,255,0.02);border-radius:16px;"></canvas>
+                </div>
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="icon"><i class="fa-regular fa-microphone-alt"></i></div>
+                        <div>
+                            <div class="value" id="stat-studios">4</div>
+                            <div class="label">Studios</div>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="icon"><i class="fa-regular fa-tools"></i></div>
+                        <div>
+                            <div class="value" id="stat-equipment">6</div>
+                            <div class="label">Equipment</div>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="icon"><i class="fa-regular fa-utensils"></i></div>
+                        <div>
+                            <div class="value" id="stat-food">8</div>
+                            <div class="label">Food Items</div>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="icon"><i class="fa-regular fa-hotel"></i></div>
+                        <div>
+                            <div class="value" id="stat-hotels">3</div>
+                            <div class="label">Hotels</div>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="icon"><i class="fa-regular fa-film"></i></div>
+                        <div>
+                            <div class="value" id="stat-movies">5</div>
+                            <div class="label">Movies</div>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="icon"><i class="fa-regular fa-user"></i></div>
+                        <div>
+                            <div class="value" id="stat-users">12</div>
+                            <div class="label">Users</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Studios Management Section (Template) -->
+            <section id="studios-section" style="display:none;">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="section-title"><i class="fa-regular fa-microphone-alt me-2"></i>Studios</div>
+                    <button class="add-btn" id="addStudioBtn"><i class="fa-regular fa-plus me-1"></i>Add Studio</button>
+                </div>
+                <div class="admin-table table-responsive">
+                    <table class="table table-borderless align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studiosTableBody">
+                            <!-- Studios rows will be rendered dynamically from studiosData -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <!-- Add Modals for CRUD operations and Toasts for feedback -->
+            <!-- Add Equipment Management Section -->
+            <section id="equipment-section" style="display:none;">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="section-title"><i class="fa-regular fa-tools me-2"></i>Equipment</div>
+                    <button class="add-btn" id="addEquipmentBtn"><i class="fa-regular fa-plus me-1"></i>Add Equipment</button>
+                </div>
+                <div class="admin-table table-responsive">
+                    <table class="table table-borderless align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="equipmentTableBody">
+                            <!-- Equipment rows will be rendered dynamically from equipmentData -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <!-- Add placeholder sections for Food, Hotels, Movies, Users, Orders, Ads -->
+            <section id="food-section" style="display:none;">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="section-title"><i class="fa-regular fa-utensils me-2"></i>Food Items</div>
+                    <button class="add-btn" id="addFoodBtn"><i class="fa-regular fa-plus me-1"></i>Add Food</button>
+                </div>
+                <div class="admin-table table-responsive">
+                    <table class="table table-borderless align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="foodTableBody">
+                            <!-- Food rows will be rendered dynamically from foodData -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <!-- Hotel Management Section -->
+            <section id="hotels-section" style="display:none;">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="section-title"><i class="fa-regular fa-hotel me-2"></i>Hotels</div>
+                    <button class="add-btn" id="addHotelBtn"><i class="fa-regular fa-plus me-1"></i>Add Hotel</button>
+                </div>
+                <div class="admin-table table-responsive">
+                    <table class="table table-borderless align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Location</th>
+                                <th>Price</th>
+                                <th>Rooms</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hotelTableBody">
+                            <!-- Hotel rows will be rendered dynamically from hotelData -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <!-- Movie Management Section -->
+            <section id="movies-section" style="display:none;">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="section-title"><i class="fa-regular fa-film me-2"></i>Movies</div>
+                    <button class="add-btn" id="addMovieBtn"><i class="fa-regular fa-plus me-1"></i>Add Movie</button>
+                </div>
+                <div class="admin-table table-responsive">
+                    <table class="table table-borderless align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Genre</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Price</th>
+                                <th>Seats</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="movieTableBody">
+                            <!-- Movie rows will be rendered dynamically from movieData -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <!-- User Management Section -->
+            <section id="users-section" style="display:none;">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="section-title"><i class="fa-regular fa-user me-2"></i>Users <span class="badge bg-primary" id="userCountBadge"></span></div>
+                    <button class="add-btn" id="addUserBtn"><i class="fa-regular fa-plus me-1"></i>Add User</button>
+                </div>
+                <div class="admin-table table-responsive">
+                    <table class="table table-borderless align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Avatar</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody">
+                            <!-- User rows will be rendered dynamically from userData -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <!-- User Modal -->
+            <div class="modal fade" id="userModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content" style="background:#23272A;color:#fff;">
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title" id="userModalLabel">Add/Edit User</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <form id="userForm">
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="userName" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="userEmail" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Phone</label>
+                                    <input type="text" class="form-control" id="userPhone" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Role</label>
+                                    <select class="form-select" id="userRole" required>
+                                        <option value="Admin">Admin</option>
+                                        <option value="Manager">Manager</option>
+                                        <option value="Staff">Staff</option>
+                                        <option value="User">User</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Status</label>
+                                    <select class="form-select" id="userStatus" required>
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Avatar</label>
+                                    <input type="file" class="form-control" id="userAvatar" accept="image/*">
+                                    <div id="userAvatarPreview" class="mt-2"></div>
+                                </div>
+                            </div>
+                            <div class="modal-footer border-0">
+                                <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- User Details Modal -->
+            <div class="modal fade" id="userDetailsModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-scrollable">
+                    <div class="modal-content" style="background:#23272A;color:#fff;max-width:400px;margin:auto;">
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title">User Details</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body" id="userDetailsBody" style="max-height:60vh;overflow-y:auto;"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Hotel Details Modal -->
+            <div class="modal fade" id="hotelDetailsModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-scrollable">
+                    <div class="modal-content" style="background:#23272A;color:#fff;max-width:400px;margin:auto;">
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title">Hotel Details</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body" id="hotelDetailsBody" style="max-height:60vh;overflow-y:auto;"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Movie Modal -->
+            <div class="modal fade" id="movieModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content" style="background:#23272A;color:#fff;">
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title" id="movieModalLabel">Add/Edit Movie</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <form id="movieForm">
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="movieName" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Genre</label>
+                                    <input type="text" class="form-control" id="movieGenre" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Show Date</label>
+                                    <input type="date" class="form-control" id="movieDate" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Show Time</label>
+                                    <input type="time" class="form-control" id="movieTime" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Price</label>
+                                    <input type="number" class="form-control" id="moviePrice" min="0" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Seats Available</label>
+                                    <input type="number" class="form-control" id="movieSeats" min="1" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Status</label>
+                                    <select class="form-select" id="movieStatus" required>
+                                        <option value="Scheduled">Scheduled</option>
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Image</label>
+                                    <input type="file" class="form-control" id="movieImage" accept="image/*">
+                                    <div id="movieImagePreview" class="mt-2"></div>
+                                </div>
+                            </div>
+                            <div class="modal-footer border-0">
+                                <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Movie Details Modal -->
+            <div class="modal fade" id="movieDetailsModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-scrollable">
+                    <div class="modal-content" style="background:#23272A;color:#fff;max-width:400px;margin:auto;">
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title">Movie Details</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body" id="movieDetailsBody" style="max-height:60vh;overflow-y:auto;"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Toast for feedback -->
+            <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+                <div id="adminToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body" id="toastMsg">Action successful!</div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            </div>
+            <!-- Studio Saved Modal -->
+            <div class="modal fade" id="studioSavedModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content" style="background:#23272A;color:#fff;max-width:400px;margin:auto;">
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title">Studio Saved</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body" id="studioSavedBody" style="max-height:60vh;overflow-y:auto;"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- FontAwesome JS -->
+<script src="assets/fontawesome/all.js"></script>
+<!-- Add Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Sidebar navigation logic
+const navLinks = document.querySelectorAll('.admin-sidebar .nav-link');
+const dashboardSection = document.getElementById('dashboard-section');
+const studiosSection = document.getElementById('studios-section');
+// Add navigation for all sections
+const equipmentSection = document.getElementById('equipment-section');
+const foodSection = document.getElementById('food-section');
+const hotelsSection = document.getElementById('hotels-section');
+const moviesSection = document.getElementById('movies-section');
+const usersSection = document.getElementById('users-section');
+const ordersSection = document.getElementById('orders-section');
+const adsSection = document.getElementById('ads-section');
+navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        navLinks.forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+        // Hide all sections with null checks
+        if (dashboardSection) dashboardSection.style.display = 'none';
+        if (studiosSection) studiosSection.style.display = 'none';
+        if (equipmentSection) equipmentSection.style.display = 'none';
+        if (foodSection) foodSection.style.display = 'none';
+        if (hotelsSection) hotelsSection.style.display = 'none';
+        if (moviesSection) moviesSection.style.display = 'none';
+        if (usersSection) usersSection.style.display = 'none';
+        if (ordersSection) ordersSection.style.display = 'none';
+        if (adsSection) adsSection.style.display = 'none';
+        // Show selected section with null checks
+        if (this.id === 'nav-dashboard' && dashboardSection) dashboardSection.style.display = '';
+        if (this.id === 'nav-studios' && studiosSection) studiosSection.style.display = '';
+        if (this.id === 'nav-equipment' && equipmentSection) equipmentSection.style.display = '';
+        if (this.id === 'nav-food' && foodSection) foodSection.style.display = '';
+        if (this.id === 'nav-hotels' && hotelsSection) hotelsSection.style.display = '';
+        if (this.id === 'nav-movies' && moviesSection) moviesSection.style.display = '';
+        if (this.id === 'nav-users' && usersSection) usersSection.style.display = '';
+        if (this.id === 'nav-orders' && ordersSection) ordersSection.style.display = '';
+        if (this.id === 'nav-ads' && adsSection) adsSection.style.display = '';
+    });
+});
+// Default: show dashboard
+window.addEventListener('DOMContentLoaded', () => {
+    if (dashboardSection) dashboardSection.style.display = '';
+    if (studiosSection) studiosSection.style.display = 'none';
+    // Chart.js Bar Chart for Dashboard
+    const ctx = document.getElementById('dashboardChart').getContext('2d');
+    window.dashboardChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Studios', 'Equipment', 'Food', 'Hotels', 'Movies', 'Users'],
+            datasets: [{
+                label: 'Total',
+                data: [studiosData.length, 6, 8, 3, 5, 12],
+                backgroundColor: [
+                    'rgba(255,59,48,0.8)',
+                    'rgba(255,149,0,0.8)',
+                    'rgba(52,199,89,0.8)',
+                    'rgba(0,122,255,0.8)',
+                    'rgba(88,86,214,0.8)',
+                    'rgba(255,45,85,0.8)'
+                ],
+                borderRadius: 8,
+                maxBarThickness: 48
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: 'Platform Overview',
+                    color: '#fff',
+                    font: { size: 18, weight: 'bold' }
+                },
+                tooltip: {
+                    backgroundColor: '#23272A',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    borderColor: '#FF3B30',
+                    borderWidth: 1
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: '#fff', font: { size: 14 } },
+                    grid: { color: 'rgba(255,255,255,0.08)' }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: { color: '#fff', font: { size: 14 } },
+                    grid: { color: 'rgba(255,255,255,0.08)' }
+                }
+            }
+        }
+    });
+});
+// Studios CRUD logic
+let studiosData = [
+    { name: 'Studio A - Professional', type: 'Recording', price: 150, status: 'Active', image: 'https://via.placeholder.com/150' },
+    { name: 'Mixing Room B', type: 'Mixing', price: 120, status: 'Active', image: 'https://via.placeholder.com/150' },
+    { name: 'Live Recording Studio', type: 'Live', price: 200, status: 'Inactive', image: 'https://via.placeholder.com/150' }
+];
+const studiosTableBody = document.getElementById('studiosTableBody');
+const studioModal = new bootstrap.Modal(document.getElementById('studioModal'));
+let editingStudioRow = null;
+let studioSavedModalInstance = null;
+let studioSavedTimeout = null;
+let studioImageDataUrl = '';
+document.getElementById('studioImage').onchange = function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            studioImageDataUrl = evt.target.result;
+            document.getElementById('studioImagePreview').innerHTML = `<img src='${studioImageDataUrl}' alt='Preview' style='max-width:100px;max-height:80px;border-radius:8px;'>`;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        studioImageDataUrl = '';
+        document.getElementById('studioImagePreview').innerHTML = '';
+    }
+};
+function renderStudiosTable() {
+    studiosTableBody.innerHTML = '';
+    studiosData.forEach((item, idx) => {
+        const statusBadge = item.status === 'Active' ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>';
+        const imgHtml = item.image ? `<img src='${item.image}' alt='Studio' style='width:48px;height:38px;object-fit:cover;border-radius:6px;'>` : '';
+        studiosTableBody.innerHTML += `<tr data-idx='${idx}'>
+            <td>${imgHtml}</td>
+            <td>${item.name}</td>
+            <td>${item.type}</td>
+            <td>$${item.price}/hour</td>
+            <td>${statusBadge}</td>
+            <td>
+                <button class='btn btn-sm btn-outline-light me-1 edit-studio'><i class='fa-regular fa-edit'></i></button>
+                <button class='btn btn-sm btn-outline-danger delete-studio'><i class="fa-regular fa-trash"></i></button>
+            </td>
+        </tr>`;
+    });
+    // Update dashboard card and chart
+    document.getElementById('stat-studios').textContent = studiosData.length;
+    if(window.dashboardChartInstance) {
+        window.dashboardChartInstance.data.datasets[0].data[0] = studiosData.length;
+        window.dashboardChartInstance.update();
+    }
+}
+renderStudiosTable();
+document.getElementById('addStudioBtn').onclick = () => {
+    editingStudioRow = null;
+    document.getElementById('studioModalLabel').textContent = 'Add Studio';
+    document.getElementById('studioName').value = '';
+    document.getElementById('studioType').value = 'Recording';
+    document.getElementById('studioPrice').value = '';
+    document.getElementById('studioStatus').value = 'Active';
+    studioImageDataUrl = '';
+    document.getElementById('studioImage').value = '';
+    document.getElementById('studioImagePreview').innerHTML = '';
+    studioModal.show();
+};
+studiosTableBody.onclick = function(e) {
+    const row = e.target.closest('tr');
+    const idx = row ? row.dataset.idx : null;
+    if (e.target.closest('.edit-studio')) {
+        editingStudioRow = row;
+        document.getElementById('studioModalLabel').textContent = 'Edit Studio';
+        document.getElementById('studioName').value = studiosData[idx].name;
+        document.getElementById('studioType').value = studiosData[idx].type;
+        document.getElementById('studioPrice').value = studiosData[idx].price;
+        document.getElementById('studioStatus').value = studiosData[idx].status;
+        studioImageDataUrl = studiosData[idx].image || '';
+        document.getElementById('studioImage').value = '';
+        document.getElementById('studioImagePreview').innerHTML = studioImageDataUrl ? `<img src='${studioImageDataUrl}' alt='Preview' style='max-width:100px;max-height:80px;border-radius:8px;'>` : '';
+        studioModal.show();
+    } else if (e.target.closest('.delete-studio')) {
+        if (confirm('Are you sure you want to delete this studio?')) {
+            studiosData.splice(idx, 1);
+            renderStudiosTable();
+            showToast('Studio deleted!');
+        }
+    }
+};
+// Add event listener for studio modal hidden event to show confirmation popup
+let pendingStudioSavedHtml = null;
+document.getElementById('studioModal').addEventListener('hidden.bs.modal', function() {
+    if (pendingStudioSavedHtml) {
+        document.getElementById('studioSavedBody').innerHTML = pendingStudioSavedHtml;
+        if (!studioSavedModalInstance) {
+            studioSavedModalInstance = new bootstrap.Modal(document.getElementById('studioSavedModal'));
+        }
+        studioSavedModalInstance.show();
+        if (studioSavedTimeout) clearTimeout(studioSavedTimeout);
+        studioSavedTimeout = setTimeout(() => { studioSavedModalInstance.hide(); }, 2000);
+        pendingStudioSavedHtml = null;
+    }
+});
+document.getElementById('studioForm').onsubmit = function(e) {
+    e.preventDefault();
+    const name = document.getElementById('studioName').value;
+    const type = document.getElementById('studioType').value;
+    const price = parseFloat(document.getElementById('studioPrice').value);
+    const status = document.getElementById('studioStatus').value;
+    const image = studioImageDataUrl;
+    let savedHtml = '';
+    if (image) {
+        savedHtml += `<div class='mb-3 text-center'><img src='${image}' alt='Studio' style='max-width:160px;max-height:120px;border-radius:10px;'></div>`;
+    }
+    savedHtml += `<div class='mb-2'><strong>Name:</strong> ${name}</div>`;
+    savedHtml += `<div class='mb-2'><strong>Type:</strong> ${type}</div>`;
+    savedHtml += `<div class='mb-2'><strong>Price:</strong> $${price}/hour</div>`;
+    savedHtml += `<div class='mb-2'><strong>Status:</strong> <span class='badge ${status==='Active'?'bg-success':'bg-secondary'}'>${status}</span></div>`;
+    if (editingStudioRow) {
+        const idx = editingStudioRow.dataset.idx;
+        studiosData[idx] = { name, type, price, status, image };
+        showToast('Studio updated!');
+    } else {
+        studiosData.push({ name, type, price, status, image });
+        showToast('Studio added!');
+    }
+    renderStudiosTable();
+    studioModal.hide();
+    setTimeout(() => {
+        document.getElementById('studioSavedBody').innerHTML = savedHtml;
+        if (!studioSavedModalInstance) {
+            studioSavedModalInstance = new bootstrap.Modal(document.getElementById('studioSavedModal'));
+        }
+        studioSavedModalInstance.show();
+        if (studioSavedTimeout) clearTimeout(studioSavedTimeout);
+        studioSavedTimeout = setTimeout(() => { studioSavedModalInstance.hide(); }, 2000);
+    }, 200);
+};
+// Equipment CRUD logic
+let equipmentData = [
+    { name: 'Shure SM58 Microphone', category: 'Audio', price: 15, status: 'Active', image: 'https://via.placeholder.com/150' },
+    { name: 'Fender Stratocaster', category: 'Instrument', price: 25, status: 'Active', image: 'https://via.placeholder.com/150' },
+    { name: 'LED Panel Light', category: 'Lighting', price: 20, status: 'Inactive', image: 'https://via.placeholder.com/150' }
+];
+const equipmentTableBody = document.getElementById('equipmentTableBody');
+const equipmentModal = new bootstrap.Modal(document.getElementById('equipmentModal'));
+let editingEquipmentRow = null;
+let equipmentImageDataUrl = '';
+document.getElementById('equipmentImage').onchange = function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            equipmentImageDataUrl = evt.target.result;
+            document.getElementById('equipmentImagePreview').innerHTML = `<img src='${equipmentImageDataUrl}' alt='Preview' style='max-width:100px;max-height:80px;border-radius:8px;'>`;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        equipmentImageDataUrl = '';
+        document.getElementById('equipmentImagePreview').innerHTML = '';
+    }
+};
+document.getElementById('addEquipmentBtn').onclick = () => {
+    editingEquipmentRow = null;
+    document.getElementById('equipmentModalLabel').textContent = 'Add Equipment';
+    document.getElementById('equipmentName').value = '';
+    document.getElementById('equipmentCategory').value = 'Audio';
+    document.getElementById('equipmentPrice').value = '';
+    document.getElementById('equipmentStatus').value = 'Active';
+    equipmentImageDataUrl = '';
+    document.getElementById('equipmentImage').value = '';
+    document.getElementById('equipmentImagePreview').innerHTML = '';
+    equipmentModal.show();
+};
+function renderEquipmentTable() {
+    equipmentTableBody.innerHTML = '';
+    equipmentData.forEach((item, idx) => {
+        const statusBadge = item.status === 'Active' ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>';
+        const imgHtml = item.image ? `<img src='${item.image}' alt='Equipment' style='width:48px;height:38px;object-fit:cover;border-radius:6px;'>` : '';
+        equipmentTableBody.innerHTML += `<tr data-idx='${idx}'>
+            <td>${imgHtml}</td>
+            <td>${item.name}</td>
+            <td>${item.category}</td>
+            <td>$${item.price}/day</td>
+            <td>${statusBadge}</td>
+            <td>
+                <button class='btn btn-sm btn-outline-light me-1 edit-equipment'><i class='fa-regular fa-edit'></i></button>
+                <button class='btn btn-sm btn-outline-danger delete-equipment'><i class='fa-regular fa-trash'></i></button>
+            </td>
+        </tr>`;
+    });
+}
+renderEquipmentTable();
+equipmentTableBody.onclick = function(e) {
+    const row = e.target.closest('tr');
+    const idx = row ? row.dataset.idx : null;
+    if (e.target.closest('.edit-equipment')) {
+        editingEquipmentRow = row;
+        document.getElementById('equipmentModalLabel').textContent = 'Edit Equipment';
+        document.getElementById('equipmentName').value = equipmentData[idx].name;
+        document.getElementById('equipmentCategory').value = equipmentData[idx].category;
+        document.getElementById('equipmentPrice').value = equipmentData[idx].price;
+        document.getElementById('equipmentStatus').value = equipmentData[idx].status;
+        equipmentImageDataUrl = equipmentData[idx].image || '';
+        document.getElementById('equipmentImage').value = '';
+        document.getElementById('equipmentImagePreview').innerHTML = equipmentImageDataUrl ? `<img src='${equipmentImageDataUrl}' alt='Preview' style='max-width:100px;max-height:80px;border-radius:8px;'>` : '';
+        equipmentModal.show();
+    } else if (e.target.closest('.delete-equipment')) {
+        if (confirm('Are you sure you want to delete this equipment?')) {
+            equipmentData.splice(idx, 1);
+            renderEquipmentTable();
+            showToast('Equipment deleted!');
+        }
+    }
+};
+document.getElementById('equipmentForm').onsubmit = function(e) {
+    e.preventDefault();
+    const name = document.getElementById('equipmentName').value;
+    const category = document.getElementById('equipmentCategory').value;
+    const price = parseFloat(document.getElementById('equipmentPrice').value);
+    const status = document.getElementById('equipmentStatus').value;
+    const image = equipmentImageDataUrl;
+    if (editingEquipmentRow) {
+        const idx = editingEquipmentRow.dataset.idx;
+        equipmentData[idx] = { name, category, price, status, image };
+        showToast('Equipment updated!');
+    } else {
+        equipmentData.push({ name, category, price, status, image });
+        showToast('Equipment added!');
+    }
+    renderEquipmentTable();
+    equipmentModal.hide();
+};
+// Toast feedback logic
+function showToast(message) {
+    const toastMsg = document.getElementById('toastMsg');
+    toastMsg.textContent = message;
+    const toastEl = document.getElementById('adminToast');
+    const toast = bootstrap.Toast.getOrCreateInstance(toastEl);
+    toast.show();
+}
+// Food CRUD logic
+const foodTableBody = document.getElementById('foodTableBody');
+const foodModal = new bootstrap.Modal(document.getElementById('foodModal'));
+let editingFoodRow = null;
+let currentToppings = [];
+let foodImageDataUrl = '';
+document.getElementById('foodImage').onchange = function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            foodImageDataUrl = evt.target.result;
+            document.getElementById('foodImagePreview').innerHTML = `<img src='${foodImageDataUrl}' alt='Preview' style='max-width:100px;max-height:80px;border-radius:8px;'>`;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        foodImageDataUrl = '';
+        document.getElementById('foodImagePreview').innerHTML = '';
+    }
+};
+function renderToppings() {
+    const toppingsList = document.getElementById('toppingsList');
+    toppingsList.innerHTML = '';
+    currentToppings.forEach((topping, idx) => {
+        const div = document.createElement('div');
+        div.className = 'd-flex align-items-center gap-2 mb-1';
+        div.innerHTML = `<span class='badge bg-secondary'>${topping.name} ($${parseFloat(topping.price).toFixed(2)})</span> <button type='button' class='btn btn-sm btn-outline-danger remove-topping' data-idx='${idx}'><i class='fa-regular fa-trash'></i></button>`;
+        toppingsList.appendChild(div);
+    });
+}
+document.getElementById('addToppingBtn').onclick = function() {
+    const name = document.getElementById('toppingName').value.trim();
+    const price = document.getElementById('toppingPrice').value;
+    if (name && price !== '') {
+        currentToppings.push({ name, price: parseFloat(price) });
+        renderToppings();
+        document.getElementById('toppingName').value = '';
+        document.getElementById('toppingPrice').value = '';
+    }
+};
+document.getElementById('toppingsList').onclick = function(e) {
+    if (e.target.closest('.remove-topping')) {
+        const idx = e.target.closest('.remove-topping').dataset.idx;
+        currentToppings.splice(idx, 1);
+        renderToppings();
+    }
+};
+document.getElementById('addFoodBtn').onclick = () => {
+    editingFoodRow = null;
+    document.getElementById('foodModalLabel').textContent = 'Add Food';
+    document.getElementById('foodName').value = '';
+    document.getElementById('foodCategory').value = 'Burger';
+    document.getElementById('foodPrice').value = '';
+    document.getElementById('foodStatus').value = 'Active';
+    currentToppings = [];
+    foodImageDataUrl = '';
+    document.getElementById('foodImage').value = '';
+    document.getElementById('foodImagePreview').innerHTML = '';
+    renderToppings();
+    foodModal.show();
+};
+// Store food data (including toppings) in a JS array for demo
+let foodData = [
+    { name: 'Classic Cheeseburger', category: 'Burger', price: 12.99, status: 'Active', toppings: [ {name:'Extra Cheese', price:1.5}, {name:'Bacon', price:2.0} ], image: 'https://via.placeholder.com/150' },
+    { name: 'Margherita Pizza', category: 'Pizza', price: 15.99, status: 'Active', toppings: [ {name:'Fresh Basil', price:1.0}, {name:'Extra Cheese', price:2.0} ], image: 'https://via.placeholder.com/150' },
+    { name: 'Grilled Chicken', category: 'Grill', price: 18.99, status: 'Inactive', toppings: [], image: 'https://via.placeholder.com/150' }
+];
+function renderFoodTable() {
+    foodTableBody.innerHTML = '';
+    foodData.forEach((item, idx) => {
+        const statusBadge = item.status === 'Active' ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>';
+        const imgHtml = item.image ? `<img src='${item.image}' alt='Food' style='width:48px;height:38px;object-fit:cover;border-radius:6px;'>` : '';
+        foodTableBody.innerHTML += `<tr data-idx='${idx}'>
+            <td>${imgHtml}</td>
+            <td>${item.name}</td>
+            <td>${item.category}</td>
+            <td>$${item.price.toFixed(2)}</td>
+            <td>${statusBadge}</td>
+            <td>
+                <button class='btn btn-sm btn-outline-info me-1 view-food'><i class='fa-regular fa-eye'></i></button>
+                <button class='btn btn-sm btn-outline-light me-1 edit-food'><i class='fa-regular fa-edit'></i></button>
+                <button class='btn btn-sm btn-outline-danger delete-food'><i class='fa-regular fa-trash'></i></button>
+            </td>
+        </tr>`;
+    });
+}
+renderFoodTable();
+foodTableBody.onclick = function(e) {
+    const row = e.target.closest('tr');
+    const idx = row ? row.dataset.idx : null;
+    if (e.target.closest('.view-food')) {
+        const item = foodData[idx];
+        let html = '';
+        if (item.image) {
+            html += `<div class='mb-3 text-center'><img src='${item.image}' alt='Food' style='max-width:160px;max-height:120px;border-radius:10px;'></div>`;
+        }
+        html += `<div class='mb-2'><strong>Name:</strong> ${item.name}</div>`;
+        html += `<div class='mb-2'><strong>Category:</strong> ${item.category}</div>`;
+        html += `<div class='mb-2'><strong>Price:</strong> $${item.price.toFixed(2)}</div>`;
+        html += `<div class='mb-2'><strong>Status:</strong> <span class='badge ${item.status==='Active'?'bg-success':'bg-secondary'}'>${item.status}</span></div>`;
+        html += `<div class='mb-2'><strong>Toppings:</strong>`;
+        if (item.toppings && item.toppings.length) {
+            html += `<ul class='ps-3'>`;
+            item.toppings.forEach(t => {
+                html += `<li>${t.name} ($${parseFloat(t.price).toFixed(2)})</li>`;
+            });
+            html += `</ul>`;
+        } else {
+            html += ` <span class='text-white-50'>None</span>`;
+        }
+        html += `</div>`;
+        document.getElementById('foodDetailsBody').innerHTML = html;
+        new bootstrap.Modal(document.getElementById('foodDetailsModal')).show();
+    } else if (e.target.closest('.edit-food')) {
+        editingFoodRow = row;
+        document.getElementById('foodModalLabel').textContent = 'Edit Food';
+        document.getElementById('foodName').value = foodData[idx].name;
+        document.getElementById('foodCategory').value = foodData[idx].category;
+        document.getElementById('foodPrice').value = foodData[idx].price;
+        document.getElementById('foodStatus').value = foodData[idx].status;
+        currentToppings = foodData[idx].toppings ? JSON.parse(JSON.stringify(foodData[idx].toppings)) : [];
+        foodImageDataUrl = foodData[idx].image || '';
+        document.getElementById('foodImage').value = '';
+        document.getElementById('foodImagePreview').innerHTML = foodImageDataUrl ? `<img src='${foodImageDataUrl}' alt='Preview' style='max-width:100px;max-height:80px;border-radius:8px;'>` : '';
+        renderToppings();
+        foodModal.show();
+    } else if (e.target.closest('.delete-food')) {
+        if (confirm('Are you sure you want to delete this food item?')) {
+            foodData.splice(idx, 1);
+            renderFoodTable();
+            showToast('Food item deleted!');
+        }
+    }
+};
+document.getElementById('foodForm').onsubmit = function(e) {
+    e.preventDefault();
+    const name = document.getElementById('foodName').value;
+    const category = document.getElementById('foodCategory').value;
+    const price = parseFloat(document.getElementById('foodPrice').value);
+    const status = document.getElementById('foodStatus').value;
+    const toppings = JSON.parse(JSON.stringify(currentToppings));
+    const image = foodImageDataUrl;
+    if (editingFoodRow) {
+        const idx = editingFoodRow.dataset.idx;
+        foodData[idx] = { name, category, price, status, toppings, image };
+        showToast('Food item updated!');
+    } else {
+        foodData.push({ name, category, price, status, toppings, image });
+        showToast('Food item added!');
+    }
+    renderFoodTable();
+    foodModal.hide();
+};
+// Hotel CRUD logic
+let hotelData = [
+    { name: 'Grand Plaza Hotel', location: 'City Center', price: 299, quantity: 50, status: 'Active', image: 'https://via.placeholder.com/150' },
+    { name: 'Ocean Resort & Spa', location: 'Beachfront', price: 399, quantity: 30, status: 'Active', image: 'https://via.placeholder.com/150' },
+    { name: 'Urban Boutique Hotel', location: 'Downtown', price: 149, quantity: 20, status: 'Inactive', image: 'https://via.placeholder.com/150' }
+];
+const hotelTableBody = document.getElementById('hotelTableBody');
+const hotelModal = new bootstrap.Modal(document.getElementById('hotelModal'));
+let editingHotelRow = null;
+let hotelImageDataUrl = '';
+document.getElementById('hotelImage').onchange = function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            hotelImageDataUrl = evt.target.result;
+            document.getElementById('hotelImagePreview').innerHTML = `<img src='${hotelImageDataUrl}' alt='Preview' style='max-width:100px;max-height:80px;border-radius:8px;'>`;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        hotelImageDataUrl = '';
+        document.getElementById('hotelImagePreview').innerHTML = '';
+    }
+};
+document.getElementById('addHotelBtn').onclick = () => {
+    editingHotelRow = null;
+    document.getElementById('hotelModalLabel').textContent = 'Add Hotel';
+    document.getElementById('hotelName').value = '';
+    document.getElementById('hotelLocation').value = '';
+    document.getElementById('hotelPrice').value = '';
+    document.getElementById('hotelQuantity').value = '';
+    document.getElementById('hotelStatus').value = 'Active';
+    hotelImageDataUrl = '';
+    document.getElementById('hotelImage').value = '';
+    document.getElementById('hotelImagePreview').innerHTML = '';
+    hotelModal.show();
+};
+function renderHotelTable() {
+    hotelTableBody.innerHTML = '';
+    hotelData.forEach((item, idx) => {
+        const statusBadge = item.status === 'Active' ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>';
+        const imgHtml = item.image ? `<img src='${item.image}' alt='Hotel' style='width:48px;height:38px;object-fit:cover;border-radius:6px;'>` : '';
+        hotelTableBody.innerHTML += `<tr data-idx='${idx}'>
+            <td>${imgHtml}</td>
+            <td>${item.name}</td>
+            <td>${item.location}</td>
+            <td>$${item.price}/night</td>
+            <td>${item.quantity}</td>
+            <td>${statusBadge}</td>
+            <td>
+                <button class='btn btn-sm btn-outline-info me-1 view-hotel'><i class='fa-regular fa-eye'></i></button>
+                <button class='btn btn-sm btn-outline-light me-1 edit-hotel'><i class='fa-regular fa-edit'></i></button>
+                <button class='btn btn-sm btn-outline-danger delete-hotel'><i class='fa-regular fa-trash'></i></button>
+            </td>
+        </tr>`;
+    });
+}
+renderHotelTable();
+hotelTableBody.onclick = function(e) {
+    const row = e.target.closest('tr');
+    const idx = row ? row.dataset.idx : null;
+    if (e.target.closest('.view-hotel')) {
+        const item = hotelData[idx];
+        let html = '';
+        if (item.image) {
+            html += `<div class='mb-3 text-center'><img src='${item.image}' alt='Hotel' style='max-width:160px;max-height:120px;border-radius:10px;'></div>`;
+        }
+        html += `<div class='mb-2'><strong>Name:</strong> ${item.name}</div>`;
+        html += `<div class='mb-2'><strong>Location:</strong> ${item.location}</div>`;
+        html += `<div class='mb-2'><strong>Price:</strong> $${item.price}/night</div>`;
+        html += `<div class='mb-2'><strong>Rooms:</strong> ${item.quantity}</div>`;
+        html += `<div class='mb-2'><strong>Status:</strong> <span class='badge ${item.status==='Active'?'bg-success':'bg-secondary'}'>${item.status}</span></div>`;
+        document.getElementById('hotelDetailsBody').innerHTML = html;
+        new bootstrap.Modal(document.getElementById('hotelDetailsModal')).show();
+    } else if (e.target.closest('.edit-hotel')) {
+        editingHotelRow = row;
+        document.getElementById('hotelModalLabel').textContent = 'Edit Hotel';
+        document.getElementById('hotelName').value = hotelData[idx].name;
+        document.getElementById('hotelLocation').value = hotelData[idx].location;
+        document.getElementById('hotelPrice').value = hotelData[idx].price;
+        document.getElementById('hotelQuantity').value = hotelData[idx].quantity;
+        document.getElementById('hotelStatus').value = hotelData[idx].status;
+        hotelImageDataUrl = hotelData[idx].image || '';
+        document.getElementById('hotelImage').value = '';
+        document.getElementById('hotelImagePreview').innerHTML = hotelImageDataUrl ? `<img src='${hotelImageDataUrl}' alt='Preview' style='max-width:100px;max-height:80px;border-radius:8px;'>` : '';
+        hotelModal.show();
+    } else if (e.target.closest('.delete-hotel')) {
+        if (confirm('Are you sure you want to delete this hotel?')) {
+            hotelData.splice(idx, 1);
+            renderHotelTable();
+            showToast('Hotel deleted!');
+        }
+    }
+};
+document.getElementById('hotelForm').onsubmit = function(e) {
+    e.preventDefault();
+    const name = document.getElementById('hotelName').value;
+    const location = document.getElementById('hotelLocation').value;
+    const price = parseFloat(document.getElementById('hotelPrice').value);
+    const quantity = parseInt(document.getElementById('hotelQuantity').value);
+    const status = document.getElementById('hotelStatus').value;
+    const image = hotelImageDataUrl;
+    if (editingHotelRow) {
+        const idx = editingHotelRow.dataset.idx;
+        hotelData[idx] = { name, location, price, quantity, status, image };
+        showToast('Hotel updated!');
+    } else {
+        hotelData.push({ name, location, price, quantity, status, image });
+        showToast('Hotel added!');
+    }
+    renderHotelTable();
+    hotelModal.hide();
+};
+// Movie CRUD logic
+let movieData = [
+    { name: 'The Grand Adventure', genre: 'Action', price: 20, seats: 100, date: '2024-07-01', time: '19:00', status: 'Scheduled', image: 'https://via.placeholder.com/150' },
+    { name: 'Romance in Paris', genre: 'Romance', price: 18, seats: 80, date: '2024-07-02', time: '21:00', status: 'Active', image: 'https://via.placeholder.com/150' },
+    { name: 'Comedy Night', genre: 'Comedy', price: 15, seats: 60, date: '2024-07-03', time: '18:00', status: 'Inactive', image: 'https://via.placeholder.com/150' }
+];
+const movieTableBody = document.getElementById('movieTableBody');
+const movieModal = new bootstrap.Modal(document.getElementById('movieModal'));
+let editingMovieRow = null;
+let movieImageDataUrl = '';
+document.getElementById('movieImage').onchange = function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            movieImageDataUrl = evt.target.result;
+            document.getElementById('movieImagePreview').innerHTML = `<img src='${movieImageDataUrl}' alt='Preview' style='max-width:100px;max-height:80px;border-radius:8px;'>`;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        movieImageDataUrl = '';
+        document.getElementById('movieImagePreview').innerHTML = '';
+    }
+};
+document.getElementById('addMovieBtn').onclick = () => {
+    editingMovieRow = null;
+    document.getElementById('movieModalLabel').textContent = 'Add Movie';
+    document.getElementById('movieName').value = '';
+    document.getElementById('movieGenre').value = '';
+    document.getElementById('movieDate').value = '';
+    document.getElementById('movieTime').value = '';
+    document.getElementById('moviePrice').value = '';
+    document.getElementById('movieSeats').value = '';
+    document.getElementById('movieStatus').value = 'Scheduled';
+    movieImageDataUrl = '';
+    document.getElementById('movieImage').value = '';
+    document.getElementById('movieImagePreview').innerHTML = '';
+    movieModal.show();
+};
+function renderMovieTable() {
+    movieTableBody.innerHTML = '';
+    movieData.forEach((item, idx) => {
+        const statusBadge = item.status === 'Active' ? '<span class="badge bg-success">Active</span>' : (item.status === 'Scheduled' ? '<span class="badge bg-primary">Scheduled</span>' : '<span class="badge bg-secondary">Inactive</span>');
+        const imgHtml = item.image ? `<img src='${item.image}' alt='Movie' style='width:48px;height:38px;object-fit:cover;border-radius:6px;'>` : '';
+        movieTableBody.innerHTML += `<tr data-idx='${idx}'>
+            <td>${imgHtml}</td>
+            <td>${item.name}</td>
+            <td>${item.genre}</td>
+            <td>${item.date}</td>
+            <td>${item.time}</td>
+            <td>$${item.price}</td>
+            <td>${item.seats}</td>
+            <td>${statusBadge}</td>
+            <td>
+                <button class='btn btn-sm btn-outline-info me-1 view-movie'><i class='fa-regular fa-eye'></i></button>
+                <button class='btn btn-sm btn-outline-light me-1 edit-movie'><i class='fa-regular fa-edit'></i></button>
+                <button class='btn btn-sm btn-outline-danger delete-movie'><i class='fa-regular fa-trash'></i></button>
+            </td>
+        </tr>`;
+    });
+}
+renderMovieTable();
+movieTableBody.onclick = function(e) {
+    const row = e.target.closest('tr');
+    const idx = row ? row.dataset.idx : null;
+    if (e.target.closest('.view-movie')) {
+        const item = movieData[idx];
+        let html = '';
+        if (item.image) {
+            html += `<div class='mb-3 text-center'><img src='${item.image}' alt='Movie' style='max-width:160px;max-height:120px;border-radius:10px;'></div>`;
+        }
+        html += `<div class='mb-2'><strong>Name:</strong> ${item.name}</div>`;
+        html += `<div class='mb-2'><strong>Genre:</strong> ${item.genre}</div>`;
+        html += `<div class='mb-2'><strong>Date:</strong> ${item.date}</div>`;
+        html += `<div class='mb-2'><strong>Time:</strong> ${item.time}</div>`;
+        html += `<div class='mb-2'><strong>Price:</strong> $${item.price}</div>`;
+        html += `<div class='mb-2'><strong>Seats Available:</strong> ${item.seats}</div>`;
+        html += `<div class='mb-2'><strong>Status:</strong> <span class='badge ${item.status==='Active'?'bg-success':(item.status==='Scheduled'?'bg-primary':'bg-secondary')}'>${item.status}</span></div>`;
+        document.getElementById('movieDetailsBody').innerHTML = html;
+        new bootstrap.Modal(document.getElementById('movieDetailsModal')).show();
+    } else if (e.target.closest('.edit-movie')) {
+        editingMovieRow = row;
+        document.getElementById('movieModalLabel').textContent = 'Edit Movie';
+        document.getElementById('movieName').value = movieData[idx].name;
+        document.getElementById('movieGenre').value = movieData[idx].genre;
+        document.getElementById('movieDate').value = movieData[idx].date;
+        document.getElementById('movieTime').value = movieData[idx].time;
+        document.getElementById('moviePrice').value = movieData[idx].price;
+        document.getElementById('movieSeats').value = movieData[idx].seats;
+        document.getElementById('movieStatus').value = movieData[idx].status;
+        movieImageDataUrl = movieData[idx].image || '';
+        document.getElementById('movieImage').value = '';
+        document.getElementById('movieImagePreview').innerHTML = movieImageDataUrl ? `<img src='${movieImageDataUrl}' alt='Preview' style='max-width:100px;max-height:80px;border-radius:8px;'>` : '';
+        movieModal.show();
+    } else if (e.target.closest('.delete-movie')) {
+        if (confirm('Are you sure you want to delete this movie?')) {
+            movieData.splice(idx, 1);
+            renderMovieTable();
+            showToast('Movie deleted!');
+        }
+    }
+};
+document.getElementById('movieForm').onsubmit = function(e) {
+    e.preventDefault();
+    const name = document.getElementById('movieName').value;
+    const genre = document.getElementById('movieGenre').value;
+    const date = document.getElementById('movieDate').value;
+    const time = document.getElementById('movieTime').value;
+    const status = document.getElementById('movieStatus').value;
+    const price = parseFloat(document.getElementById('moviePrice').value);
+    const seats = parseInt(document.getElementById('movieSeats').value);
+    const image = movieImageDataUrl;
+    if (editingMovieRow) {
+        const idx = editingMovieRow.dataset.idx;
+        movieData[idx] = { name, genre, price, seats, date, time, status, image };
+        showToast('Movie updated!');
+    } else {
+        movieData.push({ name, genre, price, seats, date, time, status, image });
+        showToast('Movie added!');
+    }
+    renderMovieTable();
+    movieModal.hide();
+};
+// User CRUD logic
+let userData = [
+    { name: 'Jane Doe', email: 'jane@example.com', phone: '555-1234', role: 'Admin', status: 'Active', avatar: 'https://randomuser.me/api/portraits/women/44.jpg' },
+    { name: 'John Smith', email: 'john@example.com', phone: '555-5678', role: 'Manager', status: 'Active', avatar: 'https://randomuser.me/api/portraits/men/32.jpg' },
+    { name: 'Alice Brown', email: 'alice@example.com', phone: '555-8765', role: 'Staff', status: 'Inactive', avatar: 'https://randomuser.me/api/portraits/women/68.jpg' },
+    { name: 'Michael Lee', email: 'michael.lee@example.com', phone: '555-4321', role: 'User', status: 'Active', avatar: 'https://randomuser.me/api/portraits/men/45.jpg' },
+    { name: 'Sara Kim', email: 'sara.kim@example.com', phone: '555-2468', role: 'User', status: 'Active', avatar: 'https://randomuser.me/api/portraits/women/12.jpg' },
+    { name: 'David Green', email: 'david.green@example.com', phone: '555-1357', role: 'Staff', status: 'Inactive', avatar: 'https://randomuser.me/api/portraits/men/23.jpg' },
+    { name: 'Emily White', email: 'emily.white@example.com', phone: '555-9753', role: 'Manager', status: 'Active', avatar: 'https://randomuser.me/api/portraits/women/33.jpg' },
+    { name: 'Chris Black', email: 'chris.black@example.com', phone: '555-8642', role: 'Admin', status: 'Inactive', avatar: 'https://randomuser.me/api/portraits/men/56.jpg' }
+];
+const userTableBody = document.getElementById('userTableBody');
+const userModal = new bootstrap.Modal(document.getElementById('userModal'));
+let editingUserRow = null;
+let userAvatarDataUrl = '';
+document.getElementById('userAvatar').onchange = function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            userAvatarDataUrl = evt.target.result;
+            document.getElementById('userAvatarPreview').innerHTML = `<img src='${userAvatarDataUrl}' alt='Preview' style='max-width:80px;max-height:80px;border-radius:50%;'>`;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        userAvatarDataUrl = '';
+        document.getElementById('userAvatarPreview').innerHTML = '';
+    }
+};
+document.getElementById('addUserBtn').onclick = () => {
+    editingUserRow = null;
+    document.getElementById('userModalLabel').textContent = 'Add User';
+    document.getElementById('userName').value = '';
+    document.getElementById('userEmail').value = '';
+    document.getElementById('userPhone').value = '';
+    document.getElementById('userRole').value = 'User';
+    document.getElementById('userStatus').value = 'Active';
+    userAvatarDataUrl = '';
+    document.getElementById('userAvatar').value = '';
+    document.getElementById('userAvatarPreview').innerHTML = '';
+    userModal.show();
+};
+function renderUserTable() {
+    userTableBody.innerHTML = '';
+    userData.forEach((item, idx) => {
+        const statusBadge = item.status === 'Active' ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>';
+        const avatarHtml = item.avatar ? `<img src='${item.avatar}' alt='Avatar' style='width:38px;height:38px;object-fit:cover;border-radius:50%;'>` : '';
+        userTableBody.innerHTML += `<tr data-idx='${idx}'>
+            <td>${avatarHtml}</td>
+            <td>${item.name}</td>
+            <td>${item.email}</td>
+            <td>${item.phone}</td>
+            <td>${item.role}</td>
+            <td>${statusBadge}</td>
+            <td>
+                <button class='btn btn-sm btn-outline-info me-1 view-user'><i class='fa-regular fa-eye'></i></button>
+                <button class='btn btn-sm btn-outline-light me-1 edit-user'><i class='fa-regular fa-edit'></i></button>
+                <button class='btn btn-sm btn-outline-danger delete-user'><i class='fa-regular fa-trash'></i></button>
+            </td>
+        </tr>`;
+    });
+    document.getElementById('userCountBadge').textContent = userData.length;
+}
+renderUserTable();
+userTableBody.onclick = function(e) {
+    const row = e.target.closest('tr');
+    const idx = row ? row.dataset.idx : null;
+    if (e.target.closest('.view-user')) {
+        const item = userData[idx];
+        let html = '';
+        if (item.avatar) {
+            html += `<div class='mb-3 text-center'><img src='${item.avatar}' alt='Avatar' style='max-width:120px;max-height:120px;border-radius:50%;'></div>`;
+        }
+        html += `<div class='mb-2'><strong>Name:</strong> ${item.name}</div>`;
+        html += `<div class='mb-2'><strong>Email:</strong> ${item.email}</div>`;
+        html += `<div class='mb-2'><strong>Phone:</strong> ${item.phone}</div>`;
+        html += `<div class='mb-2'><strong>Role:</strong> ${item.role}</div>`;
+        html += `<div class='mb-2'><strong>Status:</strong> <span class='badge ${item.status==='Active'?'bg-success':'bg-secondary'}'>${item.status}</span></div>`;
+        document.getElementById('userDetailsBody').innerHTML = html;
+        new bootstrap.Modal(document.getElementById('userDetailsModal')).show();
+    } else if (e.target.closest('.edit-user')) {
+        editingUserRow = row;
+        document.getElementById('userModalLabel').textContent = 'Edit User';
+        document.getElementById('userName').value = userData[idx].name;
+        document.getElementById('userEmail').value = userData[idx].email;
+        document.getElementById('userPhone').value = userData[idx].phone;
+        document.getElementById('userRole').value = userData[idx].role;
+        document.getElementById('userStatus').value = userData[idx].status;
+        userAvatarDataUrl = userData[idx].avatar || '';
+        document.getElementById('userAvatar').value = '';
+        document.getElementById('userAvatarPreview').innerHTML = userAvatarDataUrl ? `<img src='${userAvatarDataUrl}' alt='Preview' style='max-width:80px;max-height:80px;border-radius:50%;'>` : '';
+        userModal.show();
+    } else if (e.target.closest('.delete-user')) {
+        if (confirm('Are you sure you want to delete this user?')) {
+            userData.splice(idx, 1);
+            renderUserTable();
+            showToast('User deleted!');
+        }
+    }
+};
+document.getElementById('userForm').onsubmit = function(e) {
+    e.preventDefault();
+    const name = document.getElementById('userName').value;
+    const email = document.getElementById('userEmail').value;
+    const phone = document.getElementById('userPhone').value;
+    const role = document.getElementById('userRole').value;
+    const status = document.getElementById('userStatus').value;
+    const avatar = userAvatarDataUrl;
+    if (editingUserRow) {
+        const idx = editingUserRow.dataset.idx;
+        userData[idx] = { name, email, phone, role, status, avatar };
+        showToast('User updated!');
+    } else {
+        userData.push({ name, email, phone, role, status, avatar });
+        showToast('User added!');
+    }
+    renderUserTable();
+    userModal.hide();
+};
+</script>
+</body>
+</html>

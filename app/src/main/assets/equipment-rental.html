@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment Rental - DEEPEND Entertainment</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet" type="text/css">
+    
+    <!-- FontAwesome Icons -->
+    <link href="assets/fontawesome/all.css" rel="stylesheet" type="text/css">
+    
+    <!-- Custom CSS -->
+    <link href="styles.css" rel="stylesheet" type="text/css">
+    
+    <style>
+        /* Equipment Rental Specific Styles */
+        .equipment-hero-slider {
+            position: relative;
+            margin-bottom: 2rem;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .equipment-slider-container {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .equipment-slider-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 100%;
+        }
+        
+        .equipment-slide {
+            min-width: 100%;
+            position: relative;
+            height: 100%;
+        }
+        
+        .equipment-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .equipment-slide-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            color: white;
+            padding: 1rem;
+        }
+        
+        .equipment-slide-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .equipment-slide-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .equipment-slider-indicators {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .equipment-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .equipment-indicator.active {
+            background: white;
+            transform: scale(1.2);
+        }
+        
+        .equipment-slider-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .equipment-slider-nav:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+        
+        .equipment-slider-nav.prev {
+            left: 1rem;
+        }
+        
+        .equipment-slider-nav.next {
+            right: 1rem;
+        }
+        
+        .equipment-category-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 0.75rem 1.5rem;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .equipment-category-btn:hover,
+        .equipment-category-btn.active {
+            background: linear-gradient(135deg, #FF3B30 0%, #C62828 100%);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 59, 48, 0.3);
+        }
+        
+        .equipment-category-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        .equipment-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .equipment-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .equipment-image {
+            position: relative;
+            height: 160px;
+            overflow: hidden;
+        }
+        
+        .equipment-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .equipment-card:hover .equipment-image img {
+            transform: scale(1.05);
+        }
+        
+        .equipment-badge {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            background: linear-gradient(135deg, #FF3B30 0%, #C62828 100%);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .equipment-status {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .equipment-content {
+            padding: 1rem;
+        }
+        
+        .equipment-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        
+        .equipment-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+        
+        .equipment-specs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .equipment-spec {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 8px;
+            font-size: 0.7rem;
+        }
+        
+        .equipment-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .equipment-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #FF3B30;
+        }
+        
+        .equipment-rent-btn {
+            background: linear-gradient(135deg, #FF3B30 0%, #C62828 100%);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .equipment-rent-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 20px rgba(255, 59, 48, 0.4);
+        }
+        
+        .equipment-section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .equipment-section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(135deg, #FF3B30 0%, #C62828 100%);
+            border-radius: 2px;
+        }
+        
+        .rental-picker-container {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .rental-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            padding: 0.75rem;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+        
+        .rental-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .rental-selector {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            padding: 0.75rem;
+            width: 100%;
+        }
+        
+        .equipment-quick-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .equipment-quick-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .equipment-quick-image {
+            height: 120px;
+            position: relative;
+        }
+        
+        .equipment-quick-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .equipment-quick-content {
+            padding: 0.75rem;
+        }
+        
+        .equipment-quick-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.25rem;
+        }
+        
+        .equipment-quick-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .equipment-quick-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .equipment-quick-price {
+            font-weight: 600;
+            color: #FF3B30;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid px-3 py-3">
+        <!-- Header Section -->
+        <div class="row align-items-center mb-4">
+            <div class="col-auto">
+                <a href="index.html" class="back-link">
+                    <i class="fa-regular fa-arrow-left"></i>
+                </a>
+            </div>
+            <div class="col">
+                <div class="d-flex align-items-center">
+                    <div>
+                        <h1 class="food-title mb-0">Equipment Rental</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto d-flex gap-2">
+                <div class="icon-btn notification-icon">
+                    <i class="fa-regular fa-bell text-white"></i>
+                    <span class="notification-badge">2</span>
+                </div>
+                <!-- Remove or comment out the settings icon/button that links to settings.html -->
+            </div>
+        </div>
+
+        <!-- Equipment Hero Slider -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="equipment-hero-slider">
+                    <div class="equipment-slider-container">
+                        <div class="equipment-slider-track" id="equipmentSliderTrack">
+                            <!-- Slide 1 -->
+                            <div class="equipment-slide">
+                                <img src="https://picsum.photos/800/400?random=70" alt="Professional Equipment">
+                                <div class="equipment-slide-content">
+                                    <div class="equipment-slide-title">Professional Equipment</div>
+                                    <div class="equipment-slide-subtitle">High-quality gear for your projects</div>
+                                </div>
+                            </div>
+                            <!-- Slide 2 -->
+                            <div class="equipment-slide">
+                                <img src="https://picsum.photos/800/400?random=71" alt="Musical Instruments">
+                                <div class="equipment-slide-content">
+                                    <div class="equipment-slide-title">Musical Instruments</div>
+                                    <div class="equipment-slide-subtitle">Guitars, pianos, drums and more</div>
+                                </div>
+                            </div>
+                            <!-- Slide 3 -->
+                            <div class="equipment-slide">
+                                <img src="https://picsum.photos/800/400?random=72" alt="Audio Gear">
+                                <div class="equipment-slide-content">
+                                    <div class="equipment-slide-title">Audio Gear</div>
+                                    <div class="equipment-slide-subtitle">Microphones, interfaces, monitors</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Slider Navigation -->
+                        <button class="equipment-slider-nav prev" id="equipmentPrevBtn">
+                            <i class="fa-regular fa-chevron-left"></i>
+                        </button>
+                        <button class="equipment-slider-nav next" id="equipmentNextBtn">
+                            <i class="fa-regular fa-chevron-right"></i>
+                        </button>
+                        
+                        <!-- Slider Indicators -->
+                        <div class="equipment-slider-indicators" id="equipmentIndicators">
+                            <span class="equipment-indicator active"></span>
+                            <span class="equipment-indicator"></span>
+                            <span class="equipment-indicator"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rental Period Selection -->
+        <div class="row mb-4">
+            <div class="col">
+                <div class="rental-picker-container">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <input type="date" class="rental-input" placeholder="Pickup Date">
+                        </div>
+                        <div class="col-6">
+                            <input type="date" class="rental-input" placeholder="Return Date">
+                        </div>
+                        <div class="col-12">
+                            <select class="rental-selector">
+                                <option>Equipment Category</option>
+                                <option>Microphones & Audio</option>
+                                <option>Musical Instruments</option>
+                                <option>Lighting Equipment</option>
+                                <option>Video Equipment</option>
+                                <option>Studio Gear</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <button class="btn btn-primary w-100" style="background: linear-gradient(135deg, #FF3B30 0%, #C62828 100%); border: none; padding: 0.75rem; border-radius: 8px;">
+                                <i class="fa-regular fa-search me-2"></i>
+                                Search Available Equipment
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="row mb-4">
+            <div class="col">
+                <div class="search-container">
+                    <i class="fa-regular fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Search for equipment, brands...">
+                    <button class="filter-btn" data-bs-toggle="modal" data-bs-target="#filterModal">
+                        <i class="fa-regular fa-sliders-h"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Equipment Categories -->
+        <div class="row mb-4">
+            <div class="col">
+                <div class="categories-container">
+                    <button class="equipment-category-btn active">
+                        <div class="equipment-category-icon">
+                            <i class="fa-regular fa-tools"></i>
+                        </div>
+                        <span>All Equipment</span>
+                    </button>
+                    <button class="equipment-category-btn">
+                        <div class="equipment-category-icon">
+                            <i class="fa-regular fa-microphone-alt"></i>
+                        </div>
+                        <span>Audio</span>
+                    </button>
+                    <button class="equipment-category-btn">
+                        <div class="equipment-category-icon">
+                            <i class="fa-regular fa-music"></i>
+                        </div>
+                        <span>Instruments</span>
+                    </button>
+                    <button class="equipment-category-btn">
+                        <div class="equipment-category-icon">
+                            <i class="fa-regular fa-lightbulb"></i>
+                        </div>
+                        <span>Lighting</span>
+                    </button>
+                    <button class="equipment-category-btn">
+                        <div class="equipment-category-icon">
+                            <i class="fa-regular fa-video"></i>
+                        </div>
+                        <span>Video</span>
+                    </button>
+                    <button class="equipment-category-btn">
+                        <div class="equipment-category-icon">
+                            <i class="fa-regular fa-sliders-h"></i>
+                        </div>
+                        <span>Studio</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Popular Equipment Section -->
+        <div class="row mb-4">
+            <div class="col">
+                <h2 class="equipment-section-title">Popular Equipment</h2>
+                <div class="meals-grid">
+                    <!-- Equipment Card 1 -->
+                    <div class="meal-card">
+                        <div class="meal-image">
+                            <img src="https://picsum.photos/400/300?random=73" alt="Shure SM58">
+                            <span class="meal-time">Audio</span>
+                            <span class="meal-rating">
+                                <i class="fa-regular fa-star"></i>
+                                4.9
+                            </span>
+                        </div>
+                        <div class="meal-content">
+                            <h3 class="meal-title">Shure SM58 Microphone</h3>
+                            <p class="meal-description">Professional vocal microphone</p>
+                            <div class="meal-footer">
+                                <span class="meal-price">$15/day</span>
+                                <button class="add-to-cart-btn">
+                                    <i class="fa-regular fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Equipment Card 2 -->
+                    <div class="meal-card">
+                        <div class="meal-image">
+                            <img src="https://picsum.photos/400/300?random=74" alt="Fender Stratocaster">
+                            <span class="meal-time">Instrument</span>
+                            <span class="meal-rating">
+                                <i class="fa-regular fa-star"></i>
+                                4.8
+                            </span>
+                        </div>
+                        <div class="meal-content">
+                            <h3 class="meal-title">Fender Stratocaster</h3>
+                            <p class="meal-description">Electric guitar for recording</p>
+                            <div class="meal-footer">
+                                <span class="meal-price">$25/day</span>
+                                <button class="add-to-cart-btn">
+                                    <i class="fa-regular fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Equipment Card 3 -->
+                    <div class="meal-card">
+                        <div class="meal-image">
+                            <img src="https://picsum.photos/400/300?random=75" alt="LED Panel">
+                            <span class="meal-time">Lighting</span>
+                            <span class="meal-rating">
+                                <i class="fa-regular fa-star"></i>
+                                4.7
+                            </span>
+                        </div>
+                        <div class="meal-content">
+                            <h3 class="meal-title">LED Panel Light</h3>
+                            <p class="meal-description">Professional lighting for videos</p>
+                            <div class="meal-footer">
+                                <span class="meal-price">$20/day</span>
+                                <button class="add-to-cart-btn">
+                                    <i class="fa-regular fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Equipment Card 4 -->
+                    <div class="meal-card">
+                        <div class="meal-image">
+                            <img src="https://picsum.photos/400/300?random=76" alt="Audio Interface">
+                            <span class="meal-time">Studio</span>
+                            <span class="meal-rating">
+                                <i class="fa-regular fa-star"></i>
+                                4.6
+                            </span>
+                        </div>
+                        <div class="meal-content">
+                            <h3 class="meal-title">Focusrite Audio Interface</h3>
+                            <p class="meal-description">Professional audio interface</p>
+                            <div class="meal-footer">
+                                <span class="meal-price">$30/day</span>
+                                <button class="add-to-cart-btn">
+                                    <i class="fa-regular fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Premium Equipment Section -->
+        <div class="row mb-4">
+            <div class="col">
+                <h2 class="equipment-section-title">Premium Equipment</h2>
+                <div class="meals-grid">
+                    <!-- Premium Equipment Card 1 -->
+                    <div class="meal-card">
+                        <div class="meal-image">
+                            <img src="https://picsum.photos/400/300?random=80" alt="Neumann U87">
+                            <span class="meal-time">Premium</span>
+                            <span class="meal-rating">
+                                <i class="fa-regular fa-star"></i>
+                                5.0
+                            </span>
+                        </div>
+                        <div class="meal-content">
+                            <h3 class="meal-title">Neumann U87 Microphone</h3>
+                            <p class="meal-description">Professional studio condenser mic</p>
+                            <div class="meal-footer">
+                                <span class="meal-price">$50/day</span>
+                                <button class="add-to-cart-btn">
+                                    <i class="fa-regular fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Premium Equipment Card 2 -->
+                    <div class="meal-card">
+                        <div class="meal-image">
+                            <img src="https://picsum.photos/400/300?random=81" alt="Gibson Les Paul">
+                            <span class="meal-time">Premium</span>
+                            <span class="meal-rating">
+                                <i class="fa-regular fa-star"></i>
+                                4.9
+                            </span>
+                        </div>
+                        <div class="meal-content">
+                            <h3 class="meal-title">Gibson Les Paul Guitar</h3>
+                            <p class="meal-description">Classic electric guitar</p>
+                            <div class="meal-footer">
+                                <span class="meal-price">$40/day</span>
+                                <button class="add-to-cart-btn">
+                                    <i class="fa-regular fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Modal -->
+        <div class="modal fade" id="filterModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content filter-modal">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title">Filter Options</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="filter-section">
+                            <h6>Price Range</h6>
+                            <div class="price-range">
+                                <input type="range" class="form-range" min="0" max="100" step="5" id="priceRange">
+                                <div class="price-labels">
+                                    <span>$0</span>
+                                    <span>$100</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="filter-section">
+                            <h6>Equipment Type</h6>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="audio">
+                                <label class="form-check-label" for="audio">Audio Equipment</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="instruments">
+                                <label class="form-check-label" for="instruments">Musical Instruments</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="lighting">
+                                <label class="form-check-label" for="lighting">Lighting Equipment</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="video">
+                                <label class="form-check-label" for="video">Video Equipment</label>
+                            </div>
+                        </div>
+                        <div class="filter-section">
+                            <h6>Rental Duration</h6>
+                            <select class="form-select">
+                                <option>Any Duration</option>
+                                <option>1 Day</option>
+                                <option>3 Days</option>
+                                <option>1 Week</option>
+                                <option>1 Month</option>
+                            </select>
+                        </div>
+                        <div class="filter-section">
+                            <h6>Sort By</h6>
+                            <select class="form-select">
+                                <option>Recommended</option>
+                                <option>Price: Low to High</option>
+                                <option>Price: High to Low</option>
+                                <option>Rating</option>
+                                <option>Availability</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Reset</button>
+                        <button type="button" class="btn btn-primary apply-filter-btn">Apply Filters</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Equipment Booking Modal -->
+        <div class="modal fade" id="equipmentBookingModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="background:rgba(30,30,34,0.97);border-radius:18px;backdrop-filter:blur(12px);color:#fff;">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title"><i class="fa-regular fa-tools me-2"></i>Rent Equipment</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form id="equipmentBookingForm">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Equipment</label>
+                                <input type="text" class="form-control" id="bookingEquipmentName" name="equipment" readonly style="background:rgba(255,255,255,0.08);color:#fff;">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Rental Start Date</label>
+                                <input type="date" class="form-control" id="bookingStartDate" name="start_date" required style="background:rgba(255,255,255,0.08);color:#fff;">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Rental End Date</label>
+                                <input type="date" class="form-control" id="bookingEndDate" name="end_date" required style="background:rgba(255,255,255,0.08);color:#fff;">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Your Name</label>
+                                <input type="text" class="form-control" name="name" required style="background:rgba(255,255,255,0.08);color:#fff;">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" name="email" required style="background:rgba(255,255,255,0.08);color:#fff;">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Phone</label>
+                                <input type="tel" class="form-control" name="phone" required style="background:rgba(255,255,255,0.08);color:#fff;">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Special Requests</label>
+                                <textarea class="form-control" name="requests" rows="2" style="background:rgba(255,255,255,0.08);color:#fff;"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-0">
+                            <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Confirm Rental</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation Bar -->
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item" data-nav="home">
+                <i class="fa-regular fa-home"></i>
+            </a>
+            <a href="#" class="nav-item active" data-nav="cart">
+                <i class="fa-regular fa-shopping-cart"></i>
+            </a>
+            <a href="profile.html" class="nav-item" data-nav="profile">
+                <i class="fa-regular fa-user"></i>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- FontAwesome JS -->
+    <script src="assets/fontawesome/all.js" type="text/javascript"></script>
+
+    <!-- Custom JS -->
+    <script>
+        // Equipment Slider functionality
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.equipment-slide');
+        const indicators = document.querySelectorAll('.equipment-indicator');
+        const sliderTrack = document.getElementById('equipmentSliderTrack');
+        const prevBtn = document.getElementById('equipmentPrevBtn');
+        const nextBtn = document.getElementById('equipmentNextBtn');
+
+        function updateSlider() {
+            sliderTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // Update indicators
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            updateSlider();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            updateSlider();
+        }
+
+        // Event listeners for slider
+        if (prevBtn && nextBtn) {
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+        }
+
+        // Indicator clicks
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                currentSlide = index;
+                updateSlider();
+            });
+        });
+
+        // Auto-slide every 5 seconds
+        setInterval(nextSlide, 5000);
+
+        // Get all navigation items
+        const navItems = document.querySelectorAll('.nav-item');
+        
+        // Add click event listener to each nav item
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                // Remove active class from all items
+                navItems.forEach(nav => nav.classList.remove('active'));
+                
+                // Add active class to clicked item
+                item.classList.add('active');
+                
+                // Optional: Add smooth animation class
+                item.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+        });
+
+        // Category button click handler
+        const categoryBtns = document.querySelectorAll('.equipment-category-btn');
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+        // Add to cart animation & booking modal logic
+        const addToCartBtns = document.querySelectorAll('.add-to-cart-btn, .equipment-rent-btn');
+        addToCartBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                btn.style.transform = 'scale(0.8)';
+                setTimeout(() => {
+                    btn.style.transform = 'scale(1)';
+                }, 100);
+                // Booking modal logic
+                const card = btn.closest('.meal-card');
+                if(card) {
+                    const equipmentName = card.querySelector('.meal-title')?.textContent || '';
+                    document.getElementById('bookingEquipmentName').value = equipmentName;
+                    // Set default rental dates
+                    const today = new Date();
+                    const tomorrow = new Date(today);
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    document.getElementById('bookingStartDate').value = today.toISOString().split('T')[0];
+                    document.getElementById('bookingEndDate').value = tomorrow.toISOString().split('T')[0];
+                    // Show modal
+                    const modal = new bootstrap.Modal(document.getElementById('equipmentBookingModal'));
+                    modal.show();
+                }
+            });
+        });
+
+        // Booking form submission
+        document.getElementById('equipmentBookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Optionally, collect form data here
+            // Show success message
+            const modalBody = this.closest('.modal-content').querySelector('.modal-body');
+            modalBody.innerHTML = `<div class='text-center py-4'><i class='fa-solid fa-check-circle' style='font-size:2.5rem;color:#4CAF50;'></i><h5 class='mt-3'>Rental Confirmed!</h5><p>Your equipment rental has been received.<br>We look forward to serving you!</p></div>`;
+            // Optionally, hide modal after 2 seconds
+            setTimeout(() => {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('equipmentBookingModal'));
+                modal.hide();
+                // Reset form after closing
+                setTimeout(()=>window.location.reload(), 600);
+            }, 2000);
+        });
+
+        // Price range handler
+        const priceRange = document.getElementById('priceRange');
+        if (priceRange) {
+            priceRange.addEventListener('input', (e) => {
+                const value = e.target.value;
+                document.querySelector('.price-labels span:last-child').textContent = `$${value}`;
+            });
+        }
+
+        // Set default rental dates
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        
+        const pickupDateInput = document.querySelector('input[type="date"]:first-of-type');
+        const returnDateInput = document.querySelector('input[type="date"]:last-of-type');
+        
+        if (pickupDateInput) {
+            pickupDateInput.value = today.toISOString().split('T')[0];
+        }
+        if (returnDateInput) {
+            returnDateInput.value = tomorrow.toISOString().split('T')[0];
+        }
+    </script>
+</body>
+</html> 

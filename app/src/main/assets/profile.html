@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - DEEPEND Entertainment</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet" type="text/css">
+    
+    <!-- FontAwesome Icons -->
+    <link href="assets/fontawesome/all.css" rel="stylesheet" type="text/css">
+    
+    <!-- Custom CSS -->
+    <link href="styles.css" rel="stylesheet" type="text/css">
+    <style>
+        /* Profile Page Styles */
+        .profile-container {
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        .profile-header {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            position: relative;
+        }
+
+        .profile-photo-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .profile-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            background: linear-gradient(135deg, #FF3B30, #FF6B6B);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: white;
+            margin: 0 auto;
+        }
+
+        .edit-photo-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF3B30, #FF6B6B);
+            border: 3px solid white;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .edit-photo-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(255, 59, 48, 0.4);
+        }
+
+        .profile-name {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .profile-email {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .edit-profile-btn {
+            background: linear-gradient(135deg, #FF3B30, #FF6B6B);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .edit-profile-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 59, 48, 0.4);
+        }
+
+        .profile-menu-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 24px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-title {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding-left: 12px;
+            padding-right: 12px;
+            margin-left: -12px;
+            margin-right: -12px;
+        }
+
+        .menu-item-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .menu-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+        }
+
+        .menu-icon.orders {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .menu-icon.addresses {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+
+        .menu-icon.payment {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+        }
+
+        .menu-icon.settings {
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+        }
+
+        .menu-icon.help {
+            background: linear-gradient(135deg, #fa709a, #fee140);
+        }
+
+        .menu-icon.logout {
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+        }
+
+        .menu-details {
+            flex: 1;
+        }
+
+        .menu-title {
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .menu-subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+
+        .menu-arrow {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-item:hover .menu-arrow {
+            transform: translateX(4px);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .logout-section {
+            background: rgba(255, 59, 48, 0.1);
+            border: 1px solid rgba(255, 59, 48, 0.3);
+            border-radius: 15px;
+            padding: 24px;
+            margin-top: 20px;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #FF3B30, #FF6B6B);
+            border: none;
+            border-radius: 12px;
+            padding: 16px 24px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 59, 48, 0.4);
+        }
+
+        .stats-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-number {
+            color: #FF3B30;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .profile-container {
+                padding: 16px;
+            }
+
+            .profile-header {
+                padding: 24px 20px;
+            }
+
+            .profile-photo {
+                width: 100px;
+                height: 100px;
+                font-size: 40px;
+            }
+
+            .profile-name {
+                font-size: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid profile-container">
+        <!-- Header Section -->
+        <div class="row align-items-center mb-4">
+            <div class="col-auto">
+                <a href="index.html" class="back-link">
+                    <i class="fa-regular fa-arrow-left"></i>
+                </a>
+            </div>
+            <div class="col">
+                <div class="d-flex align-items-center">
+                    <div>
+                        <h1 class="food-title mb-0">My Profile</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="icon-btn notification-icon">
+                    <i class="fa-regular fa-bell text-white"></i>
+                    <span class="notification-badge">2</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-photo-container">
+                <div class="profile-photo" id="profilePhoto">
+                    <i class="fa-regular fa-user"></i>
+                </div>
+                <div class="edit-photo-btn" onclick="editProfilePhoto()">
+                    <i class="fa-regular fa-camera"></i>
+                </div>
+            </div>
+            <div class="profile-name" id="profileName">John Doe</div>
+            <div class="profile-email" id="profileEmail">john.doe@example.com</div>
+            <button class="edit-profile-btn" onclick="editProfile()">
+                <i class="fa-regular fa-edit"></i>
+                Edit Profile
+            </button>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="section-title">
+                <i class="fa-regular fa-chart-bar"></i>
+                My Stats
+            </div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalOrders">12</div>
+                    <div class="stat-label">Total Orders</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="savedAddresses">3</div>
+                    <div class="stat-label">Saved Addresses</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="loyaltyPoints">450</div>
+                    <div class="stat-label">Loyalty Points</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Menu -->
+        <div class="profile-menu-section">
+            <div class="section-title">
+                <i class="fa-regular fa-cog"></i>
+                Account Settings
+            </div>
+            
+            <div class="menu-item" onclick="navigateTo('my-orders.html')">
+                <div class="menu-item-left">
+                    <div class="menu-icon orders">
+                        <i class="fa-regular fa-receipt"></i>
+                    </div>
+                    <div class="menu-details">
+                        <div class="menu-title">My Orders</div>
+                        <div class="menu-subtitle">View order history and track deliveries</div>
+                    </div>
+                </div>
+                <div class="menu-arrow">
+                    <i class="fa-regular fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="navigateTo('saved-addresses.html')">
+                <div class="menu-item-left">
+                    <div class="menu-icon addresses">
+                        <i class="fa-regular fa-map-marker-alt"></i>
+                    </div>
+                    <div class="menu-details">
+                        <div class="menu-title">Saved Addresses</div>
+                        <div class="menu-subtitle">Manage your delivery addresses</div>
+                    </div>
+                </div>
+                <div class="menu-arrow">
+                    <i class="fa-regular fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="navigateTo('payment-methods.html')">
+                <div class="menu-item-left">
+                    <div class="menu-icon payment">
+                        <i class="fa-regular fa-credit-card"></i>
+                    </div>
+                    <div class="menu-details">
+                        <div class="menu-title">Payment Methods</div>
+                        <div class="menu-subtitle">Manage your payment options</div>
+                    </div>
+                </div>
+                <div class="menu-arrow">
+                    <i class="fa-regular fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="navigateTo('account-settings.html')">
+                <div class="menu-item-left">
+                    <div class="menu-icon settings">
+                        <i class="fa-regular fa-cog"></i>
+                    </div>
+                    <div class="menu-details">
+                        <div class="menu-title">Account Settings</div>
+                        <div class="menu-subtitle">Privacy, notifications, and preferences</div>
+                    </div>
+                </div>
+                <div class="menu-arrow">
+                    <i class="fa-regular fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="navigateTo('help-support.html')">
+                <div class="menu-item-left">
+                    <div class="menu-icon help">
+                        <i class="fa-regular fa-question-circle"></i>
+                    </div>
+                    <div class="menu-details">
+                        <div class="menu-title">Help & Support</div>
+                        <div class="menu-subtitle">Get help and contact support</div>
+                    </div>
+                </div>
+                <div class="menu-arrow">
+                    <i class="fa-regular fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logout Section -->
+        <div class="logout-section">
+            <button class="logout-btn" onclick="logout()">
+                <i class="fa-regular fa-sign-out-alt"></i>
+                Logout
+            </button>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- FontAwesome JS -->
+    <script src="assets/fontawesome/all.js" type="text/javascript"></script>
+    
+    <script>
+        // Restrict access to logged-in users only
+        if (localStorage.getItem('deepend_user_logged_in') !== 'true') {
+            window.location.href = 'auth.html';
+        }
+
+        // Profile data
+        let userProfile = {
+            name: 'John Doe',
+            email: 'john.doe@example.com',
+            photo: null,
+            totalOrders: 12,
+            savedAddresses: 3,
+            loyaltyPoints: 450
+        };
+
+        // Initialize profile page
+        function initializeProfile() {
+            loadUserProfile();
+            updateStats();
+        }
+
+        // Load user profile from localStorage
+        function loadUserProfile() {
+            const storedName = localStorage.getItem('deepend_user_name');
+            const storedEmail = localStorage.getItem('deepend_user_email');
+            const storedPhoto = localStorage.getItem('deepend_user_photo');
+            
+            if (storedName) {
+                userProfile.name = storedName;
+            }
+            if (storedEmail) {
+                userProfile.email = storedEmail;
+            }
+            if (storedPhoto) {
+                userProfile.photo = storedPhoto;
+            }
+
+            // Update display
+            document.getElementById('profileName').textContent = userProfile.name;
+            document.getElementById('profileEmail').textContent = userProfile.email;
+            
+            if (userProfile.photo) {
+                document.getElementById('profilePhoto').innerHTML = `<img src="${userProfile.photo}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+            } else {
+                // Show initials
+                const initials = userProfile.name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('profilePhoto').innerHTML = `<span style="font-size: 36px; font-weight: 600;">${initials}</span>`;
+            }
+        }
+
+        // Update stats display
+        function updateStats() {
+            document.getElementById('totalOrders').textContent = userProfile.totalOrders;
+            document.getElementById('savedAddresses').textContent = userProfile.savedAddresses;
+            document.getElementById('loyaltyPoints').textContent = userProfile.loyaltyPoints;
+        }
+
+        // Edit profile photo
+        function editProfilePhoto() {
+            // Create file input
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const photoUrl = e.target.result;
+                        userProfile.photo = photoUrl;
+                        localStorage.setItem('deepend_user_photo', photoUrl);
+                        document.getElementById('profilePhoto').innerHTML = 
+                            `<img src="${photoUrl}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                        showSuccessMessage('Profile photo updated successfully!');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+        // Edit profile
+        function editProfile() {
+            // Use a modal for better UX
+            const modal = document.createElement('div');
+            modal.tabIndex = -1;
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 2000; display: flex; align-items: center; justify-content: center;`;
+            // Fallback for missing email
+            const emailValue = userProfile.email || localStorage.getItem('deepend_user_email') || '';
+            modal.innerHTML = `
+                <div style=\"background: #222; padding: 2rem; border-radius: 16px; min-width: 320px; max-width: 90vw; box-shadow: 0 8px 32px rgba(0,0,0,0.4);\">
+                    <h5 style=\"color: white; margin-bottom: 1rem;\">Edit Profile</h5>
+                    <div style=\"display: flex; flex-direction: column; gap: 1rem;\">
+                        <div style=\"display: flex; align-items: center; gap: 1rem;\">
+                            <div id=\"editProfilePhotoPreview\" style=\"width: 60px; height: 60px; border-radius: 50%; background: #444; display: flex; align-items: center; justify-content: center; overflow: hidden;\">
+                                <!-- Photo or initials will be inserted here -->
+                            </div>
+                            <button id=\"editProfilePhotoBtn\" style=\"background: linear-gradient(135deg, #FF3B30, #FF6B6B); color: white; border: none; border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.9rem;\">Change Photo</button>
+                        </div>
+                        <input id=\"editNameInput\" type=\"text\" value=\"${userProfile.name}\" placeholder=\"Name\" style=\"width: 100%; padding: 0.5rem; border-radius: 8px; border: none; font-size: 1rem;\">
+                        <input id=\"editEmailInput\" type=\"email\" value=\"${emailValue}\" placeholder=\"Email\" style=\"width: 100%; padding: 0.5rem; border-radius: 8px; border: none; font-size: 1rem;\">
+                    </div>
+                    <div style=\"display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;\">
+                        <button id=\"cancelEditBtn\" style=\"background: #444; color: white; border: none; border-radius: 8px; padding: 0.5rem 1rem;\">Cancel</button>
+                        <button id=\"saveEditBtn\" style=\"background: linear-gradient(135deg, #FF3B30, #FF6B6B); color: white; border: none; border-radius: 8px; padding: 0.5rem 1rem;\">Save</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.focus();
+            // Set photo preview
+            const preview = modal.querySelector('#editProfilePhotoPreview');
+            if (userProfile.photo) {
+                preview.innerHTML = `<img src=\"${userProfile.photo}\" alt=\"Profile\" style=\"width: 100%; height: 100%; object-fit: cover;\">`;
+            } else {
+                const initials = userProfile.name.split(' ').map(n => n[0]).join('').toUpperCase();
+                preview.innerHTML = `<span style=\"color: white; font-size: 1.5rem; font-weight: 600;\">${initials}</span>`;
+            }
+            // Change photo
+            modal.querySelector('#editProfilePhotoBtn').onclick = () => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.onchange = function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const photoUrl = e.target.result;
+                            userProfile.photo = photoUrl;
+                            preview.innerHTML = `<img src=\"${photoUrl}\" alt=\"Profile\" style=\"width: 100%; height: 100%; object-fit: cover;\">`;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                };
+                input.click();
+            };
+            // Cancel
+            modal.querySelector('#cancelEditBtn').onclick = () => modal.remove();
+            // Save
+            modal.querySelector('#saveEditBtn').onclick = () => {
+                const newName = modal.querySelector('#editNameInput').value.trim();
+                const newEmail = modal.querySelector('#editEmailInput').value.trim();
+                if (!newName || !newEmail) {
+                    showSuccessMessage('Name and email are required!');
+                    return;
+                }
+                userProfile.name = newName;
+                userProfile.email = newEmail;
+                localStorage.setItem('deepend_user_name', userProfile.name);
+                localStorage.setItem('deepend_user_email', userProfile.email);
+                if (userProfile.photo) {
+                    localStorage.setItem('deepend_user_photo', userProfile.photo);
+                }
+                document.getElementById('profileName').textContent = userProfile.name;
+                document.getElementById('profileEmail').textContent = userProfile.email;
+                if (userProfile.photo) {
+                    document.getElementById('profilePhoto').innerHTML = `<img src=\"${userProfile.photo}\" alt=\"Profile\" style=\"width: 100%; height: 100%; object-fit: cover; border-radius: 50%;\">`;
+                } else {
+                    const initials = userProfile.name.split(' ').map(n => n[0]).join('').toUpperCase();
+                    document.getElementById('profilePhoto').innerHTML = `<span style=\"font-size: 36px; font-weight: 600;\">${initials}</span>`;
+                }
+                showSuccessMessage('Profile updated successfully!');
+                modal.remove();
+            };
+            // Accessibility: close modal on Escape
+            modal.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') modal.remove();
+            });
+        }
+
+        // Navigate to different pages
+        function navigateTo(page) {
+            // Map menu items to real pages if they exist
+            const pageMap = {
+                'my-orders.html': 'order-success.html' // Use order-success as a placeholder for My Orders
+                // All other menu items will show an alert for now
+            };
+            if (pageMap[page]) {
+                window.location.href = pageMap[page];
+            } else {
+                alert('This section will be implemented soon!');
+            }
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear user data
+                localStorage.removeItem('deepend_user_visited');
+                localStorage.removeItem('deepend_user_name');
+                localStorage.removeItem('deepend_user_logged_in');
+                localStorage.removeItem('deepend_user_email');
+                localStorage.removeItem('deepend_user_photo');
+                
+                // Show logout message
+                showSuccessMessage('Logged out successfully!');
+                
+                // Redirect to home page
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+            }
+        }
+
+        // Show success message
+        function showSuccessMessage(message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(76, 175, 80, 0.9);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-size: 14px;
+                z-index: 1000;
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            `;
+            messageDiv.textContent = message;
+            document.body.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 3000);
+        }
+
+        // Helper to open a modal with custom content and actions
+        function openCustomModal(title, contentHtml, onSave) {
+            const modal = document.createElement('div');
+            modal.tabIndex = -1;
+            modal.style.cssText = `position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 3000; display: flex; align-items: center; justify-content: center;`;
+            modal.innerHTML = `
+                <div style=\"background: #222; padding: 2rem; border-radius: 16px; min-width: 340px; max-width: 95vw; box-shadow: 0 8px 32px rgba(0,0,0,0.4); color: white;\">
+                    <div style=\"display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;\">
+                        <h4 style=\"margin: 0; font-size: 1.2rem; font-weight: 700;\">${title}</h4>
+                        <button id=\"closeCustomModalBtn\" style=\"background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;\">&times;</button>
+                    </div>
+                    <form id=\"modalForm\">${contentHtml}
+                        <div style=\"display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;\">
+                            <button type=\"button\" id=\"cancelModalBtn\" style=\"background: #444; color: white; border: none; border-radius: 8px; padding: 0.5rem 1rem;\">Cancel</button>
+                            <button type=\"submit\" id=\"saveModalBtn\" style=\"background: linear-gradient(135deg, #FF3B30, #FF6B6B); color: white; border: none; border-radius: 8px; padding: 0.5rem 1rem;\">Save</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.focus();
+            modal.querySelector('#closeCustomModalBtn').onclick = () => modal.remove();
+            modal.querySelector('#cancelModalBtn').onclick = (e) => { e.preventDefault(); modal.remove(); };
+            modal.addEventListener('keydown', function(e) { if (e.key === 'Escape') modal.remove(); });
+            if (onSave) {
+                modal.querySelector('#modalForm').onsubmit = function(e) { e.preventDefault(); onSave(modal); };
+            } else {
+                modal.querySelector('#modalForm').onsubmit = function(e) { e.preventDefault(); modal.remove(); };
+            }
+        }
+        // Improved modals for each section
+        function showOrdersModal() {
+            let orders = JSON.parse(localStorage.getItem('deepend_orders') || '[]');
+            let html = `<div id='ordersList'>`;
+            if (orders.length === 0) {
+                html += '<div style="color:#aaa;">No orders yet.</div>';
+            } else {
+                orders.forEach((order, i) => {
+                    html += `<div style='display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;background:#333;padding:8px 12px;border-radius:8px;'>
+                        <span>Order #${order.id}: ${order.note}</span>
+                        <button type='button' data-idx='${i}' class='deleteOrderBtn' style='background:#FF3B30;color:white;border:none;border-radius:6px;padding:2px 10px;font-size:0.9em;'>Delete</button>
+                    </div>`;
+                });
+            }
+            html += `</div>
+                <input type='text' id='orderNote' placeholder='Order note' style='width:100%;padding:0.5rem;border-radius:8px;border:none;margin-top:10px;'>
+                <button type='button' id='addOrderBtn' style='margin-top:8px;background:linear-gradient(135deg,#43e97b,#38f9d7);color:white;border:none;border-radius:8px;padding:0.5rem 1rem;width:100%;'>Add Order</button>`;
+            openCustomModal('My Orders', html, function(modal){
+                // Save not needed, handled by add/delete
+                modal.remove();
+            });
+            setTimeout(() => {
+                document.getElementById('addOrderBtn').onclick = function() {
+                    const note = document.getElementById('orderNote').value.trim();
+                    if (!note) return;
+                    orders.push({id: Date.now(), note});
+                    localStorage.setItem('deepend_orders', JSON.stringify(orders));
+                    showSuccessMessage('Order added!');
+                    document.querySelector('#closeCustomModalBtn').click();
+                    showOrdersModal();
+                };
+                document.querySelectorAll('.deleteOrderBtn').forEach(btn => {
+                    btn.onclick = function() {
+                        const idx = +btn.getAttribute('data-idx');
+                        orders.splice(idx,1);
+                        localStorage.setItem('deepend_orders', JSON.stringify(orders));
+                        showSuccessMessage('Order deleted!');
+                        document.querySelector('#closeCustomModalBtn').click();
+                        showOrdersModal();
+                    };
+                });
+            }, 100);
+        }
+        function showAddressesModal() {
+            let addresses = JSON.parse(localStorage.getItem('deepend_addresses') || '[]');
+            let html = `<div id='addressesList'>`;
+            if (addresses.length === 0) {
+                html += '<div style="color:#aaa;">No addresses yet.</div>';
+            } else {
+                addresses.forEach((address, i) => {
+                    html += `<div style='display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;background:#333;padding:8px 12px;border-radius:8px;'>
+                        <span>${address}</span>
+                        <button type='button' data-idx='${i}' class='deleteAddressBtn' style='background:#FF3B30;color:white;border:none;border-radius:6px;padding:2px 10px;font-size:0.9em;'>Delete</button>
+                    </div>`;
+                });
+            }
+            html += `</div>
+                <input type='text' id='addressInput' placeholder='Enter address' style='width:100%;padding:0.5rem;border-radius:8px;border:none;margin-top:10px;'>
+                <button type='button' id='addAddressBtn' style='margin-top:8px;background:linear-gradient(135deg,#f093fb,#f5576c);color:white;border:none;border-radius:8px;padding:0.5rem 1rem;width:100%;'>Add Address</button>`;
+            openCustomModal('Saved Addresses', html, function(modal){modal.remove();});
+            setTimeout(() => {
+                document.getElementById('addAddressBtn').onclick = function() {
+                    const val = document.getElementById('addressInput').value.trim();
+                    if (!val) return;
+                    addresses.push(val);
+                    localStorage.setItem('deepend_addresses', JSON.stringify(addresses));
+                    showSuccessMessage('Address added!');
+                    document.querySelector('#closeCustomModalBtn').click();
+                    showAddressesModal();
+                };
+                document.querySelectorAll('.deleteAddressBtn').forEach(btn => {
+                    btn.onclick = function() {
+                        const idx = +btn.getAttribute('data-idx');
+                        addresses.splice(idx,1);
+                        localStorage.setItem('deepend_addresses', JSON.stringify(addresses));
+                        showSuccessMessage('Address deleted!');
+                        document.querySelector('#closeCustomModalBtn').click();
+                        showAddressesModal();
+                    };
+                });
+            }, 100);
+        }
+        function showPaymentsModal() {
+            let cards = JSON.parse(localStorage.getItem('deepend_cards') || '[]');
+            let html = `<div id='cardsList'>`;
+            if (cards.length === 0) {
+                html += '<div style="color:#aaa;">No payment methods yet.</div>';
+            } else {
+                cards.forEach((card, i) => {
+                    html += `<div style='display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;background:#333;padding:8px 12px;border-radius:8px;'>
+                        <span>${card}</span>
+                        <button type='button' data-idx='${i}' class='deleteCardBtn' style='background:#4facfe;color:white;border:none;border-radius:6px;padding:2px 10px;font-size:0.9em;'>Delete</button>
+                    </div>`;
+                });
+            }
+            html += `</div>
+                <input type='text' id='cardInput' placeholder='Card ending in...' style='width:100%;padding:0.5rem;border-radius:8px;border:none;margin-top:10px;'>
+                <button type='button' id='addCardBtn' style='margin-top:8px;background:linear-gradient(135deg,#4facfe,#00f2fe);color:white;border:none;border-radius:8px;padding:0.5rem 1rem;width:100%;'>Add Card</button>`;
+            openCustomModal('Payment Methods', html, function(modal){modal.remove();});
+            setTimeout(() => {
+                document.getElementById('addCardBtn').onclick = function() {
+                    const val = document.getElementById('cardInput').value.trim();
+                    if (!val) return;
+                    cards.push(val);
+                    localStorage.setItem('deepend_cards', JSON.stringify(cards));
+                    showSuccessMessage('Card added!');
+                    document.querySelector('#closeCustomModalBtn').click();
+                    showPaymentsModal();
+                };
+                document.querySelectorAll('.deleteCardBtn').forEach(btn => {
+                    btn.onclick = function() {
+                        const idx = +btn.getAttribute('data-idx');
+                        cards.splice(idx,1);
+                        localStorage.setItem('deepend_cards', JSON.stringify(cards));
+                        showSuccessMessage('Card deleted!');
+                        document.querySelector('#closeCustomModalBtn').click();
+                        showPaymentsModal();
+                    };
+                });
+            }, 100);
+        }
+        function showAccountSettingsModal() {
+            let prefs = JSON.parse(localStorage.getItem('deepend_prefs') || '{"notifications":true,"privacy":false}');
+            let html = `<div style='display:flex;flex-direction:column;gap:1.2rem;'>
+                <label style='display:flex;align-items:center;gap:1rem;'>
+                    <input type='checkbox' id='notifToggle' ${prefs.notifications ? 'checked' : ''} style='accent-color:#43e97b;width:20px;height:20px;'>
+                    <span>Enable notifications</span>
+                </label>
+                <label style='display:flex;align-items:center;gap:1rem;'>
+                    <input type='checkbox' id='privacyToggle' ${prefs.privacy ? 'checked' : ''} style='accent-color:#f093fb;width:20px;height:20px;'>
+                    <span>Private account</span>
+                </label>
+            </div>`;
+            openCustomModal('Account Settings', html, function(modal){
+                const prefs = {
+                    notifications: modal.querySelector('#notifToggle').checked,
+                    privacy: modal.querySelector('#privacyToggle').checked
+                };
+                localStorage.setItem('deepend_prefs', JSON.stringify(prefs));
+                showSuccessMessage('Preferences saved!');
+                modal.remove();
+            });
+        }
+        function showHelpModal() {
+            openCustomModal('Help & Support', `<input type='text' id='helpSubject' placeholder='Subject' style='width:100%;padding:0.5rem;border-radius:8px;border:none;margin-bottom:10px;'><textarea id='helpInput' placeholder='Describe your issue...' style='width:100%;min-height:80px;padding:0.5rem;border-radius:8px;border:none;'></textarea>`, function(modal){
+                showSuccessMessage('Support request sent (demo)!');
+                modal.remove();
+            });
+        }
+        // Attach improved modals to menu items
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.menu-item').forEach(function(item) {
+                const title = item.querySelector('.menu-title').textContent.trim();
+                if (title === 'My Orders') {
+                    item.onclick = function() { window.location.href = 'order-history.html'; };
+                } else if (title === 'Saved Addresses') {
+                    item.onclick = showAddressesModal;
+                } else if (title === 'Payment Methods') {
+                    item.onclick = function() { window.location.href = 'edit-payment-method.html'; };
+                } else if (title === 'Account Settings') {
+                    item.onclick = function() { window.location.href = 'account-settings.html'; };
+                } else if (title === 'Help & Support') {
+                    item.onclick = showHelpModal;
+                }
+            });
+        });
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializeProfile);
+
+        // Notification Popup
+        function showNotificationPopup() {
+            const notifications = [
+                { title: 'Order Confirmed', message: 'Your order #12345 has been confirmed!', time: '2 min ago' },
+                { title: 'Welcome!', message: 'Thanks for joining DEEPEND Entertainment.', time: '1 day ago' },
+                { title: 'Event Reminder', message: 'VR Game Experience starts in 1 hour.', time: '3 days ago' }
+            ];
+            const modal = document.createElement('div');
+            modal.tabIndex = -1;
+            modal.style.cssText = `position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.35); z-index: 3000; display: flex; align-items: flex-start; justify-content: flex-end;`;
+            modal.innerHTML = `
+                <div style=\"margin: 32px 32px 0 0; background: rgba(30,30,34,0.95); border-radius: 18px; box-shadow: 0 8px 32px rgba(0,0,0,0.35); min-width: 340px; max-width: 95vw; color: #fff; padding: 1.5rem 1.2rem; border: 1.5px solid rgba(255,255,255,0.08); backdrop-filter: blur(14px);\">
+                    <div style='display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem;'>
+                        <h5 style='margin:0;font-size:1.15rem;font-weight:700;letter-spacing:0.2px;'><i class=\"fa-regular fa-bell\" style=\"color:#FF3B30;margin-right:0.5rem;\"></i>Notifications</h5>
+                        <button id='closeNotifModal' style='background:none;border:none;color:#fff;font-size:1.5rem;cursor:pointer;'>&times;</button>
+                    </div>
+                    <div id='notifList'>
+                        ${notifications.map(n => `
+                            <div style='margin-bottom:1.1rem;padding-bottom:0.7rem;border-bottom:1px solid rgba(255,255,255,0.07);'>
+                                <div style='font-weight:600;font-size:1.04rem;'>${n.title}</div>
+                                <div style='color:#bbb;font-size:0.98rem;margin:0.2rem 0 0.3rem 0;'>${n.message}</div>
+                                <div style='color:#FF3B30;font-size:0.92rem;'>${n.time}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.focus();
+            document.getElementById('closeNotifModal').onclick = () => modal.remove();
+            modal.addEventListener('keydown', function(e) { if (e.key === 'Escape') modal.remove(); });
+            modal.onclick = function(e) { if (e.target === modal) modal.remove(); };
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const notifIcon = document.querySelector('.notification-icon');
+            if (notifIcon) notifIcon.onclick = showNotificationPopup;
+        });
+    </script>
+</body>
+</html> 

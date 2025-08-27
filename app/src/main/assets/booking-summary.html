@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Summary - DEEPEND Entertainment</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet" type="text/css">
+    <!-- FontAwesome Icons -->
+    <link href="assets/fontawesome/all.css" rel="stylesheet" type="text/css">
+    <!-- Custom CSS -->
+    <link href="styles.css" rel="stylesheet" type="text/css">
+    <style>
+        body { background: #18181c; color: #fff; font-family: 'Open Sans', 'Roboto', sans-serif; }
+        .glass-card {
+            background: rgba(255,255,255,0.07);
+            border-radius: 18px;
+            border: 1.5px solid rgba(255,255,255,0.08);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+            backdrop-filter: blur(14px);
+        }
+        .summary-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #FF3B30;
+            margin-bottom: 0.5rem;
+        }
+        .summary-label { color: #bbb; font-size: 0.98rem; }
+        .summary-value { font-weight: 600; font-size: 1.08rem; }
+        .form-label { color: #fff; font-weight: 500; }
+        .form-control, .form-select {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.18);
+            color: #fff;
+        }
+        .form-control:focus, .form-select:focus {
+            background: rgba(255,255,255,0.13);
+            color: #fff;
+            border-color: #FF3B30;
+            box-shadow: 0 0 0 0.2rem rgba(255,59,48,0.08);
+        }
+        .payment-methods .form-check-label { color: #fff; }
+        .btn-danger, .btn-danger:focus { background: linear-gradient(135deg, #FF3B30 0%, #C62828 100%); border: none; }
+        .btn-danger:active, .btn-danger:hover { background: #C62828; }
+        .coupon-msg { font-size: 0.97rem; margin-top: 0.2rem; }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <!-- Header -->
+        <div class="row align-items-center mb-4">
+            <div class="col-auto">
+                <a href="hotel-booking.html" class="back-link">
+                    <i class="fa-regular fa-arrow-left"></i>
+                </a>
+            </div>
+            <div class="col">
+                <h1 class="food-title mb-0">Booking Summary</h1>
+            </div>
+        </div>
+        <!-- Booking Summary Card -->
+        <div class="row mb-4">
+            <div class="col-lg-6 mx-auto">
+                <div class="glass-card p-4 mb-3">
+                    <div class="summary-title"><i class="fa-regular fa-bed me-2"></i>Selected Room</div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="summary-label">Room:</span>
+                        <span class="summary-value" id="summaryRoom">Grand Plaza Hotel - Deluxe Suite</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="summary-label">Price:</span>
+                        <span class="summary-value" id="summaryPrice">$299/night</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="summary-label">Duration:</span>
+                        <span class="summary-value" id="summaryDuration">2 nights</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Booking Form -->
+        <div class="row mb-4">
+            <div class="col-lg-6 mx-auto">
+                <form id="bookingForm" autocomplete="off">
+                    <div class="glass-card p-4 mb-3">
+                        <h5 class="mb-3"><i class="fa-regular fa-user me-2"></i>Guest Details</h5>
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="guestName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="guestEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="guestPhone" required>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Check-in</label>
+                                <input type="date" class="form-control" id="checkIn" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Check-out</label>
+                                <input type="date" class="form-control" id="checkOut" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Number of Guests</label>
+                            <input type="number" class="form-control" id="numGuests" min="1" max="8" value="2" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Special Requests</label>
+                            <textarea class="form-control" id="specialRequests" rows="2" placeholder="e.g. Early check-in, high floor..."></textarea>
+                        </div>
+                        <h5 class="mb-3 mt-4"><i class="fa-regular fa-credit-card me-2"></i>Payment</h5>
+                        <div class="mb-3 payment-methods">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="paystack" value="Paystack" required>
+                                <label class="form-check-label" for="paystack"><i class="fa-brands fa-cc-mastercard me-1"></i>Paystack</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="flutterwave" value="Flutterwave">
+                                <label class="form-check-label" for="flutterwave"><i class="fa-brands fa-cc-visa me-1"></i>Flutterwave</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Coupon Code</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="couponCode" placeholder="Enter coupon code">
+                                <button class="btn btn-outline-light" type="button" id="applyCouponBtn">Apply</button>
+                            </div>
+                            <div class="coupon-msg" id="couponMsg"></div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-bold">Total:</span>
+                            <span class="fw-bold fs-5" id="totalAmount">$598.00</span>
+                        </div>
+                        <button type="submit" class="btn btn-danger w-100 mt-3" id="confirmBookingBtn">Confirm Booking</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Bottom Navigation Bar -->
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item" data-nav="home">
+                <i class="fa-regular fa-home"></i>
+            </a>
+            <a href="#" class="nav-item active" data-nav="cart">
+                <i class="fa-regular fa-shopping-cart"></i>
+            </a>
+            <a href="profile.html" class="nav-item" data-nav="profile">
+                <i class="fa-regular fa-user"></i>
+            </a>
+        </nav>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- FontAwesome JS -->
+    <script src="assets/fontawesome/all.js" type="text/javascript"></script>
+    <script>
+        // Get URL params for summary
+        function getParam(name) {
+            const url = new URL(window.location.href);
+            return url.searchParams.get(name) || '';
+        }
+        // Fill summary from params
+        document.getElementById('summaryRoom').textContent = getParam('room') || 'Grand Plaza Hotel - Deluxe Suite';
+        document.getElementById('summaryPrice').textContent = getParam('price') || '$299/night';
+        document.getElementById('summaryDuration').textContent = getParam('duration') || '2 nights';
+
+        // Demo: Coupon logic ("HOTEL10" for $50 off)
+        let basePrice = parseFloat((getParam('price')||'').replace(/[^\d.]/g, '')) || 299,
+            nights = 2,
+            couponDiscount = 0;
+        function updateSummary() {
+            // Calculate nights if check-in/out are set
+            const checkIn = document.getElementById('checkIn').value;
+            const checkOut = document.getElementById('checkOut').value;
+            if (checkIn && checkOut) {
+                const d1 = new Date(checkIn), d2 = new Date(checkOut);
+                nights = Math.max(1, Math.round((d2-d1)/(1000*60*60*24)));
+                document.getElementById('summaryDuration').textContent = nights + (nights > 1 ? ' nights' : ' night');
+            }
+            let total = (basePrice * nights) - couponDiscount;
+            document.getElementById('totalAmount').textContent = `$${total.toFixed(2)}`;
+        }
+        document.getElementById('checkIn').addEventListener('change', updateSummary);
+        document.getElementById('checkOut').addEventListener('change', updateSummary);
+        document.getElementById('applyCouponBtn').onclick = function() {
+            const code = document.getElementById('couponCode').value.trim().toUpperCase();
+            const msg = document.getElementById('couponMsg');
+            if (code === 'HOTEL10') {
+                couponDiscount = 50;
+                msg.textContent = 'Coupon applied: $50 off!';
+                msg.style.color = '#28a745';
+            } else if (code) {
+                couponDiscount = 0;
+                msg.textContent = 'Invalid coupon code.';
+                msg.style.color = '#FF3B30';
+            } else {
+                couponDiscount = 0;
+                msg.textContent = '';
+            }
+            updateSummary();
+        };
+        document.getElementById('bookingForm').onsubmit = function(e) {
+            e.preventDefault();
+            // Validate dates
+            const checkIn = document.getElementById('checkIn').value;
+            const checkOut = document.getElementById('checkOut').value;
+            if (!checkIn || !checkOut || new Date(checkOut) <= new Date(checkIn)) {
+                alert('Please select valid check-in and check-out dates.');
+                return;
+            }
+            document.getElementById('confirmBookingBtn').disabled = true;
+            document.getElementById('confirmBookingBtn').textContent = 'Processing...';
+            setTimeout(() => {
+                alert('Booking confirmed! (Demo)');
+                document.getElementById('confirmBookingBtn').disabled = false;
+                document.getElementById('confirmBookingBtn').textContent = 'Confirm Booking';
+                document.getElementById('bookingForm').reset();
+                document.getElementById('couponMsg').textContent = '';
+                couponDiscount = 0;
+                updateSummary();
+            }, 1200);
+        };
+        updateSummary();
+    </script>
+</body>
+</html> 

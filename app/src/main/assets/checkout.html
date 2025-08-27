@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - DEEPEND Entertainment</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet" type="text/css">
+    
+    <!-- FontAwesome Icons -->
+    <link href="assets/fontawesome/all.css" rel="stylesheet" type="text/css">
+    
+    <!-- Custom CSS -->
+    <link href="styles.css" rel="stylesheet" type="text/css">
+    <style>
+        /* Checkout Page Styles */
+        .checkout-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-title {
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 10px;
+            color: #FF3B30;
+        }
+
+        /* Address Selection */
+        .address-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .address-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .address-option:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .address-option.selected {
+            background: rgba(255, 59, 48, 0.1);
+            border-color: #FF3B30;
+        }
+
+        .address-option.selected::before {
+            content: '✓';
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #FF3B30;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .address-type {
+            color: #FF3B30;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .address-details {
+            color: white;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .add-address-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-address-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+            color: white;
+        }
+
+        /* Address Form Styles */
+        .address-form {
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .address-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            padding: 12px 14px;
+            transition: all 0.3s ease;
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+            cursor: text;
+            position: relative;
+            min-height: 44px; /* Better touch target */
+            z-index: 2;
+        }
+
+        .address-input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #FF3B30;
+            color: white;
+            box-shadow: 0 0 0 0.2rem rgba(255, 59, 48, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .address-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            transition: color 0.3s ease;
+        }
+
+        .address-input:focus::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .address-input:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Make input boxes look more clickable */
+        .address-input {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .address-input:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Input wrapper and icon styles */
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            cursor: text;
+            width: 100%;
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 12px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 14px;
+            pointer-events: none;
+            transition: color 0.3s ease;
+            z-index: 1;
+        }
+
+        .address-input:focus + .input-icon {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .input-wrapper:hover .input-icon {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Add subtle pulse animation to make inputs more inviting */
+        .input-wrapper {
+            animation: subtle-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes subtle-pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.02);
+            }
+        }
+
+        .input-wrapper:hover {
+            animation: none;
+            transform: scale(1.02);
+        }
+
+        .address-form-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .btn-outline-light {
+            border-color: rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .btn-outline-light:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+            color: white;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FF3B30, #FF6B6B);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+            transform: translateY(-1px);
+        }
+
+        /* Payment Methods */
+        .payment-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .payment-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .payment-option:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .payment-option.selected {
+            background: rgba(255, 59, 48, 0.1);
+            border-color: #FF3B30;
+        }
+
+        .payment-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .payment-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 18px;
+            color: white;
+        }
+
+        .payment-icon.card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .payment-icon.wallet {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+
+        .payment-icon.cash {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+        }
+
+        .payment-details {
+            flex: 1;
+        }
+
+        .payment-name {
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .payment-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+        }
+
+        .payment-checkmark {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .payment-option.selected .payment-checkmark {
+            background: #FF3B30;
+            border-color: #FF3B30;
+        }
+
+        .payment-option.selected .payment-checkmark::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Order Summary */
+        .order-summary {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .summary-row:last-child {
+            margin-bottom: 0;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .summary-label {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .summary-value {
+            color: white;
+            font-weight: 500;
+        }
+
+        .summary-total {
+            color: #FF3B30;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        /* Delivery Fee */
+        .delivery-fee {
+            color: #FF3B30;
+        }
+
+        /* Confirm Button */
+        .confirm-order-btn {
+            background: linear-gradient(135deg, #FF3B30, #FF6B6B);
+            border: none;
+            border-radius: 15px;
+            padding: 16px 24px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .confirm-order-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 59, 48, 0.4);
+        }
+
+        .confirm-order-btn:active {
+            transform: translateY(0);
+        }
+
+        .confirm-order-btn:disabled {
+            background: rgba(255, 255, 255, 0.2);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Order Items */
+        .order-items {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 16px;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-item-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 12px;
+        }
+
+        .order-item-details {
+            flex: 1;
+        }
+
+        .order-item-name {
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .order-item-extras {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+        }
+
+        .order-item-price {
+            color: #FF3B30;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Loading State */
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+        }
+
+
+
+        @media (max-width: 768px) {
+            .checkout-section {
+                padding: 16px;
+            }
+            
+            .section-title {
+                font-size: 16px;
+            }
+            
+            .confirm-order-btn {
+                padding: 14px 20px;
+                font-size: 15px;
+            }
+
+            .address-form .row .col-6 {
+                margin-bottom: 12px;
+            }
+
+            .address-input {
+                font-size: 16px; /* Prevents zoom on iOS */
+                padding: 12px 14px;
+            }
+
+            .address-form-buttons {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .address-form-buttons .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid px-3 py-3">
+        <!-- Header Section -->
+        <div class="row align-items-center mb-4">
+            <div class="col-auto">
+                <a href="cart.html" class="back-link">
+                    <i class="fa-regular fa-arrow-left"></i>
+                </a>
+            </div>
+            <div class="col">
+                <div class="d-flex align-items-center">
+                    <div>
+                        <h1 class="food-title mb-0">Checkout</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto d-flex gap-2">
+                <div class="icon-btn notification-icon">
+                    <i class="fa-regular fa-bell text-white"></i>
+                    <span class="notification-badge">2</span>
+                </div>
+                <!-- Remove or comment out the settings icon/button that links to settings.html -->
+            </div>
+        </div>
+
+        <!-- Delivery Address Section -->
+        <div class="checkout-section">
+            <h6 class="section-title">
+                <i class="fa-regular fa-map-marker-alt"></i>
+                Delivery Address
+            </h6>
+            <div class="address-options" id="addressOptions">
+                <!-- Address options will be populated dynamically -->
+            </div>
+        </div>
+
+        <!-- Payment Method Section -->
+        <div class="checkout-section">
+            <h6 class="section-title">
+                <i class="fa-regular fa-credit-card"></i>
+                Payment Method
+            </h6>
+            <div class="payment-options" id="paymentOptions">
+                <!-- Payment options will be populated dynamically -->
+            </div>
+        </div>
+
+        <!-- Order Summary Section -->
+        <div class="order-summary">
+            <h6 class="section-title">
+                <i class="fa-regular fa-receipt"></i>
+                Order Summary
+            </h6>
+            
+            <!-- Order Items -->
+            <div class="order-items" id="orderItems">
+                <!-- Order items will be populated dynamically -->
+            </div>
+
+            <!-- Price Summary -->
+            <div class="summary-row">
+                <span class="summary-label">Subtotal:</span>
+                <span class="summary-value" id="subtotal">$0.00</span>
+            </div>
+            <div class="summary-row">
+                <span class="summary-label">Delivery Fee:</span>
+                <span class="summary-value delivery-fee" id="deliveryFee">$0.00</span>
+            </div>
+            <div class="summary-row">
+                <span class="summary-label">Total:</span>
+                <span class="summary-value summary-total" id="total">$0.00</span>
+            </div>
+        </div>
+
+        <!-- Confirm Order Button -->
+        <button class="confirm-order-btn" id="confirmOrderBtn" disabled>
+            <span class="btn-text">Confirm Order</span>
+            <span class="btn-loading" style="display: none;">
+                <span class="loading-spinner"></span>
+                Processing...
+            </span>
+        </button>
+    </div>
+
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- FontAwesome JS -->
+    <script src="assets/fontawesome/all.js" type="text/javascript"></script>
+    
+    <script>
+        // State management
+        let selectedAddress = null;
+        let selectedPaymentMethod = null;
+        let cartItems = [];
+        let deliveryFee = 0;
+        let subtotal = 0;
+
+        // Sample addresses
+        let addresses = [
+            {
+                id: 1,
+                type: 'Home',
+                address: '123 Main Street, Apartment 4B',
+                city: 'New York, NY 10001',
+                isDefault: true
+            },
+            {
+                id: 2,
+                type: 'Work',
+                address: '456 Business Ave, Suite 200',
+                city: 'New York, NY 10002',
+                isDefault: false
+            },
+            {
+                id: 3,
+                type: 'Other',
+                address: '789 Park Lane',
+                city: 'New York, NY 10003',
+                isDefault: false
+            }
+        ];
+
+        // Payment methods
+        const paymentMethods = [
+            {
+                id: 'card',
+                name: 'Credit/Debit Card',
+                description: 'Visa, Mastercard, American Express',
+                icon: 'fa-regular fa-credit-card'
+            },
+            {
+                id: 'wallet',
+                name: 'Digital Wallet',
+                description: 'Apple Pay, Google Pay, PayPal',
+                icon: 'fa-regular fa-wallet'
+            },
+            {
+                id: 'cash',
+                name: 'Cash on Delivery',
+                description: 'Pay when you receive your order',
+                icon: 'fa-regular fa-money-bill'
+            }
+        ];
+
+        // Initialize checkout page
+        function initializeCheckout() {
+            loadCartItems();
+            populateAddresses();
+            populatePaymentMethods();
+            calculateTotals();
+            updateConfirmButton();
+        }
+
+        // Load cart items from localStorage
+        function loadCartItems() {
+            cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            if (cartItems.length === 0) {
+                // Redirect to cart if empty
+                window.location.href = 'cart.html';
+                return;
+            }
+            populateOrderItems();
+        }
+
+        // Populate order items
+        function populateOrderItems() {
+            const orderItemsContainer = document.getElementById('orderItems');
+            
+            orderItemsContainer.innerHTML = cartItems.map(item => `
+                <div class="order-item">
+                    <img src="${item.image}" alt="${item.name}" class="order-item-image">
+                    <div class="order-item-details">
+                        <div class="order-item-name">${item.name}</div>
+                        <div class="order-item-extras">
+                            ${item.package ? `Size: ${item.package}` : ''}
+                            ${item.toppings && item.toppings.length > 0 ? 
+                                `Toppings: ${item.toppings.join(', ')}` : ''}
+                        </div>
+                    </div>
+                    <div class="order-item-price">$${item.price.toFixed(2)}</div>
+                </div>
+            `).join('');
+        }
+
+        // Populate addresses
+        function populateAddresses() {
+            const addressOptions = document.getElementById('addressOptions');
+            
+            addressOptions.innerHTML = addresses.map(address => `
+                <div class="address-option ${address.isDefault ? 'selected' : ''}" data-address-id="${address.id}">
+                    <div class="address-type">${address.type}</div>
+                    <div class="address-details">
+                        ${address.address}<br>
+                        ${address.city}
+                    </div>
+                </div>
+            `).join('') + `
+                <div class="add-address-btn" id="addAddressBtn">
+                    <i class="fa-regular fa-plus me-2"></i>
+                    Add New Address
+                </div>
+            `;
+
+            // Set default selected address
+            selectedAddress = addresses.find(addr => addr.isDefault) || addresses[0];
+
+            // Add click listeners
+            addressOptions.querySelectorAll('.address-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    addressOptions.querySelectorAll('.address-option').forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    selectedAddress = addresses.find(addr => addr.id == option.dataset.addressId);
+                    updateConfirmButton();
+                });
+            });
+
+            // Add click listener to "Add New Address" button
+            document.getElementById('addAddressBtn').addEventListener('click', showAddAddressForm);
+        }
+
+        // Populate payment methods
+        function populatePaymentMethods() {
+            const paymentOptions = document.getElementById('paymentOptions');
+            
+            paymentOptions.innerHTML = paymentMethods.map(method => `
+                <div class="payment-option" data-payment-id="${method.id}">
+                    <div class="payment-info">
+                        <div class="payment-icon ${method.id}">
+                            <i class="${method.icon}"></i>
+                        </div>
+                        <div class="payment-details">
+                            <div class="payment-name">${method.name}</div>
+                            <div class="payment-description">${method.description}</div>
+                        </div>
+                    </div>
+                    <div class="payment-checkmark"></div>
+                </div>
+            `).join('');
+
+            // Add click listeners
+            paymentOptions.querySelectorAll('.payment-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    paymentOptions.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    selectedPaymentMethod = option.dataset.paymentId;
+                    updateConfirmButton();
+                });
+            });
+        }
+
+        // Calculate totals
+        function calculateTotals() {
+            subtotal = cartItems.reduce((sum, item) => sum + item.price, 0);
+            
+            // Calculate delivery fee based on subtotal
+            if (subtotal >= 50) {
+                deliveryFee = 0; // Free delivery for orders over $50
+            } else if (subtotal >= 25) {
+                deliveryFee = 2.99; // Reduced fee for orders over $25
+            } else {
+                deliveryFee = 4.99; // Standard delivery fee
+            }
+
+            const total = subtotal + deliveryFee;
+
+            // Update display
+            document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('deliveryFee').textContent = `$${deliveryFee.toFixed(2)}`;
+            document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+        }
+
+        // Update confirm button state
+        function updateConfirmButton() {
+            const confirmBtn = document.getElementById('confirmOrderBtn');
+            const isComplete = selectedAddress && selectedPaymentMethod;
+            
+            confirmBtn.disabled = !isComplete;
+            
+            if (isComplete) {
+                confirmBtn.style.opacity = '1';
+            } else {
+                confirmBtn.style.opacity = '0.6';
+            }
+        }
+
+        // Handle order confirmation
+        function confirmOrder() {
+            if (!selectedAddress || !selectedPaymentMethod) {
+                alert('Please select both delivery address and payment method.');
+                return;
+            }
+
+            const confirmBtn = document.getElementById('confirmOrderBtn');
+            const btnText = confirmBtn.querySelector('.btn-text');
+            const btnLoading = confirmBtn.querySelector('.btn-loading');
+
+            // Show loading state
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline-flex';
+            confirmBtn.disabled = true;
+
+            // Simulate order processing
+            setTimeout(() => {
+                // Log order details to console
+                console.log('Order Confirmed:', {
+                    items: cartItems,
+                    deliveryAddress: selectedAddress,
+                    paymentMethod: selectedPaymentMethod,
+                    subtotal: subtotal,
+                    deliveryFee: deliveryFee,
+                    total: subtotal + deliveryFee,
+                    orderId: 'ORD-' + Date.now()
+                });
+
+                // Store order details for tracking
+                const orderId = 'ORD-' + Date.now();
+                const total = subtotal + deliveryFee;
+                localStorage.setItem('lastOrderId', orderId);
+                localStorage.setItem('lastOrderTime', new Date().toISOString());
+                localStorage.setItem('lastOrderTotal', `$${total.toFixed(2)}`);
+                localStorage.setItem('lastOrderItems', JSON.stringify(cartItems));
+
+                // Clear cart
+                localStorage.removeItem('cartItems');
+
+                // Redirect to success page with order details
+                const deliveryTime = new Date(Date.now() + (30 * 60000)).toLocaleTimeString('en-US', { 
+                    hour: '2-digit', 
+                    minute: '2-digit',
+                    hour12: true 
+                });
+                
+                const successUrl = `order-success.html?orderId=${orderId}&total=$${total.toFixed(2)}&deliveryTime=${encodeURIComponent(deliveryTime)}`;
+                window.location.href = successUrl;
+
+            }, 2000);
+        }
+
+        // Show add address form
+        function showAddAddressForm() {
+            const addressOptions = document.getElementById('addressOptions');
+            const addAddressBtn = document.getElementById('addAddressBtn');
+            
+            // Replace the "Add New Address" button with the form
+            addAddressBtn.innerHTML = `
+                <div class="address-form">
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <div class="input-wrapper">
+                                <input type="text" class="form-control address-input" placeholder="Address Type (e.g., Home, Work)" id="addressType" autocomplete="off" maxlength="20" tabindex="0">
+                                <i class="fa-regular fa-home input-icon"></i>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="input-wrapper">
+                                <input type="text" class="form-control address-input" placeholder="Street Address" id="streetAddress" autocomplete="off" maxlength="50" tabindex="0">
+                                <i class="fa-regular fa-map-marker-alt input-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <div class="input-wrapper">
+                                <input type="text" class="form-control address-input" placeholder="City" id="city" autocomplete="off" maxlength="30" tabindex="0">
+                                <i class="fa-regular fa-building input-icon"></i>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="input-wrapper">
+                                <input type="text" class="form-control address-input" placeholder="State, ZIP" id="stateZip" autocomplete="off" maxlength="15" tabindex="0">
+                                <i class="fa-regular fa-location-dot input-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <small style="color: rgba(255, 255, 255, 0.6); font-size: 12px;">
+                                <i class="fa-regular fa-info-circle me-1"></i>
+                                Tip: Click on any field to start typing, or use Tab/Enter to navigate
+                            </small>
+                        </div>
+                    </div>
+                    <div class="address-form-buttons">
+                        <button type="button" class="btn btn-outline-light btn-sm me-2" id="cancelAddressBtn">
+                            <i class="fa-regular fa-times me-1"></i>
+                            Cancel
+                        </button>
+                        <button type="button" class="btn btn-primary btn-sm" id="saveAddressBtn">
+                            <i class="fa-regular fa-check me-1"></i>
+                            Save Address
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Add event listeners to the new buttons
+            document.getElementById('cancelAddressBtn').addEventListener('click', cancelAddAddress);
+            document.getElementById('saveAddressBtn').addEventListener('click', saveNewAddress);
+
+            // Ensure inputs are clickable by adding a global click handler
+            setTimeout(() => {
+                const allInputs = addAddressBtn.querySelectorAll('.address-input');
+                allInputs.forEach(input => {
+                    // Force focus on click
+                    input.addEventListener('mousedown', (e) => {
+                        e.preventDefault();
+                        input.focus();
+                    });
+                    
+                    input.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        console.log('Input clicked:', input.id);
+                        input.focus();
+                        input.select();
+                    });
+                });
+            }, 100);
+
+            // Add keyboard event listeners for better UX
+            const inputs = addAddressBtn.querySelectorAll('.address-input');
+            inputs.forEach((input, index) => {
+                // Enhanced click and focus handling
+                input.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    input.focus();
+                    input.select(); // Select all text when clicked
+                });
+
+                // Also add click listener to the wrapper
+                const wrapper = input.closest('.input-wrapper');
+                if (wrapper) {
+                    wrapper.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        input.focus();
+                        input.select();
+                    });
+                }
+
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (index < inputs.length - 1) {
+                            inputs[index + 1].focus();
+                        } else {
+                            saveNewAddress();
+                        }
+                    } else if (e.key === 'Tab') {
+                        // Allow natural tab navigation
+                        if (index < inputs.length - 1) {
+                            setTimeout(() => {
+                                inputs[index + 1].focus();
+                            }, 10);
+                        }
+                    }
+                });
+
+                // Enhanced focus and blur effects
+                input.addEventListener('focus', (e) => {
+                    e.target.style.borderColor = '#FF3B30';
+                    e.target.style.boxShadow = '0 0 0 0.2rem rgba(255, 59, 48, 0.25)';
+                    e.target.style.transform = 'translateY(-1px)';
+                    e.target.style.background = 'rgba(255, 255, 255, 0.15)';
+                });
+
+                input.addEventListener('blur', (e) => {
+                    e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                    e.target.style.boxShadow = 'none';
+                    e.target.style.transform = 'translateY(0)';
+                    e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+                });
+
+                // Add hover effect for better click indication
+                input.addEventListener('mouseenter', (e) => {
+                    if (document.activeElement !== e.target) {
+                        e.target.style.background = 'rgba(255, 255, 255, 0.12)';
+                        e.target.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                    }
+                });
+
+                input.addEventListener('mouseleave', (e) => {
+                    if (document.activeElement !== e.target) {
+                        e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+                        e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                    }
+                });
+            });
+
+            // Focus on first input
+            setTimeout(() => {
+                document.getElementById('addressType').focus();
+            }, 100);
+        }
+
+        // Cancel adding new address
+        function cancelAddAddress() {
+            // Check if any fields have been filled
+            const addressType = document.getElementById('addressType').value.trim();
+            const streetAddress = document.getElementById('streetAddress').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const stateZip = document.getElementById('stateZip').value.trim();
+
+            if (addressType || streetAddress || city || stateZip) {
+                // Show confirmation dialog
+                if (confirm('Are you sure you want to cancel? Your entered information will be lost.')) {
+                    populateAddresses();
+                }
+            } else {
+                // No data entered, just cancel
+                populateAddresses();
+            }
+        }
+
+        // Save new address
+        function saveNewAddress() {
+            const addressType = document.getElementById('addressType').value.trim();
+            const streetAddress = document.getElementById('streetAddress').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const stateZip = document.getElementById('stateZip').value.trim();
+
+            // Enhanced validation
+            if (!addressType) {
+                showValidationError('Please enter an address type (e.g., Home, Work, Office)');
+                document.getElementById('addressType').focus();
+                return;
+            }
+
+            if (!streetAddress) {
+                showValidationError('Please enter your street address');
+                document.getElementById('streetAddress').focus();
+                return;
+            }
+
+            if (!city) {
+                showValidationError('Please enter your city');
+                document.getElementById('city').focus();
+                return;
+            }
+
+            if (!stateZip) {
+                showValidationError('Please enter your state and ZIP code');
+                document.getElementById('stateZip').focus();
+                return;
+            }
+
+            // Create new address object
+            const newAddress = {
+                id: Date.now(), // Generate unique ID
+                type: addressType,
+                address: streetAddress,
+                city: `${city}, ${stateZip}`,
+                isDefault: false
+            };
+
+            // Add to addresses array
+            addresses.push(newAddress);
+
+            // Re-populate addresses and select the new one
+            populateAddresses();
+            
+            // Select the newly added address
+            setTimeout(() => {
+                const newAddressOption = document.querySelector(`[data-address-id="${newAddress.id}"]`);
+                if (newAddressOption) {
+                    newAddressOption.click();
+                }
+            }, 100);
+
+            // Show success message
+            showAddAddressSuccess(addressType);
+        }
+
+        // Show validation error
+        function showValidationError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(255, 59, 48, 0.9);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-size: 14px;
+                z-index: 1000;
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                animation: slideDown 0.3s ease;
+            `;
+            errorDiv.textContent = message;
+            document.body.appendChild(errorDiv);
+            
+            setTimeout(() => {
+                errorDiv.style.animation = 'slideUp 0.3s ease';
+                setTimeout(() => {
+                    errorDiv.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        // Show success message for new address
+        function showAddAddressSuccess(addressType) {
+            const message = document.createElement('div');
+            message.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(0, 0, 0, 0.9);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 25px;
+                font-size: 14px;
+                z-index: 1000;
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            `;
+            message.textContent = `${addressType} address added successfully!`;
+            document.body.appendChild(message);
+            
+            setTimeout(() => {
+                message.remove();
+            }, 2000);
+        }
+
+        // Add event listener to confirm button
+        document.getElementById('confirmOrderBtn').addEventListener('click', confirmOrder);
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializeCheckout);
+    </script>
+</body>
+</html> 

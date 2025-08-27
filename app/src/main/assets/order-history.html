@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History - DEEPEND Entertainment</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/fontawesome/all.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <style>
+        body { background: linear-gradient(135deg, #23232a 0%, #18181b 100%); color: #fff; font-family: 'Roboto', sans-serif; min-height: 100vh; }
+        .history-container { max-width: 440px; margin: 48px auto; background: rgba(30,30,34,0.7); border-radius: 22px; box-shadow: 0 8px 32px rgba(0,0,0,0.45); padding: 2.7rem 2.2rem; backdrop-filter: blur(18px); border: 1.5px solid rgba(255,255,255,0.08); position: relative; }
+        .history-title { font-size: 1.7rem; font-weight: 700; margin-bottom: 1.7rem; display: flex; align-items: center; gap: 0.7rem; letter-spacing: 0.5px; }
+        .history-title i { color: #43e97b; font-size: 1.5rem; }
+        .back-link { color: #fff; text-decoration: none; font-size: 1.13rem; margin-bottom: 2.2rem; display: inline-block; transition: color 0.2s; }
+        .back-link i { margin-right: 0.5rem; }
+        .back-link:hover { color: #43e97b; }
+        .order-list { margin-bottom: 2.2rem; }
+        .order-item { background: rgba(67,233,123,0.10); border: 1.5px solid rgba(67,233,123,0.18); border-radius: 14px; padding: 1.1rem 1.2rem; display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; box-shadow: 0 2px 12px rgba(67,233,123,0.08); }
+        .order-info { display: flex; flex-direction: column; gap: 0.2rem; }
+        .order-number { font-size: 1.08rem; font-weight: 600; letter-spacing: 1.2px; color: #43e97b; }
+        .order-note { font-size: 1.01rem; color: #fff; }
+        .order-time { font-size: 0.97rem; color: #bbb; }
+        .no-orders { color: #aaa; font-size: 1.01rem; margin-bottom: 1.2rem; text-align: center; }
+        @media (max-width: 600px) { .history-container { padding: 1.2rem 0.5rem; } }
+    </style>
+</head>
+<body>
+    <div class="history-container">
+        <a href="profile.html" class="back-link"><i class="fa-regular fa-arrow-left"></i>Back to Profile</a>
+        <div class="history-title"><i class="fa-regular fa-receipt"></i> Order History</div>
+        <div class="order-list" id="orderList"></div>
+    </div>
+    <script src="assets/fontawesome/all.js"></script>
+    <script>
+        function renderOrders() {
+            const orderList = document.getElementById('orderList');
+            let orders = JSON.parse(localStorage.getItem('deepend_orders') || '[]');
+            if (orders.length === 0) {
+                orderList.innerHTML = '<div class="no-orders">No orders yet.</div>';
+                return;
+            }
+            orderList.innerHTML = '';
+            orders.slice().reverse().forEach(order => {
+                const date = new Date(order.id ? Number(order.id) : Date.now());
+                const timeStr = date.toLocaleString();
+                orderList.innerHTML += `
+                    <div class="order-item">
+                        <div class="order-info">
+                            <div class="order-number">Order #${order.id || 'N/A'}</div>
+                            <div class="order-note">${order.note || ''}</div>
+                        </div>
+                        <div class="order-time">${timeStr}</div>
+                    </div>
+                `;
+            });
+        }
+        renderOrders();
+    </script>
+</body>
+</html> 

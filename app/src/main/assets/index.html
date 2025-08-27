@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEEPEND Entertainment</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet" type="text/css">
+    
+    <!-- FontAwesome Icons -->
+    <link href="assets/fontawesome/all.css" rel="stylesheet" type="text/css">
+    
+    <!-- Custom CSS -->
+    <link href="styles.css" rel="stylesheet" type="text/css">
+    <style>
+        /* Enhanced Avatar Styles */
+        .profile-avatar {
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.05);
+        }
+
+        .avatar-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .avatar-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 59, 48, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.9;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        /* New User Indicator */
+        .new-user-indicator {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 20px;
+            height: 20px;
+            background: #FF3B30;
+            border-radius: 50%;
+            border: 2px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Enhanced Profile Menu */
+        .profile-menu {
+            position: fixed;
+            top: 80px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.95);
+            border-radius: 15px;
+            padding: 1.5rem;
+            z-index: 1000;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            min-width: 200px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .profile-menu-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-menu-item:hover {
+            background: rgba(255, 59, 48, 0.2);
+            color: #FF3B30;
+            transform: translateX(5px);
+        }
+
+        .profile-menu-item:last-child {
+            margin-bottom: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .profile-menu-item i {
+            margin-right: 12px;
+            width: 16px;
+            text-align: center;
+        }
+
+        /* Enhanced Notification Icon */
+        .notification-icon {
+            position: relative;
+            padding: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .notification-icon:hover {
+            background: rgba(255, 59, 48, 0.2);
+            transform: scale(1.1);
+        }
+
+        .notification-icon i {
+            font-size: 1.2rem;
+        }
+
+        /* Loading Animation */
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #FF3B30;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Settings Button Styles */
+        .settings-button {
+            position: relative;
+            padding: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-right: 10px;
+            display: none; /* Hidden by default, shown only for logged-in users */
+        }
+
+        .settings-button:hover {
+            background: rgba(255, 59, 48, 0.2);
+            transform: scale(1.1);
+        }
+
+        .settings-button i {
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .settings-button.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Settings Menu Styles */
+        .settings-menu {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.95);
+            border-radius: 15px;
+            padding: 1.5rem;
+            z-index: 1000;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            min-width: 200px;
+            animation: slideInRight 0.3s ease;
+            display: none;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .settings-menu-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+        }
+
+        .settings-menu-item:hover {
+            background: rgba(255, 59, 48, 0.2);
+            color: #FF3B30;
+            transform: translateX(5px);
+        }
+
+        .settings-menu-item:last-child {
+            margin-bottom: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .settings-menu-item i {
+            margin-right: 12px;
+            width: 16px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid px-3 py-3">
+        <!-- Header Section -->
+        <div class="row align-items-center">
+            <div class="col">
+                <div class="d-flex align-items-center">
+                    <div class="profile-avatar me-3" id="profileAvatar">
+                        <img src="https://i.pravatar.cc/90" alt="Profile Avatar" class="avatar-img">
+                        <div class="avatar-overlay" id="avatarOverlay" style="display: none;">
+                            <i class="fa-solid fa-plus"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h5 class="mb-0 text-white fw-bold" style="font-size: smaller;">Hello</h5>
+                        <h6 class="mb-0 text-white-50" style="font-weight: 300; font-size: smaller;" id="userName">Guest</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="d-flex align-items-center">
+                    <!-- Cart Icon -->
+                    <a href="cart.html" class="icon-btn me-2" aria-label="Cart">
+                        <i class="fa-regular fa-shopping-cart text-white"></i>
+                        <span class="notification-badge" id="cart-badge" style="display: none;">0</span>
+                    </a>
+                    <!-- Notification Icon -->
+                    <div class="notification-icon">
+                        <i class="fa-regular fa-bell"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fun Events Section -->
+        <div class="row">
+            <div class="col-12">
+                <h6 class="text-secondary mb-3" style="font-size: smaller;">Some fun events for you</h6>
+                <div class="events-slider">
+                    <div class="events-container">
+                        <!-- VR Games Card -->
+                        <div class="event-card">
+                            <div class="event-image">
+                                <img src="https://picsum.photos/300/200?random=1" alt="VR Event" class="event-img">
+                                <p class="event-bottom-title">VR Games for adults and kids</p>
+                            </div>
+                        </div>
+
+                        <!-- Deep Learning Card -->
+                        <div class="event-card">
+                            <div class="event-image">
+                                <img src="https://picsum.photos/300/200?random=2" alt="Deep Learning Event"
+                                    class="event-img">
+                                <p class="event-bottom-title">Deep Learning Experience</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Services Section -->
+        <div class="row mb-2">
+            <div class="col-12">
+                <h6 class="text-secondary mt-3" style="font-size: smaller;">What can we help with?</h6>
+            </div>
+        </div>
+
+        <!-- Services Grid -->
+        <div class="row g-custom">
+            <!-- Food Service -->
+            <div class="col-6">
+                <a href="food.html" class="text-decoration-none">
+                    <div class="service-card food-card">
+                        <div class="service-icon">
+                            <i class="fa-regular fa-utensils"></i>
+                        </div>
+                        <h6 class="service-title">Order Food & Beverages</h6>
+                    </div>
+                </a>
+            </div>
+
+            <!-- VR Game Tickets -->
+            <div class="col-6">
+                <a href="vr-games.html" class="text-decoration-none">
+                    <div class="service-card vr-card">
+                        <div class="service-icon">
+                            <i class="fa-regular fa-vr-cardboard"></i>
+                        </div>
+                        <h6 class="service-title">VR Game Experience</h6>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Hotel Booking -->
+            <div class="col-6">
+                <a href="hotel-booking.html" class="text-decoration-none">
+                    <div class="service-card hotel-card">
+                        <div class="service-icon">
+                            <i class="fa-regular fa-hotel"></i>
+                        </div>
+                        <h6 class="service-title">Book Your Stay</h6>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Studio Booking -->
+            <div class="col-6">
+                <a href="studio-booking.html" class="text-decoration-none">
+                    <div class="service-card studio-card">
+                        <div class="service-icon">
+                            <i class="fa-regular fa-microphone-alt"></i>
+                        </div>
+                        <h6 class="service-title">Recording Studio</h6>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Equipment Renting -->
+            <div class="col-6">
+                <a href="equipment-rental.html" class="text-decoration-none">
+                    <div class="service-card equipment-card">
+                        <div class="service-icon">
+                            <i class="fa-regular fa-tools"></i>
+                        </div>
+                        <h6 class="service-title">Rent Equipment</h6>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Cinema Tickets -->
+            <div class="col-6">
+                <a href="movie-ticketing.html" class="text-decoration-none">
+                    <div class="service-card cinema-card">
+                        <div class="service-icon">
+                            <i class="fa-regular fa-film"></i>
+                        </div>
+                        <h6 class="service-title">Movie Tickets</h6>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Ads Section -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="ads-slider">
+                    <div class="ads-track">
+                        <!-- Ad 1 -->
+                        <div class="ad-slide">
+                            <img src="https://picsum.photos/400/120?random=1" alt="Advertisement">
+                            <div class="ad-content">
+                                <span class="ad-tag">Special Offer</span>
+                                <h6>20% Off on VR Games</h6>
+                            </div>
+                        </div>
+                        <!-- Ad 2 -->
+                        <div class="ad-slide">
+                            <img src="https://picsum.photos/400/120?random=2" alt="Advertisement">
+                            <div class="ad-content">
+                                <span class="ad-tag">New</span>
+                                <h6>Premium Studio Equipment</h6>
+                            </div>
+                        </div>
+                        <!-- Ad 3 -->
+                        <div class="ad-slide">
+                            <img src="https://picsum.photos/400/120?random=3" alt="Advertisement">
+                            <div class="ad-content">
+                                <span class="ad-tag">Limited Time</span>
+                                <h6>Free Movie Tickets</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Slider indicators -->
+                    <div class="slider-indicators">
+                        <span class="indicator active"></span>
+                        <span class="indicator"></span>
+                        <span class="indicator"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation Bar -->
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item active" data-nav="home">
+                <i class="fa-regular fa-home"></i>
+            </a>
+            <a href="cart.html" class="nav-item" data-nav="cart">
+                <i class="fa-regular fa-shopping-cart"></i>
+            </a>
+            <a href="profile.html" class="nav-item" data-nav="profile">
+                <i class="fa-regular fa-user"></i>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- FontAwesome JS -->
+    <script src="assets/fontawesome/all.js" type="text/javascript"></script>
+
+    <!-- Custom JS -->
+    <script>
+        // Enhanced User Management System
+        class UserManager {
+            constructor() {
+                this.isNewUser = this.checkIfNewUser();
+                this.isLoggedIn = this.checkLoginStatus();
+                this.init();
+            }
+
+            checkIfNewUser() {
+                const hasVisited = localStorage.getItem('deepend_user_visited');
+                if (!hasVisited) {
+                    localStorage.setItem('deepend_user_visited', 'true');
+                    return true;
+                }
+                return false;
+            }
+
+            checkLoginStatus() {
+                return localStorage.getItem('deepend_user_logged_in') === 'true';
+            }
+
+            init() {
+                this.setupProfileAvatar();
+                this.updateUserDisplay();
+                this.setupBottomNav();
+                this.setupSettingsButton();
+            }
+
+            setupProfileAvatar() {
+                const profileAvatar = document.getElementById('profileAvatar');
+                const avatarOverlay = document.getElementById('avatarOverlay');
+
+                if (this.isNewUser && !this.isLoggedIn) {
+                    // Show overlay for new users
+                    avatarOverlay.style.display = 'flex';
+                    
+                    // Add new user indicator
+                    const indicator = document.createElement('div');
+                    indicator.className = 'new-user-indicator';
+                    indicator.innerHTML = 'N';
+                    profileAvatar.appendChild(indicator);
+                }
+
+                // Add click handler
+                profileAvatar.addEventListener('click', () => {
+                    if (this.isNewUser && !this.isLoggedIn) {
+                        // Navigate to auth page for new users
+                        window.location.href = 'auth.html';
+                    } else {
+                        // For existing users, show logout menu
+                        this.showLogoutMenu();
+                    }
+                });
+
+                // Add hover effects
+                profileAvatar.addEventListener('mouseenter', () => {
+                    if (this.isNewUser && !this.isLoggedIn) {
+                        profileAvatar.style.transform = 'scale(1.1)';
+                    }
+                });
+
+                profileAvatar.addEventListener('mouseleave', () => {
+                    if (this.isNewUser && !this.isLoggedIn) {
+                        profileAvatar.style.transform = 'scale(1)';
+                    }
+                });
+            }
+
+            updateUserDisplay() {
+                const userName = document.getElementById('userName');
+                
+                if (this.isNewUser && !this.isLoggedIn) {
+                    userName.textContent = 'Guest';
+                    userName.style.color = '#FF3B30';
+                    userName.style.fontWeight = '500';
+                } else {
+                    // For existing users, show their name
+                    const savedName = localStorage.getItem('deepend_user_name');
+                    userName.textContent = savedName || 'User';
+                    userName.style.color = 'rgba(255, 255, 255, 0.5)';
+                }
+            }
+
+            showLogoutMenu() {
+                // Remove existing menu if any
+                const existingMenu = document.querySelector('.profile-menu');
+                if (existingMenu) {
+                    existingMenu.remove();
+                }
+
+                // Create logout menu
+                const menu = document.createElement('div');
+                menu.className = 'profile-menu';
+                menu.innerHTML = `
+                    <div class="profile-menu-item" onclick="userManager.logout()">
+                        <i class="fa-solid fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </div>
+                `;
+                
+                document.body.appendChild(menu);
+                
+                // Add click outside to close
+                document.addEventListener('click', (e) => {
+                    if (!menu.contains(e.target) && !document.getElementById('profileAvatar').contains(e.target)) {
+                        menu.remove();
+                    }
+                });
+
+                // Auto remove after 5 seconds
+                setTimeout(() => {
+                    if (menu.parentNode) {
+                        menu.remove();
+                    }
+                }, 5000);
+            }
+
+            logout() {
+                // Show loading state
+                const menu = document.querySelector('.profile-menu');
+                if (menu) {
+                    menu.innerHTML = `
+                        <div class="profile-menu-item">
+                            <span class="loading-spinner"></span>
+                            <span>Logging out...</span>
+                        </div>
+                    `;
+                }
+
+                // Hide settings button immediately
+                const settingsButton = document.getElementById('settingsButton');
+                if (settingsButton) {
+                    settingsButton.classList.remove('show');
+                }
+
+                // Close settings menu if open
+                this.closeSettingsMenu();
+
+                // Clear user data after a short delay
+                setTimeout(() => {
+                    localStorage.removeItem('deepend_user_visited');
+                    localStorage.removeItem('deepend_user_name');
+                    localStorage.removeItem('deepend_user_logged_in');
+                    localStorage.removeItem('deepend_user_email');
+                    
+                    // Reload page to show as new user
+                    window.location.reload();
+                }, 1000);
+            }
+
+            setupBottomNav() {
+                const navItems = document.querySelectorAll('.nav-item');
+                navItems.forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        // Remove e.preventDefault(); so anchor works
+                        navItems.forEach(nav => nav.classList.remove('active'));
+                        item.classList.add('active');
+                    });
+                });
+            }
+
+            handleNavigation(navType) {
+                switch(navType) {
+                    case 'home':
+                        // Already on home
+                        break;
+                    case 'cart':
+                        // Handle cart navigation
+                        console.log('Cart clicked');
+                        break;
+                    case 'profile':
+                        // Show logout menu for logged in users
+                        if (this.isLoggedIn) {
+                            this.showLogoutMenu();
+                        } else {
+                            // Navigate to auth for new users
+                            window.location.href = 'auth.html';
+                        }
+                        break;
+                }
+            }
+
+            setupSettingsButton() {
+                const settingsButton = document.getElementById('settingsButton');
+                const settingsMenu = document.getElementById('settingsMenu');
+
+                if (this.isLoggedIn) {
+                    settingsButton.classList.add('show');
+                    settingsButton.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.toggleSettingsMenu();
+                    });
+                } else {
+                    settingsButton.classList.remove('show');
+                }
+            }
+
+            toggleSettingsMenu() {
+                const settingsMenu = document.getElementById('settingsMenu');
+                if (settingsMenu.style.display === 'block') {
+                    this.closeSettingsMenu();
+                } else {
+                    this.openSettingsMenu();
+                }
+            }
+
+            openSettingsMenu() {
+                const settingsMenu = document.getElementById('settingsMenu');
+                if (settingsMenu) {
+                    settingsMenu.style.display = 'block';
+                    // Add click outside listener
+                    setTimeout(() => {
+                        document.addEventListener('click', this.closeSettingsMenu.bind(this));
+                    }, 100);
+                }
+            }
+
+            closeSettingsMenu(event) {
+                const settingsMenu = document.getElementById('settingsMenu');
+                const settingsButton = document.getElementById('settingsButton');
+                
+                if (event && settingsMenu && settingsButton && 
+                    !settingsMenu.contains(event.target) && 
+                    !settingsButton.contains(event.target)) {
+                    settingsMenu.style.display = 'none';
+                    document.removeEventListener('click', this.closeSettingsMenu.bind(this));
+                } else if (!event) {
+                    // Called directly without event
+                    if (settingsMenu) {
+                        settingsMenu.style.display = 'none';
+                        document.removeEventListener('click', this.closeSettingsMenu.bind(this));
+                    }
+                }
+            }
+
+            openSettings() {
+                this.closeSettingsMenu();
+                window.location.href = 'account-settings.html';
+            }
+
+            openPreferences() {
+                alert('Preferences clicked!');
+                // Implement preferences logic here
+            }
+
+            openHelp() {
+                alert('Help & Support clicked!');
+                // Implement help logic here
+            }
+
+            trackOrder() {
+                this.closeSettingsMenu();
+                // Check if user has a recent order
+                const lastOrderId = localStorage.getItem('lastOrderId');
+                const lastOrderTime = localStorage.getItem('lastOrderTime');
+                
+                if (lastOrderId && lastOrderTime) {
+                    // Check if order is within last 24 hours
+                    const orderTime = new Date(lastOrderTime);
+                    const now = new Date();
+                    const hoursDiff = (now - orderTime) / (1000 * 60 * 60);
+                    
+                    if (hoursDiff < 24) {
+                        // Redirect to tracking page with order details
+                        const total = localStorage.getItem('lastOrderTotal') || '$24.99';
+                        const deliveryTime = new Date(orderTime.getTime() + (30 * 60000)).toLocaleTimeString('en-US', { 
+                            hour: '2-digit', 
+                            minute: '2-digit',
+                            hour12: true 
+                        });
+                        
+                        const trackingUrl = `order-tracking.html?orderId=${lastOrderId}&total=${total}&deliveryTime=${encodeURIComponent(deliveryTime)}`;
+                        window.location.href = trackingUrl;
+                    } else {
+                        alert('No recent orders found. Your order tracking is available for 24 hours after placing an order.');
+                    }
+                } else {
+                    alert('No orders found. Place an order to track it!');
+                }
+            }
+        }
+
+        // Cart badge functionality
+        function updateCartBadge() {
+            const cartBadge = document.getElementById('cart-badge');
+            const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+            
+            if (totalItems > 0) {
+                cartBadge.textContent = totalItems;
+                cartBadge.style.display = 'block';
+            } else {
+                cartBadge.style.display = 'none';
+            }
+        }
+
+        // Notification Popup
+        function showNotificationPopup() {
+            // Demo notifications
+            const notifications = [
+                { title: 'Order Confirmed', message: 'Your order #12345 has been confirmed!', time: '2 min ago' },
+                { title: 'Welcome!', message: 'Thanks for joining DEEPEND Entertainment.', time: '1 day ago' },
+                { title: 'Event Reminder', message: 'VR Game Experience starts in 1 hour.', time: '3 days ago' }
+            ];
+            const modal = document.createElement('div');
+            modal.tabIndex = -1;
+            modal.style.cssText = `position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.35); z-index: 3000; display: flex; align-items: flex-start; justify-content: flex-end;`;
+            modal.innerHTML = `
+                <div style="margin: 32px 32px 0 0; background: rgba(30,30,34,0.95); border-radius: 18px; box-shadow: 0 8px 32px rgba(0,0,0,0.35); min-width: 340px; max-width: 95vw; color: #fff; padding: 1.5rem 1.2rem; border: 1.5px solid rgba(255,255,255,0.08); backdrop-filter: blur(14px);">
+                    <div style='display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem;'>
+                        <h5 style='margin:0;font-size:1.15rem;font-weight:700;letter-spacing:0.2px;'><i class="fa-regular fa-bell" style="color:#FF3B30;margin-right:0.5rem;"></i>Notifications</h5>
+                        <button id='closeNotifModal' style='background:none;border:none;color:#fff;font-size:1.5rem;cursor:pointer;'>&times;</button>
+                    </div>
+                    <div id='notifList'>
+                        ${notifications.map(n => `
+                            <div style='margin-bottom:1.1rem;padding-bottom:0.7rem;border-bottom:1px solid rgba(255,255,255,0.07);'>
+                                <div style='font-weight:600;font-size:1.04rem;'>${n.title}</div>
+                                <div style='color:#bbb;font-size:0.98rem;margin:0.2rem 0 0.3rem 0;'>${n.message}</div>
+                                <div style='color:#FF3B30;font-size:0.92rem;'>${n.time}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.focus();
+            document.getElementById('closeNotifModal').onclick = () => modal.remove();
+            modal.addEventListener('keydown', function(e) { if (e.key === 'Escape') modal.remove(); });
+            modal.onclick = function(e) { if (e.target === modal) modal.remove(); };
+        }
+        // Attach to notification icon
+        document.addEventListener('DOMContentLoaded', function() {
+            const notifIcon = document.querySelector('.notification-icon');
+            if (notifIcon) notifIcon.onclick = showNotificationPopup;
+        });
+
+        // Initialize user manager when page loads
+        let userManager;
+        document.addEventListener('DOMContentLoaded', () => {
+            userManager = new UserManager();
+            updateCartBadge();
+        });
+
+        // Handle auth page return
+        window.addEventListener('pageshow', () => {
+            const fromAuth = sessionStorage.getItem('from_auth_page');
+            if (fromAuth) {
+                sessionStorage.removeItem('from_auth_page');
+                // Refresh user manager
+                if (userManager) {
+                    userManager.isNewUser = false;
+                    userManager.isLoggedIn = true;
+                    userManager.updateUserDisplay();
+                    userManager.setupSettingsButton(); // Re-setup settings button after login
+                }
+            }
+        });
+    </script>
+</body>
+</html>

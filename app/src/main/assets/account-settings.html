@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings - DEEPEND Entertainment</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/fontawesome/all.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <style>
+        body { background: linear-gradient(135deg, #23232a 0%, #18181b 100%); color: #fff; font-family: 'Roboto', sans-serif; min-height: 100vh; }
+        .settings-container { max-width: 440px; margin: 48px auto; background: rgba(30,30,34,0.7); border-radius: 22px; box-shadow: 0 8px 32px rgba(0,0,0,0.45); padding: 2.7rem 2.2rem; backdrop-filter: blur(18px); border: 1.5px solid rgba(255,255,255,0.08); position: relative; }
+        .settings-title { font-size: 1.7rem; font-weight: 700; margin-bottom: 1.7rem; display: flex; align-items: center; gap: 0.7rem; letter-spacing: 0.5px; }
+        .settings-title i { color: #43e97b; font-size: 1.5rem; }
+        .settings-section { margin-bottom: 2.3rem; }
+        .settings-section h5 { font-size: 1.13rem; font-weight: 600; margin-bottom: 0.7rem; letter-spacing: 0.2px; }
+        .settings-section ul { padding-left: 1.2rem; color: #bbb; font-size: 1.01rem; }
+        .divider { border: none; border-top: 1.5px solid rgba(255,255,255,0.08); margin: 2.2rem 0 2.1rem 0; }
+        .delete-section { background: rgba(255,59,48,0.08); border: 1.5px solid rgba(255,59,48,0.18); border-radius: 14px; padding: 1.5rem 1.2rem; text-align: center; }
+        .delete-section h5 { color: #FF3B30; margin-bottom: 0.7rem; }
+        .delete-btn { background: linear-gradient(135deg, #FF3B30, #FF6B6B); color: #fff; border: none; border-radius: 10px; padding: 0.7rem 1.5rem; font-size: 1.07rem; font-weight: 600; margin-top: 0.7rem; transition: box-shadow 0.2s, transform 0.15s; box-shadow: 0 2px 12px rgba(255,59,48,0.10); }
+        .delete-btn:hover { box-shadow: 0 4px 18px rgba(255,59,48,0.18); transform: translateY(-2px) scale(1.04); }
+        .back-link { color: #fff; text-decoration: none; font-size: 1.13rem; margin-bottom: 2.2rem; display: inline-block; transition: color 0.2s; }
+        .back-link i { margin-right: 0.5rem; }
+        .back-link:hover { color: #43e97b; }
+        .delete-warning { color: #FF3B30; font-weight: 600; margin-top: 1.1rem; font-size: 1.01rem; letter-spacing: 0.1px; }
+        .confirm-modal-bg { position: fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:3000; display:flex; align-items:center; justify-content:center; animation: fadeInBg 0.3s; }
+        .confirm-modal { background:rgba(35,35,42,0.98); border-radius:16px; padding:2.2rem 1.5rem; min-width:320px; max-width:92vw; box-shadow:0 8px 32px rgba(0,0,0,0.4); color:#fff; text-align:center; animation: popIn 0.25s; }
+        .confirm-modal button { margin: 0 0.5rem; border-radius:8px; border:none; padding:0.5rem 1.2rem; font-weight:600; font-size:1rem; }
+        .confirm-modal .yes { background:linear-gradient(135deg,#FF3B30,#FF6B6B); color:#fff; }
+        .confirm-modal .no { background:#444; color:#fff; }
+        @keyframes fadeInBg { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes popIn { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <a href="profile.html" class="back-link"><i class="fa-regular fa-arrow-left"></i>Back to Profile</a>
+        <div class="settings-title"> Account Settings</div>
+        <div class="settings-section">
+            <h5>Important Instructions</h5>
+            <ul>
+                <li>Update your privacy and notification preferences in your profile.</li>
+                <li>Deleting your profile will remove all your data from this device.</li>
+                <li>This action cannot be undone.</li>
+            </ul>
+        </div>
+        <hr class="divider">
+        <div class="delete-section">
+            <h5><i class="fa-regular fa-triangle-exclamation"></i> Danger Zone</h5>
+            <div class="delete-warning">Deleting your profile is permanent and cannot be undone.</div>
+            <button class="delete-btn" id="deleteProfileBtn"><i class="fa-regular fa-trash"></i> Delete My Profile</button>
+        </div>
+    </div>
+    <script src="assets/fontawesome/all.js"></script>
+    <script>
+        // Notification Popup
+        function showNotificationPopup() {
+            const notifications = [
+                { title: 'Order Confirmed', message: 'Your order #12345 has been confirmed!', time: '2 min ago' },
+                { title: 'Welcome!', message: 'Thanks for joining DEEPEND Entertainment.', time: '1 day ago' },
+                { title: 'Event Reminder', message: 'VR Game Experience starts in 1 hour.', time: '3 days ago' }
+            ];
+            const modal = document.createElement('div');
+            modal.tabIndex = -1;
+            modal.style.cssText = `position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.35); z-index: 3000; display: flex; align-items: flex-start; justify-content: flex-end;`;
+            modal.innerHTML = `
+                <div style=\"margin: 32px 32px 0 0; background: rgba(30,30,34,0.95); border-radius: 18px; box-shadow: 0 8px 32px rgba(0,0,0,0.35); min-width: 340px; max-width: 95vw; color: #fff; padding: 1.5rem 1.2rem; border: 1.5px solid rgba(255,255,255,0.08); backdrop-filter: blur(14px);\">
+                    <div style='display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem;'>
+                        <h5 style='margin:0;font-size:1.15rem;font-weight:700;letter-spacing:0.2px;'><i class=\"fa-regular fa-bell\" style=\"color:#FF3B30;margin-right:0.5rem;\"></i>Notifications</h5>
+                        <button id='closeNotifModal' style='background:none;border:none;color:#fff;font-size:1.5rem;cursor:pointer;'>&times;</button>
+                    </div>
+                    <div id='notifList'>
+                        ${notifications.map(n => `
+                            <div style='margin-bottom:1.1rem;padding-bottom:0.7rem;border-bottom:1px solid rgba(255,255,255,0.07);'>
+                                <div style='font-weight:600;font-size:1.04rem;'>${n.title}</div>
+                                <div style='color:#bbb;font-size:0.98rem;margin:0.2rem 0 0.3rem 0;'>${n.message}</div>
+                                <div style='color:#FF3B30;font-size:0.92rem;'>${n.time}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.focus();
+            document.getElementById('closeNotifModal').onclick = () => modal.remove();
+            modal.addEventListener('keydown', function(e) { if (e.key === 'Escape') modal.remove(); });
+            modal.onclick = function(e) { if (e.target === modal) modal.remove(); };
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const notifIcon = document.querySelector('.notification-icon');
+            if (notifIcon) notifIcon.onclick = showNotificationPopup;
+        });
+        document.getElementById('deleteProfileBtn').onclick = function() {
+            const modalBg = document.createElement('div');
+            modalBg.className = 'confirm-modal-bg';
+            modalBg.innerHTML = `
+                <div class='confirm-modal'>
+                    <h5 style='color:#FF3B30;'><i class='fa-regular fa-triangle-exclamation'></i> Confirm Deletion</h5>
+                    <p>This will remove all your data from this device.<br><b>This action cannot be undone.</b></p>
+                    <button class='yes'>Yes, Delete</button>
+                    <button class='no'>Cancel</button>
+                </div>
+            `;
+            document.body.appendChild(modalBg);
+            modalBg.querySelector('.no').onclick = () => modalBg.remove();
+            modalBg.querySelector('.yes').onclick = function() {
+                localStorage.clear();
+                modalBg.querySelector('.confirm-modal').innerHTML = '<h5 style="color:#43e97b;">Profile deleted!</h5><p>Redirecting to home...</p>';
+                setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+            };
+        };
+    </script>
+</body>
+</html> 

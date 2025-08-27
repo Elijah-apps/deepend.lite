@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Welcome to DEEPEND Entertainment - Your complete entertainment destination with dining, VR games, hotels, studios, equipment rental, and movie ticketing.">
+    <meta name="keywords" content="entertainment, dining, VR games, hotels, studios, equipment rental, movie tickets, booking">
+    <meta name="author" content="DEEPEND Entertainment">
+    <meta name="theme-color" content="#FF3B30">
+    <title>DEEPEND Entertainment - Welcome</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link href="assets/fontawesome/all.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link href="styles.css" rel="stylesheet">
+    
+    <style>
+        /* Enhanced 3D animations and effects */
+        :root {
+            --primary-color: #FF3B30;
+            --primary-dark: #C62828;
+            --bg-gradient: linear-gradient(135deg, #18181c 0%, #0f0f13 100%);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-primary: white;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-primary: 0 8px 32px rgba(255, 59, 48, 0.3);
+            --shadow-hover: 0 12px 40px rgba(255, 59, 48, 0.4);
+            --animation-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        /* Improved base styles */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #533483 75%, #e94560 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+
+        /* Colorful background elements */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 59, 48, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 30%, rgba(255, 59, 48, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 70%, rgba(255, 59, 48, 0.25) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(255, 59, 48, 0.15) 0%, transparent 50%);
+            z-index: -2;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 40%, rgba(255, 59, 48, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 70% 10%, rgba(255, 59, 48, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 30% 90%, rgba(255, 59, 48, 0.25) 0%, transparent 40%);
+            z-index: -1;
+            animation: backgroundShift 15s ease-in-out infinite reverse;
+        }
+
+        /* Enhanced container with reduced bottom spacing */
+        .intro-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Improved screen transitions with 3D effects */
+        .screen {
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(30px) rotateX(10deg);
+            transition: var(--transition-smooth);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) translateY(30px) rotateX(10deg);
+            perspective: 1000px;
+        }
+
+        .screen.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) translateY(0) rotateX(0deg);
+            position: relative;
+            top: auto;
+            left: auto;
+            transform: none;
+        }
+
+        /* Enhanced 3D icon with beautiful effects */
+        .screen-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2.5rem;
+            color: var(--text-primary);
+            box-shadow: var(--shadow-primary);
+            animation: float3D 3s ease-in-out infinite;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .screen-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s ease-in-out infinite;
+        }
+
+        .screen-icon:hover {
+            transform: scale(1.1) rotateY(10deg);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Enhanced 3D Icon container */
+        .screen-image {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1rem;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotate3D 8s linear infinite;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--text-primary);
+            box-shadow: var(--shadow-primary);
+            overflow: hidden;
+        }
+
+        .screen-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shine 2s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        .screen-image:hover {
+            animation-play-state: paused;
+            transform: scale(1.05) rotateY(10deg);
+        }
+
+        /* Image loading fallback */
+        .screen-image.loading {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .screen-image.loading::after {
+            content: '';
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Improved typography with reduced font sizes */
+        .screen-title {
+            font-size: clamp(1.3rem, 3.5vw, 1.8rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+            animation: slideInUp 0.6s var(--animation-bounce);
+        }
+
+        .screen-description {
+            font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.3;
+            max-width: 250px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: slideInUp 0.6s var(--animation-bounce) 0.1s both;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Enhanced navigation with reduced spacing */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 300px;
+            margin-top: 0.75rem;
+            gap: 0.75rem;
+            animation: slideInUp 0.6s var(--animation-bounce) 0.2s both;
+        }
+
+        /* Center the Get Started button on the last screen */
+        .navigation-buttons.centered {
+            justify-content: center;
+        }
+
+        .nav-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: var(--transition-smooth);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-btn:hover::before {
+            left: 100%;
+        }
+
+        .nav-btn:hover,
+        .nav-btn:focus {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: var(--shadow-primary);
+            outline: none;
+        }
+
+        .nav-btn:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .skip-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--text-secondary);
+        }
+
+        .skip-btn:hover,
+        .skip-btn:focus {
+            color: var(--text-primary);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .get-started-btn {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            border: none;
+            color: var(--text-primary);
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: var(--transition-smooth);
+            box-shadow: var(--shadow-primary);
+        }
+
+        .get-started-btn:hover,
+        .get-started-btn:focus {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Enhanced progress dots with 3D effect */
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 0.4rem;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+            animation: slideInDown 0.6s var(--animation-bounce);
+        }
+
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: var(--transition-smooth);
+            cursor: pointer;
+            border: 2px solid transparent;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .progress-dot::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
+            opacity: 0;
+            transition: var(--transition-smooth);
+            z-index: -1;
+        }
+
+        .progress-dot:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.2) translateZ(10px);
+        }
+
+        .progress-dot:hover::before {
+            opacity: 0.3;
+        }
+
+        .progress-dot.active {
+            background: var(--primary-color);
+            transform: scale(1.3) translateZ(15px);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 20px rgba(255, 59, 48, 0.5);
+        }
+
+        .progress-dot.active::before {
+            opacity: 1;
+        }
+
+        /* Enhanced floating elements with colorful red circles */
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .floating-element {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255, 59, 48, 0.4) 0%, rgba(255, 59, 48, 0.1) 70%, transparent 100%);
+            border-radius: 50%;
+            animation: float3D 6s ease-in-out infinite;
+            will-change: transform;
+            box-shadow: 0 0 30px rgba(255, 59, 48, 0.3);
+        }
+
+        .floating-element:nth-child(1) {
+            width: 120px;
+            height: 120px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+            background: radial-gradient(circle, rgba(255, 59, 48, 0.5) 0%, rgba(255, 59, 48, 0.2) 70%, transparent 100%);
+        }
+
+        .floating-element:nth-child(2) {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            right: 15%;
+            animation-delay: 2s;
+            background: radial-gradient(circle, rgba(255, 59, 48, 0.4) 0%, rgba(255, 59, 48, 0.15) 70%, transparent 100%);
+        }
+
+        .floating-element:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            bottom: 20%;
+            left: 5%;
+            animation-delay: 4s;
+            background: radial-gradient(circle, rgba(255, 59, 48, 0.6) 0%, rgba(255, 59, 48, 0.25) 70%, transparent 100%);
+        }
+
+        .floating-element:nth-child(4) {
+            width: 100px;
+            height: 100px;
+            bottom: 10%;
+            right: 10%;
+            animation-delay: 1s;
+            background: radial-gradient(circle, rgba(255, 59, 48, 0.35) 0%, rgba(255, 59, 48, 0.1) 70%, transparent 100%);
+        }
+
+        .floating-element:nth-child(5) {
+            width: 60px;
+            height: 60px;
+            top: 60%;
+            left: 50%;
+            animation-delay: 3s;
+            background: radial-gradient(circle, rgba(255, 59, 48, 0.3) 0%, rgba(255, 59, 48, 0.1) 70%, transparent 100%);
+        }
+
+        .floating-element:nth-child(6) {
+            width: 90px;
+            height: 90px;
+            top: 40%;
+            right: 5%;
+            animation-delay: 5s;
+            background: radial-gradient(circle, rgba(255, 59, 48, 0.45) 0%, rgba(255, 59, 48, 0.2) 70%, transparent 100%);
+        }
+
+        /* Additional colorful background circles */
+        .colorful-circles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -3;
+        }
+
+        .colorful-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 59, 48, 0.3) 0%, transparent 70%);
+            animation: pulseGlow 4s ease-in-out infinite;
+        }
+
+        .colorful-circle:nth-child(1) {
+            width: 200px;
+            height: 200px;
+            top: 5%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .colorful-circle:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            top: 70%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        .colorful-circle:nth-child(3) {
+            width: 180px;
+            height: 180px;
+            bottom: 5%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        .colorful-circle:nth-child(4) {
+            width: 120px;
+            height: 120px;
+            top: 30%;
+            right: 30%;
+            animation-delay: 1s;
+        }
+
+        /* Enhanced 3D animations */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float3D {
+            0%, 100% {
+                transform: translateY(0px) rotateX(0deg) rotateY(0deg) scale(1);
+            }
+            50% {
+                transform: translateY(-30px) rotateX(10deg) rotateY(10deg) scale(1.1);
+            }
+        }
+
+        @keyframes rotate3D {
+            0% {
+                transform: rotateY(0deg);
+            }
+            100% {
+                transform: rotateY(360deg);
+            }
+        }
+
+        @keyframes shine {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+            50% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
+            100% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* Enhanced responsive design */
+        @media (max-width: 768px) {
+            .intro-container {
+                padding: 0.5rem;
+            }
+            
+            .screen-image {
+                width: 80px;
+                height: 80px;
+                font-size: 2.5rem;
+            }
+            
+            .navigation-buttons {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .nav-btn {
+                width: 100%;
+                max-width: 180px;
+            }
+            
+            .screen-description {
+                margin-bottom: 0.75rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .screen-image {
+                width: 70px;
+                height: 70px;
+                font-size: 2rem;
+            }
+            
+            .screen-icon {
+                width: 70px;
+                height: 70px;
+                font-size: 1.8rem;
+            }
+            
+            .progress-dots {
+                gap: 0.3rem;
+            }
+            
+            .progress-dot {
+                width: 8px;
+                height: 8px;
+            }
+        }
+        
+        /* Auto-slide indicator */
+        .auto-slide-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            color: white;
+            font-size: 0.8rem;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            opacity: 0.7;
+            transition: var(--transition-smooth);
+        }
+        
+        .auto-slide-indicator:hover {
+            opacity: 1;
+        }
+        
+        /* Loading state styles */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition-smooth);
+        }
+        
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Error state styles */
+        .error-message {
+            background: rgba(255, 59, 48, 0.1);
+            border: 1px solid rgba(255, 59, 48, 0.3);
+            color: var(--primary-color);
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+            animation: slideInUp 0.3s ease-out;
+        }
+        
+        /* Performance optimizations */
+        .screen {
+            will-change: opacity, transform;
+        }
+        
+        .screen-icon {
+            will-change: transform;
+        }
+
+        /* Enhanced 3D animations with colorful effects */
+        @keyframes backgroundShift {
+            0%, 100% {
+                transform: translateX(0) translateY(0) scale(1);
+                opacity: 0.8;
+            }
+            25% {
+                transform: translateX(-20px) translateY(-10px) scale(1.1);
+                opacity: 1;
+            }
+            50% {
+                transform: translateX(10px) translateY(-20px) scale(0.9);
+                opacity: 0.6;
+            }
+            75% {
+                transform: translateX(-15px) translateY(15px) scale(1.05);
+                opacity: 0.9;
+            }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.6;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+    
+    <main class="intro-container" role="main" aria-label="DEEPEND Entertainment Introduction">
+        <!-- Colorful background circles -->
+        <div class="colorful-circles">
+            <div class="colorful-circle"></div>
+            <div class="colorful-circle"></div>
+            <div class="colorful-circle"></div>
+            <div class="colorful-circle"></div>
+        </div>
+
+        <!-- Loading overlay -->
+        <div class="loading-overlay" id="loadingOverlay" aria-hidden="true">
+            <div class="loading-spinner" aria-label="Loading"></div>
+        </div>
+
+        <!-- Error message -->
+        <div class="error-message" id="errorMessage" role="alert" aria-live="polite">
+            <i class="fa-solid fa-exclamation-triangle me-2"></i>
+            <span id="errorText">An error occurred. Please try again.</span>
+        </div>
+
+        <!-- Floating background elements -->
+        <div class="floating-elements" aria-hidden="true">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+        </div>
+        
+        <!-- Progress dots -->
+        <nav class="progress-dots" role="navigation" aria-label="Introduction progress">
+            <div class="progress-dot active" data-screen="0" role="button" tabindex="0" aria-label="Go to screen 1" aria-current="true"></div>
+            <div class="progress-dot" data-screen="1" role="button" tabindex="0" aria-label="Go to screen 2" aria-current="false"></div>
+            <div class="progress-dot" data-screen="2" role="button" tabindex="0" aria-label="Go to screen 3" aria-current="false"></div>
+            <div class="progress-dot" data-screen="3" role="button" tabindex="0" aria-label="Go to screen 4" aria-current="false"></div>
+            <div class="progress-dot" data-screen="4" role="button" tabindex="0" aria-label="Go to screen 5" aria-current="false"></div>
+            <div class="progress-dot" data-screen="5" role="button" tabindex="0" aria-label="Go to screen 6" aria-current="false"></div>
+        </nav>
+        
+        <!-- Screen 1: Welcome -->
+        <section class="screen" data-screen="0" aria-labelledby="welcome-title">
+            <div class="screen-image">
+                <i class="fa-solid fa-star"></i>
+            </div>
+            <h1 id="welcome-title" class="screen-title">Welcome to DEEPEND</h1>
+            <p class="screen-description">Your complete entertainment destination with everything you need for the perfect experience.</p>
+        </section>
+
+        <!-- Screen 2: Dining -->
+        <section class="screen" data-screen="1" aria-labelledby="dining-title">
+            <div class="screen-image">
+                <i class="fa-solid fa-utensils"></i>
+            </div>
+            <h2 id="dining-title" class="screen-title">Delicious Dining</h2>
+            <p class="screen-description">Explore curated restaurants and cafes with diverse cuisines for every taste.</p>
+        </section>
+
+        <!-- Screen 3: VR Games -->
+        <section class="screen" data-screen="2" aria-labelledby="vr-title">
+            <div class="screen-image">
+                <i class="fa-solid fa-vr-cardboard"></i>
+            </div>
+            <h2 id="vr-title" class="screen-title">Virtual Reality</h2>
+            <p class="screen-description">Immerse yourself in cutting-edge VR experiences and adventures.</p>
+        </section>
+
+        <!-- Screen 4: Hotels -->
+        <section class="screen" data-screen="3" aria-labelledby="hotel-title">
+            <div class="screen-image">
+                <i class="fa-solid fa-hotel"></i>
+            </div>
+            <h2 id="hotel-title" class="screen-title">Luxury Accommodations</h2>
+            <p class="screen-description">Book premium hotels and resorts for the perfect stay experience.</p>
+        </section>
+
+        <!-- Screen 5: Studios & Equipment -->
+        <section class="screen" data-screen="4" aria-labelledby="studio-title">
+            <div class="screen-image">
+                <i class="fa-solid fa-microphone"></i>
+            </div>
+            <h2 id="studio-title" class="screen-title">Studios & Equipment</h2>
+            <p class="screen-description">Professional studios and high-quality equipment for creators.</p>
+        </section>
+
+        <!-- Screen 6: Complete Entertainment -->
+        <section class="screen" data-screen="5" aria-labelledby="complete-title">
+            <div class="screen-image">
+                <i class="fa-solid fa-film"></i>
+            </div>
+            <h2 id="complete-title" class="screen-title">Complete Entertainment</h2>
+            <p class="screen-description">From movies to events, book your perfect entertainment experience.</p>
+        </section>
+
+        <!-- Navigation buttons -->
+        <div class="navigation-buttons" role="navigation" aria-label="Introduction navigation">
+            <button class="nav-btn skip-btn" onclick="skipIntro()" aria-label="Skip introduction">
+                <i class="fa-solid fa-forward me-2"></i>Skip
+            </button>
+            <button class="nav-btn next-btn" onclick="nextScreen()" aria-label="Go to next screen">Next</button>
+        </div>
+    </main>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- FontAwesome JS -->
+    <script src="assets/fontawesome/all.js"></script>
+    
+    <script>
+        // Improved Intro App with better performance and maintainability
+        class IntroApp {
+            constructor() {
+                this.currentScreen = 0;
+                this.totalScreens = 6;
+                this.autoAdvanceTimer = null;
+                this.isLoading = false;
+                
+                // Cache DOM elements for better performance
+                this.elements = {
+                    screens: document.querySelectorAll('.screen'),
+                    progressDots: document.querySelectorAll('.progress-dot'),
+                    nextBtn: document.querySelector('.next-btn'),
+                    skipBtn: document.querySelector('.skip-btn'),
+                    floatingElements: document.querySelectorAll('.floating-element')
+                };
+                
+                this.init();
+            }
+            
+            init() {
+                this.setupEventListeners();
+                this.showScreen(0);
+                this.setupFloatingElements();
+                this.startAutoAdvance();
+                this.setupAutoSlidePause(); // Call new method
+                this.setupInactivityAutoSlide(); // Call new method
+            }
+            
+            setupEventListeners() {
+                // Progress dot click handlers
+                this.elements.progressDots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => this.goToScreen(index));
+                    dot.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            this.goToScreen(index);
+                        }
+                    });
+                    dot.setAttribute('tabindex', '0');
+                    dot.setAttribute('role', 'button');
+                    dot.setAttribute('aria-label', `Go to screen ${index + 1}`);
+                });
+                
+                // Icon animation setup
+                this.setupIconAnimations();
+                
+                // Keyboard navigation
+                document.addEventListener('keydown', (e) => {
+                    if (this.isLoading) return;
+                    
+                    switch(e.key) {
+                        case 'ArrowRight':
+                            e.preventDefault();
+                            this.nextScreen();
+                            break;
+                        case 'ArrowLeft':
+                            e.preventDefault();
+                            this.prevScreen();
+                            break;
+                        case 'Escape':
+                            e.preventDefault();
+                            this.skipIntro();
+                            break;
+                    }
+                });
+                
+                // Touch/swipe support
+                let startX = 0;
+                let startY = 0;
+                
+                document.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    startY = e.touches[0].clientY;
+                    this.stopAutoAdvance();
+                });
+                
+                document.addEventListener('touchend', (e) => {
+                    if (!startX || !startY) return;
+                    
+                    const endX = e.changedTouches[0].clientX;
+                    const endY = e.changedTouches[0].clientY;
+                    const diffX = startX - endX;
+                    const diffY = startY - endY;
+                    
+                    // Minimum swipe distance
+                    if (Math.abs(diffX) > 50 && Math.abs(diffY) < 100) {
+                        if (diffX > 0) {
+                            this.nextScreen();
+                        } else {
+                            this.prevScreen();
+                        }
+                    }
+                    
+                    startX = startY = 0;
+                });
+                
+                // Stop auto-advance on user interaction
+                document.addEventListener('click', () => this.stopAutoAdvance());
+                document.addEventListener('touchstart', () => this.stopAutoAdvance());
+            }
+            
+            setupIconAnimations() {
+                const icons = document.querySelectorAll('.screen-image i');
+                icons.forEach((icon, index) => {
+                    // Add initial animation delay
+                    icon.style.animationDelay = `${index * 0.2}s`;
+                    
+                    // Add hover effects
+                    icon.addEventListener('mouseenter', () => {
+                        icon.style.transform = 'scale(1.2) rotateY(15deg)';
+                    });
+                    
+                    icon.addEventListener('mouseleave', () => {
+                        icon.style.transform = 'scale(1) rotateY(0deg)';
+                    });
+                });
+            }
+            
+            showScreen(screenIndex) {
+                if (screenIndex < 0 || screenIndex >= this.totalScreens) return;
+                
+                // Update current screen
+                this.currentScreen = screenIndex;
+                
+                // Hide all screens with smooth transition
+                this.elements.screens.forEach((screen, index) => {
+                    if (index === screenIndex) {
+                        screen.classList.add('active');
+                        screen.setAttribute('aria-hidden', 'false');
+                    } else {
+                        screen.classList.remove('active');
+                        screen.setAttribute('aria-hidden', 'true');
+                    }
+                });
+                
+                // Update progress dots
+                this.elements.progressDots.forEach((dot, index) => {
+                    if (index === screenIndex) {
+                        dot.classList.add('active');
+                        dot.setAttribute('aria-current', 'true');
+                    } else {
+                        dot.classList.remove('active');
+                        dot.setAttribute('aria-current', 'false');
+                    }
+                });
+                
+                // Update navigation buttons
+                this.updateNavigationButtons();
+                
+                // Announce screen change for screen readers
+                this.announceScreenChange(screenIndex);
+            }
+            
+            updateNavigationButtons() {
+                const isLastScreen = this.currentScreen === this.totalScreens - 1;
+                const navigationContainer = document.querySelector('.navigation-buttons');
+                
+                if (isLastScreen) {
+                    // Last screen - show Get Started button
+                    this.elements.nextBtn.innerHTML = '<i class="fa-regular fa-rocket me-2"></i>Get Started';
+                    this.elements.nextBtn.className = 'nav-btn get-started-btn';
+                    this.elements.nextBtn.onclick = () => this.startApp();
+                    this.elements.skipBtn.style.display = 'none';
+                    navigationContainer.classList.add('centered');
+                } else {
+                    // Regular screens - show Next button
+                    this.elements.nextBtn.innerHTML = 'Next';
+                    this.elements.nextBtn.className = 'nav-btn next-btn';
+                    this.elements.nextBtn.onclick = () => this.nextScreen();
+                    this.elements.skipBtn.style.display = 'block';
+                    navigationContainer.classList.remove('centered');
+                }
+            }
+            
+            nextScreen() {
+                if (this.currentScreen < this.totalScreens - 1) {
+                    this.showScreen(this.currentScreen + 1);
+                }
+            }
+            
+            prevScreen() {
+                if (this.currentScreen > 0) {
+                    this.showScreen(this.currentScreen - 1);
+                }
+            }
+            
+            goToScreen(screenIndex) {
+                this.showScreen(screenIndex);
+            }
+            
+            skipIntro() {
+                this.startApp();
+            }
+            
+            async startApp() {
+                if (this.isLoading) return;
+                
+                this.isLoading = true;
+                
+                // Show loading overlay
+                this.showLoading();
+                
+                // Add loading animation to button
+                const btn = this.elements.nextBtn;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-regular fa-spinner fa-spin me-2"></i>Loading...';
+                btn.disabled = true;
+                
+                try {
+                    // Simulate loading time with better UX
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    window.location.href = 'index.html';
+                } catch (error) {
+                    console.error('Navigation error:', error);
+                    this.showError('Failed to navigate to the main app. Please try again.');
+                    // Reset button state
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    this.isLoading = false;
+                    this.hideLoading();
+                }
+            }
+            
+            showLoading() {
+                const overlay = document.getElementById('loadingOverlay');
+                if (overlay) {
+                    overlay.classList.add('active');
+                    overlay.setAttribute('aria-hidden', 'false');
+                }
+            }
+            
+            hideLoading() {
+                const overlay = document.getElementById('loadingOverlay');
+                if (overlay) {
+                    overlay.classList.remove('active');
+                    overlay.setAttribute('aria-hidden', 'true');
+                }
+            }
+            
+            showError(message) {
+                const errorElement = document.getElementById('errorMessage');
+                const errorText = document.getElementById('errorText');
+                if (errorElement && errorText) {
+                    errorText.textContent = message;
+                    errorElement.classList.add('show');
+                    
+                    // Auto-hide error after 5 seconds
+                    setTimeout(() => {
+                        errorElement.classList.remove('show');
+                    }, 5000);
+                }
+            }
+            
+            setupFloatingElements() {
+                this.elements.floatingElements.forEach((element, index) => {
+                    element.style.animationDelay = `${index * 2}s`;
+                });
+            }
+            
+            startAutoAdvance() {
+                this.stopAutoAdvance(); // Clear any existing timer
+                this.autoAdvanceTimer = setTimeout(() => {
+                    if (this.currentScreen < this.totalScreens - 1) {
+                        this.nextScreen();
+                        this.startAutoAdvance();
+                    }
+                }, 3000); // Reduced to 3 seconds for faster auto-sliding
+            }
+            
+            stopAutoAdvance() {
+                if (this.autoAdvanceTimer) {
+                    clearTimeout(this.autoAdvanceTimer);
+                    this.autoAdvanceTimer = null;
+                }
+            }
+            
+            // Enhanced auto-sliding with pause on hover
+            setupAutoSlidePause() {
+                const container = document.querySelector('.intro-container');
+                if (container) {
+                    container.addEventListener('mouseenter', () => this.stopAutoAdvance());
+                    container.addEventListener('mouseleave', () => this.startAutoAdvance());
+                }
+            }
+            
+            // Auto-slide on user inactivity
+            setupInactivityAutoSlide() {
+                let inactivityTimer;
+                const resetTimer = () => {
+                    clearTimeout(inactivityTimer);
+                    inactivityTimer = setTimeout(() => {
+                        if (this.currentScreen < this.totalScreens - 1) {
+                            this.nextScreen();
+                        }
+                    }, 5000); // Auto-slide after 5 seconds of inactivity
+                };
+                
+                // Reset timer on any user interaction
+                document.addEventListener('click', resetTimer);
+                document.addEventListener('touchstart', resetTimer);
+                document.addEventListener('keydown', resetTimer);
+                
+                // Start initial timer
+                resetTimer();
+            }
+            
+            announceScreenChange(screenIndex) {
+                // Create a live region for screen readers
+                let liveRegion = document.getElementById('screen-announcement');
+                if (!liveRegion) {
+                    liveRegion = document.createElement('div');
+                    liveRegion.id = 'screen-announcement';
+                    liveRegion.setAttribute('aria-live', 'polite');
+                    liveRegion.setAttribute('aria-atomic', 'true');
+                    liveRegion.style.position = 'absolute';
+                    liveRegion.style.left = '-10000px';
+                    liveRegion.style.width = '1px';
+                    liveRegion.style.height = '1px';
+                    liveRegion.style.overflow = 'hidden';
+                    document.body.appendChild(liveRegion);
+                }
+                
+                const screenTitles = [
+                    'Welcome to DEEPEND',
+                    'Delicious Dining',
+                    'Virtual Reality',
+                    'Luxury Accommodations',
+                    'Equipment & Entertainment',
+                    'Complete Entertainment'
+                ];
+                
+                liveRegion.textContent = `Screen ${screenIndex + 1} of ${this.totalScreens}: ${screenTitles[screenIndex]}`;
+            }
+        }
+        
+        // Initialize the app when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            window.introApp = new IntroApp();
+        });
+        
+        // Handle page visibility changes
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                // Pause auto-advance when page is not visible
+                window.introApp?.stopAutoAdvance();
+            } else {
+                // Resume auto-advance when page becomes visible
+                window.introApp?.startAutoAdvance();
+            }
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Booking - DEEPEND Entertainment</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet" type="text/css">
+    
+    <!-- FontAwesome Icons -->
+    <link href="assets/fontawesome/all.css" rel="stylesheet" type="text/css">
+    
+    <!-- Custom CSS -->
+    <link href="styles.css" rel="stylesheet" type="text/css">
+    
+    <style>
+        /* Studio Booking Specific Styles */
+        .studio-hero-slider {
+            position: relative;
+            margin-bottom: 2rem;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .studio-slider-container {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .studio-slider-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 100%;
+        }
+        
+        .studio-slide {
+            min-width: 100%;
+            position: relative;
+            height: 100%;
+        }
+        
+        .studio-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .studio-slide-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            color: white;
+            padding: 1rem;
+        }
+        
+        .studio-slide-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .studio-slide-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .studio-slider-indicators {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .studio-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .studio-indicator.active {
+            background: white;
+            transform: scale(1.2);
+        }
+        
+        .studio-slider-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .studio-slider-nav:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+        
+        .studio-slider-nav.prev {
+            left: 1rem;
+        }
+        
+        .studio-slider-nav.next {
+            right: 1rem;
+        }
+        
+        .studio-category-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 0.75rem 1.5rem;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .studio-category-btn:hover,
+        .studio-category-btn.active {
+            background: linear-gradient(135deg, #FF3B30 0%, #C62828 100%);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 59, 48, 0.3);
+        }
+        
+        .studio-category-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        .studio-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .studio-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .studio-image {
+            position: relative;
+            height: 160px;
+            overflow: hidden;
+        }
+        
+        .studio-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .studio-card:hover .studio-image img {
+            transform: scale(1.05);
+        }
+        
+        .studio-badge {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            background: linear-gradient(135deg, #FF3B30 0%, #C62828 100%);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .studio-rating {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .studio-content {
+            padding: 1rem;
+        }
+        
+        .studio-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        
+        .studio-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+        
+        .studio-features {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .studio-feature {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 8px;
+            font-size: 0.7rem;
+        }
+        
+        .studio-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .studio-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #FF3B30;
+        }
+        
+        .studio-book-btn {
+            background: linear-gradient(135deg, #FF3B30 0%, #C62828 100%);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .studio-book-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 20px rgba(255, 59, 48, 0.4);
+        }
+        
+        .studio-section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .studio-section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(135deg, #FF3B30 0%, #C62828 100%);
+            border-radius: 2px;
+        }
+        
+        .studio-quick-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .studio-quick-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .studio-quick-image {
+            height: 120px;
+            position: relative;
+        }
+        
+        .studio-quick-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .studio-quick-content {
+            padding: 0.75rem;
+        }
+        
+        .studio-quick-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.25rem;
+        }
+        
+        .studio-quick-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .studio-quick-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .studio-quick-price {
+            font-weight: 600;
+            color: #FF3B30;
+        }
+        
+        .session-picker-container {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .session-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            padding: 0.75rem;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+        
+        .session-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .session-selector {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            padding: 0.75rem;
+            width: 100%;
+        }
+        
+        /* Rating Styles */
+        .rating-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .rating-card {
+            text-align: center;
+        }
+        
+        .rating-header h4 {
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .rating-header p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .rating-stars {
+            margin-bottom: 1.5rem;
+        }
+        
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .star {
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .star:hover,
+        .star.active {
+            color: #FFD700;
+            transform: scale(1.1);
+        }
+        
+        .star.filled {
+            color: #FFD700;
+        }
+        
+        .rating-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .rating-feedback {
+            margin-bottom: 1.5rem;
+        }
+        
+        .feedback-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            padding: 0.75rem;
+            width: 100%;
+            min-height: 80px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        .feedback-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .rating-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .submit-rating-btn {
+            background: linear-gradient(135deg, #FF3B30 0%, #C62828 100%);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .submit-rating-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .submit-rating-btn:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 59, 48, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid px-3 py-3">
+        <!-- Header Section -->
+        <div class="row align-items-center mb-4">
+            <div class="col-auto">
+                <a href="index.html" class="back-link">
+                    <i class="fa-regular fa-arrow-left"></i>
+                </a>
+            </div>
+            <div class="col">
+                <div class="d-flex align-items-center">
+                    <div>
+                        <h1 class="food-title mb-0">Studio Booking</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto d-flex gap-2">
+                <div class="icon-btn notification-icon">
+                    <i class="fa-regular fa-bell text-white"></i>
+                    <span class="notification-badge">1</span>
+                </div>
+                <!-- Remove or comment out the settings icon/button that links to settings.html -->
+            </div>
+        </div>
+
+        <!-- Studio Hero Slider -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="studio-hero-slider">
+                    <div class="studio-slider-container">
+                        <div class="studio-slider-track" id="studioSliderTrack">
+                            <!-- Slide 1 -->
+                            <div class="studio-slide">
+                                <img src="https://picsum.photos/800/400?random=50" alt="Professional Studio">
+                                <div class="studio-slide-content">
+                                    <div class="studio-slide-title">Professional Studio</div>
+                                    <div class="studio-slide-subtitle">High-quality recording equipment</div>
+                                </div>
+                            </div>
+                            <!-- Slide 2 -->
+                            <div class="studio-slide">
+                                <img src="https://picsum.photos/800/400?random=51" alt="Mixing Room">
+                                <div class="studio-slide-content">
+                                    <div class="studio-slide-title">Mixing Room</div>
+                                    <div class="studio-slide-subtitle">Perfect for post-production</div>
+                                </div>
+                            </div>
+                            <!-- Slide 3 -->
+                            <div class="studio-slide">
+                                <img src="https://picsum.photos/800/400?random=52" alt="Live Recording">
+                                <div class="studio-slide-content">
+                                    <div class="studio-slide-title">Live Recording</div>
+                                    <div class="studio-slide-subtitle">Capture live performances</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Slider Navigation -->
+                        <button class="studio-slider-nav prev" id="studioPrevBtn">
+                            <i class="fa-regular fa-chevron-left"></i>
+                        </button>
+                        <button class="studio-slider-nav next" id="studioNextBtn">
+                            <i class="fa-regular fa-chevron-right"></i>
+                        </button>
+                        
+                        <!-- Slider Indicators -->
+                        <div class="studio-slider-indicators" id="studioIndicators">
+                            <span class="studio-indicator active"></span>
+                            <span class="studio-indicator"></span>
+                            <span class="studio-indicator"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Session and Equipment Selection -->
+        <div class="row mb-4">
+            <div class="col">
+                <div class="session-picker-container">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <input type="date" class="session-input" placeholder="Session Date">
+                        </div>
+                        <div class="col-6">
+                            <select class="session-selector">
+                                <option>2 Hour Session</option>
+                                <option>4 Hour Session</option>
+                                <option>6 Hour Session</option>
+                                <option>Full Day (8 Hours)</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <select class="session-selector">
+                                <option>Studio Type</option>
+                                <option>Professional Recording Studio</option>
+                                <option>Mixing & Mastering Room</option>
+                                <option>Live Recording Space</option>
+                                <option>Podcast Studio</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <button class="btn btn-primary w-100" style="background: linear-gradient(135deg, #FF3B30 0%, #C62828 100%); border: none; padding: 0.75rem; border-radius: 8px;">
+                                <i class="fa-regular fa-search me-2"></i>
+                                Search Available Studios
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="row mb-4">
+            <div class="col">
+                <div class="search-container">
+                    <i class="fa-regular fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Search for studios, equipment...">
+                    <button class="filter-btn" data-bs-toggle="modal" data-bs-target="#filterModal">
+                        <i class="fa-regular fa-sliders-h"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Studio Categories -->
+        <div class="row mb-4">
+            <div class="col">
+                <div class="categories-container">
+                    <button class="studio-category-btn active">
+                        <div class="studio-category-icon">
+                            <i class="fa-regular fa-microphone-alt"></i>
+                        </div>
+                        <span>All Studios</span>
+                    </button>
+                    <button class="studio-category-btn">
+                        <div class="studio-category-icon">
+                            <i class="fa-regular fa-music"></i>
+                        </div>
+                        <span>Recording</span>
+                    </button>
+                    <button class="studio-category-btn">
+                        <div class="studio-category-icon">
+                            <i class="fa-regular fa-sliders-h"></i>
+                        </div>
+                        <span>Mixing</span>
+                    </button>
+                    <button class="studio-category-btn">
+                        <div class="studio-category-icon">
+                            <i class="fa-regular fa-podcast"></i>
+                        </div>
+                        <span>Podcast</span>
+                    </button>
+
+                    <button class="studio-category-btn">
+                        <div class="studio-category-icon">
+                            <i class="fa-regular fa-users"></i>
+                        </div>
+                        <span>Live</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Popular Studios Section -->
+        <div class="row mb-4">
+            <div class="col">
+                <h2 class="studio-section-title">Popular Studios</h2>
+                <div class="meals-grid">
+                    <!-- Studio Card 1 -->
+                    <div class="meal-card">
+                        <div class="meal-image">
+                            <img src="https://picsum.photos/400/300?random=53" alt="Studio A">
+                            <span class="meal-time">Pro</span>
+                            <span class="meal-rating">
+                                <i class="fa-regular fa-star"></i>
+                                4.9
+                            </span>
+                        </div>
+                        <div class="meal-content">
+                            <h3 class="meal-title">Studio A - Professional</h3>
+                            <p class="meal-description">High-end recording with premium equipment</p>
+                            <div class="meal-footer">
+                                <span class="meal-price">$150/hour</span>
+                                <button class="add-to-cart-btn">
+                                    <i class="fa-regular fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Studio Card 2 -->
+                    <div class="meal-card">
+                        <div class="meal-image">
+                            <img src="https://picsum.photos/400/300?random=54" alt="Mixing Room">
+                            <span class="meal-time">Mix</span>
+                            <span class="meal-rating">
+                                <i class="fa-regular fa-star"></i>
+                                4.8
+                            </span>
+                        </div>
+                        <div class="meal-content">
+                            <h3 class="meal-title">Mixing Room B</h3>
+                            <p class="meal-description">Perfect for post-production and mastering</p>
+                            <div class="meal-footer">
+                                <span class="meal-price">$120/hour</span>
+                                <button class="add-to-cart-btn">
+                                    <i class="fa-regular fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Studio Card 3 -->
+                    <div class="meal-card">
+                        <div class="meal-image">
+                            <img src="https://picsum.photos/400/300?random=55" alt="Live Studio">
+                            <span class="meal-time">Live</span>
+                            <span class="meal-rating">
+                                <i class="fa-regular fa-star"></i>
+                                4.7
+                            </span>
+                        </div>
+                        <div class="meal-content">
+                            <h3 class="meal-title">Live Recording Studio</h3>
+                            <p class="meal-description">Capture live performances and bands</p>
+                            <div class="meal-footer">
+                                <span class="meal-price">$200/hour</span>
+                                <button class="add-to-cart-btn">
+                                    <i class="fa-regular fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Studio Card 4 -->
+                    <div class="meal-card">
+                        <div class="meal-image">
+                            <img src="https://picsum.photos/400/300?random=56" alt="Podcast Studio">
+                            <span class="meal-time">Podcast</span>
+                            <span class="meal-rating">
+                                <i class="fa-regular fa-star"></i>
+                                4.6
+                            </span>
+                        </div>
+                        <div class="meal-content">
+                            <h3 class="meal-title">Podcast Studio</h3>
+                            <p class="meal-description">Specialized for podcast recording</p>
+                            <div class="meal-footer">
+                                <span class="meal-price">$80/hour</span>
+                                <button class="add-to-cart-btn">
+                                    <i class="fa-regular fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Premium Studios Section -->
+        <div class="row mb-4">
+            <div class="col">
+                <h2 class="studio-section-title">Premium Studios</h2>
+                <div class="meals-grid">
+                    <!-- Premium Studio Card 1 -->
+                    <div class="meal-card">
+                        <div class="meal-image">
+                            <img src="https://picsum.photos/400/300?random=60" alt="Executive Studio">
+                            <span class="meal-time">Premium</span>
+                            <span class="meal-rating">
+                                <i class="fa-regular fa-star"></i>
+                                5.0
+                            </span>
+                        </div>
+                        <div class="meal-content">
+                            <h3 class="meal-title">Executive Studio Suite</h3>
+                            <p class="meal-description">Luxury recording with engineer included</p>
+                            <div class="meal-footer">
+                                <span class="meal-price">$300/hour</span>
+                                <button class="add-to-cart-btn">
+                                    <i class="fa-regular fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Premium Studio Card 2 -->
+                    <div class="meal-card">
+                        <div class="meal-image">
+                            <img src="https://picsum.photos/400/300?random=61" alt="Mastering Studio">
+                            <span class="meal-time">Master</span>
+                            <span class="meal-rating">
+                                <i class="fa-regular fa-star"></i>
+                                4.9
+                            </span>
+                        </div>
+                        <div class="meal-content">
+                            <h3 class="meal-title">Mastering Studio</h3>
+                            <p class="meal-description">Professional mastering services</p>
+                            <div class="meal-footer">
+                                <span class="meal-price">$250/hour</span>
+                                <button class="add-to-cart-btn">
+                                    <i class="fa-regular fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Studio Rating Section -->
+        <div class="row mb-4">
+            <div class="col">
+                <h2 class="studio-section-title">Rate Your Experience</h2>
+                <div class="rating-container">
+                    <div class="rating-card">
+                        <div class="rating-header">
+                            <h4>How was your studio session?</h4>
+                            <p>Share your experience to help others</p>
+                        </div>
+                        <div class="rating-stars">
+                            <div class="star-rating" id="starRating">
+                                <i class="fa-regular fa-star star" data-rating="1"></i>
+                                <i class="fa-regular fa-star star" data-rating="2"></i>
+                                <i class="fa-regular fa-star star" data-rating="3"></i>
+                                <i class="fa-regular fa-star star" data-rating="4"></i>
+                                <i class="fa-regular fa-star star" data-rating="5"></i>
+                            </div>
+                            <div class="rating-text" id="ratingText">Tap to rate</div>
+                        </div>
+                        <div class="rating-feedback">
+                            <textarea class="feedback-input" placeholder="Tell us about your experience (optional)"></textarea>
+                        </div>
+                        <div class="rating-actions">
+                            <button class="btn btn-outline-light me-2" id="skipRating">Skip</button>
+                            <button class="btn btn-primary submit-rating-btn" id="submitRating" disabled>
+                                Submit Rating
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking Modal -->
+        <div class="modal fade" id="studioBookingModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="background:rgba(30,30,34,0.97);border-radius:18px;backdrop-filter:blur(12px);color:#fff;">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title"><i class="fa-regular fa-microphone-alt me-2"></i>Book Studio</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form id="studioBookingForm">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Studio</label>
+                                <input type="text" class="form-control" id="bookingStudioName" name="studio" readonly style="background:rgba(255,255,255,0.08);color:#fff;">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Date</label>
+                                <input type="date" class="form-control" id="bookingDate" name="date" required style="background:rgba(255,255,255,0.08);color:#fff;">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Session Duration</label>
+                                <select class="form-select" id="bookingDuration" name="duration" required style="background:rgba(255,255,255,0.08);color:#fff;">
+                                    <option value="2 Hour Session">2 Hour Session</option>
+                                    <option value="4 Hour Session">4 Hour Session</option>
+                                    <option value="6 Hour Session">6 Hour Session</option>
+                                    <option value="Full Day (8 Hours)">Full Day (8 Hours)</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Studio Type</label>
+                                <select class="form-select" id="bookingType" name="type" required style="background:rgba(255,255,255,0.08);color:#fff;">
+                                    <option value="Professional Recording Studio">Professional Recording Studio</option>
+                                    <option value="Mixing & Mastering Room">Mixing & Mastering Room</option>
+                                    <option value="Live Recording Space">Live Recording Space</option>
+                                    <option value="Podcast Studio">Podcast Studio</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Your Name</label>
+                                <input type="text" class="form-control" name="name" required style="background:rgba(255,255,255,0.08);color:#fff;">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" name="email" required style="background:rgba(255,255,255,0.08);color:#fff;">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Phone</label>
+                                <input type="tel" class="form-control" name="phone" required style="background:rgba(255,255,255,0.08);color:#fff;">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Special Requests</label>
+                                <textarea class="form-control" name="requests" rows="2" style="background:rgba(255,255,255,0.08);color:#fff;"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-0">
+                            <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Confirm Booking</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Modal -->
+        <div class="modal fade" id="filterModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content filter-modal">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title">Filter Options</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="filter-section">
+                            <h6>Price Range</h6>
+                            <div class="price-range">
+                                <input type="range" class="form-range" min="0" max="500" step="25" id="priceRange">
+                                <div class="price-labels">
+                                    <span>$0</span>
+                                    <span>$500</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="filter-section">
+                            <h6>Studio Type</h6>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="recording">
+                                <label class="form-check-label" for="recording">Recording</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="mixing">
+                                <label class="form-check-label" for="mixing">Mixing</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="podcast">
+                                <label class="form-check-label" for="podcast">Podcast</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="live">
+                                <label class="form-check-label" for="live">Live Recording</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="equipment">
+                                <label class="form-check-label" for="equipment">Equipment Available</label>
+                            </div>
+                        </div>
+                        <div class="filter-section">
+                            <h6>Session Duration</h6>
+                            <select class="form-select">
+                                <option>Any Duration</option>
+                                <option>2 Hours</option>
+                                <option>4 Hours</option>
+                                <option>6 Hours</option>
+                                <option>Full Day</option>
+                            </select>
+                        </div>
+                        <div class="filter-section">
+                            <h6>Sort By</h6>
+                            <select class="form-select">
+                                <option>Recommended</option>
+                                <option>Price: Low to High</option>
+                                <option>Price: High to Low</option>
+                                <option>Rating</option>
+                                <option>Availability</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Reset</button>
+                        <button type="button" class="btn btn-primary apply-filter-btn">Apply Filters</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation Bar -->
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item" data-nav="home">
+                <i class="fa-regular fa-home"></i>
+            </a>
+            <a href="#" class="nav-item active" data-nav="cart">
+                <i class="fa-regular fa-shopping-cart"></i>
+            </a>
+            <a href="profile.html" class="nav-item" data-nav="profile">
+                <i class="fa-regular fa-user"></i>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- FontAwesome JS -->
+    <script src="assets/fontawesome/all.js" type="text/javascript"></script>
+
+    <!-- Custom JS -->
+    <script>
+        // Studio Slider functionality
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.studio-slide');
+        const indicators = document.querySelectorAll('.studio-indicator');
+        const sliderTrack = document.getElementById('studioSliderTrack');
+        const prevBtn = document.getElementById('studioPrevBtn');
+        const nextBtn = document.getElementById('studioNextBtn');
+
+        function updateSlider() {
+            sliderTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // Update indicators
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            updateSlider();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            updateSlider();
+        }
+
+        // Event listeners for slider
+        if (prevBtn && nextBtn) {
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+        }
+
+        // Indicator clicks
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                currentSlide = index;
+                updateSlider();
+            });
+        });
+
+        // Auto-slide every 5 seconds
+        setInterval(nextSlide, 5000);
+
+        // Get all navigation items
+        const navItems = document.querySelectorAll('.nav-item');
+        
+        // Add click event listener to each nav item
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                // Remove active class from all items
+                navItems.forEach(nav => nav.classList.remove('active'));
+                
+                // Add active class to clicked item
+                item.classList.add('active');
+                
+                // Optional: Add smooth animation class
+                item.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+        });
+
+        // Category button click handler
+        const categoryBtns = document.querySelectorAll('.studio-category-btn');
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+        // Add to cart animation & booking modal logic
+        const addToCartBtns = document.querySelectorAll('.add-to-cart-btn, .studio-book-btn');
+        let selectedStudioPrice = 0;
+        addToCartBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                btn.style.transform = 'scale(0.8)';
+                setTimeout(() => {
+                    btn.style.transform = 'scale(1)';
+                }, 100);
+                // Booking modal logic
+                const card = btn.closest('.meal-card');
+                if(card) {
+                    const studioName = card.querySelector('.meal-title')?.textContent || '';
+                    document.getElementById('bookingStudioName').value = studioName;
+                    // Set today's date as default
+                    const today = new Date();
+                    document.getElementById('bookingDate').value = today.toISOString().split('T')[0];
+                    // Extract price (e.g. "$200/hour" -> 200)
+                    const priceText = card.querySelector('.meal-price')?.textContent || '';
+                    const priceMatch = priceText.match(/\$([\d.]+)/);
+                    selectedStudioPrice = priceMatch ? parseFloat(priceMatch[1]) : 0;
+                    // Show modal
+                    const modal = new bootstrap.Modal(document.getElementById('studioBookingModal'));
+                    modal.show();
+                }
+            });
+        });
+
+        // Booking form submission
+        document.getElementById('studioBookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Optionally, collect form data here
+            // Show success message with payment link and price
+            const modalBody = this.closest('.modal-content').querySelector('.modal-body');
+            // For demo, show price and pass as query param to Paystack demo link
+            const paystackAmount = Math.round(selectedStudioPrice * 100); // Paystack expects kobo (NGN) or cents
+            modalBody.innerHTML = `<div class='text-center py-4'><i class='fa-solid fa-check-circle' style='font-size:2.5rem;color:#4CAF50;'></i><h5 class='mt-3'>Booking Confirmed!</h5><p>Your studio booking has been received.<br>Proceed to payment below:</p>
+            <div class='mb-2'><strong>Amount to Pay: $${selectedStudioPrice.toFixed(2)}</strong></div>
+            <div style='max-width:420px;margin:0 auto;'>
+                <iframe src='https://paystack.com/pay/demo?amount=${paystackAmount}' style='width:100%;min-height:600px;border:none;border-radius:12px;overflow:hidden;background:#fff;'></iframe>
+            </div>
+            </div>`;
+            // Optionally, hide modal after payment or keep open
+        });
+
+        // Price range handler
+        const priceRange = document.getElementById('priceRange');
+        if (priceRange) {
+            priceRange.addEventListener('input', (e) => {
+                const value = e.target.value;
+                document.querySelector('.price-labels span:last-child').textContent = `$${value}`;
+            });
+        }
+
+        // Set default session date
+        const today = new Date();
+        const sessionDateInput = document.querySelector('input[type="date"]');
+        if (sessionDateInput) {
+            sessionDateInput.value = today.toISOString().split('T')[0];
+        }
+
+        // Rating functionality
+        let currentRating = 0;
+        const stars = document.querySelectorAll('.star');
+        const ratingText = document.getElementById('ratingText');
+        const submitRatingBtn = document.getElementById('submitRating');
+        const skipRatingBtn = document.getElementById('skipRating');
+        const feedbackInput = document.querySelector('.feedback-input');
+
+        const ratingMessages = {
+            1: 'Poor',
+            2: 'Fair',
+            3: 'Good',
+            4: 'Very Good',
+            5: 'Excellent'
+        };
+
+        // Star click handler
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const rating = parseInt(star.dataset.rating);
+                currentRating = rating;
+                
+                // Update star appearance
+                stars.forEach((s, index) => {
+                    if (index < rating) {
+                        s.classList.add('filled');
+                        s.classList.remove('fa-regular');
+                        s.classList.add('fa-solid');
+                    } else {
+                        s.classList.remove('filled');
+                        s.classList.remove('fa-solid');
+                        s.classList.add('fa-regular');
+                    }
+                });
+                
+                // Update rating text
+                ratingText.textContent = ratingMessages[rating];
+                
+                // Enable submit button
+                submitRatingBtn.disabled = false;
+            });
+
+            // Hover effects
+            star.addEventListener('mouseenter', () => {
+                const rating = parseInt(star.dataset.rating);
+                stars.forEach((s, index) => {
+                    if (index < rating) {
+                        s.style.color = '#FFD700';
+                    }
+                });
+            });
+
+            star.addEventListener('mouseleave', () => {
+                stars.forEach((s, index) => {
+                    if (index < currentRating) {
+                        s.style.color = '#FFD700';
+                    } else {
+                        s.style.color = 'rgba(255, 255, 255, 0.3)';
+                    }
+                });
+            });
+        });
+
+        // Submit rating handler
+        if (submitRatingBtn) {
+            submitRatingBtn.addEventListener('click', () => {
+                const feedback = feedbackInput.value.trim();
+                
+                // Show success message
+                const ratingCard = document.querySelector('.rating-card');
+                ratingCard.innerHTML = `
+                    <div class="rating-success">
+                        <i class="fa-solid fa-check-circle" style="font-size: 3rem; color: #4CAF50; margin-bottom: 1rem;"></i>
+                        <h4 style="color: white; margin-bottom: 0.5rem;">Thank you for your feedback!</h4>
+                        <p style="color: rgba(255, 255, 255, 0.7);">Your rating has been submitted successfully.</p>
+                    </div>
+                `;
+                
+                // Optional: Send to server here
+                console.log('Rating submitted:', { rating: currentRating, feedback });
+            });
+        }
+
+        // Skip rating handler
+        if (skipRatingBtn) {
+            skipRatingBtn.addEventListener('click', () => {
+                const ratingCard = document.querySelector('.rating-card');
+                ratingCard.innerHTML = `
+                    <div class="rating-skipped">
+                        <i class="fa-regular fa-heart" style="font-size: 3rem; color: #FF3B30; margin-bottom: 1rem;"></i>
+                        <h4 style="color: white; margin-bottom: 0.5rem;">Thanks for visiting!</h4>
+                        <p style="color: rgba(255, 255, 255, 0.7);">We hope you enjoyed your studio session.</p>
+                    </div>
+                `;
+            });
+        }
+
+        // Notification Popup
+        function showNotificationPopup() {
+            const notifications = [
+                { title: 'Order Confirmed', message: 'Your order #12345 has been confirmed!', time: '2 min ago' },
+                { title: 'Welcome!', message: 'Thanks for joining DEEPEND Entertainment.', time: '1 day ago' },
+                { title: 'Event Reminder', message: 'VR Game Experience starts in 1 hour.', time: '3 days ago' }
+            ];
+            const modal = document.createElement('div');
+            modal.tabIndex = -1;
+            modal.style.cssText = `position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.35); z-index: 3000; display: flex; align-items: flex-start; justify-content: flex-end;`;
+            modal.innerHTML = `
+                <div style=\"margin: 32px 32px 0 0; background: rgba(30,30,34,0.95); border-radius: 18px; box-shadow: 0 8px 32px rgba(0,0,0,0.35); min-width: 340px; max-width: 95vw; color: #fff; padding: 1.5rem 1.2rem; border: 1.5px solid rgba(255,255,255,0.08); backdrop-filter: blur(14px);\">
+                    <div style='display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem;'>
+                        <h5 style='margin:0;font-size:1.15rem;font-weight:700;letter-spacing:0.2px;'><i class=\"fa-regular fa-bell\" style=\"color:#FF3B30;margin-right:0.5rem;\"></i>Notifications</h5>
+                        <button id='closeNotifModal' style='background:none;border:none;color:#fff;font-size:1.5rem;cursor:pointer;'>&times;</button>
+                    </div>
+                    <div id='notifList'>
+                        ${notifications.map(n => `
+                            <div style='margin-bottom:1.1rem;padding-bottom:0.7rem;border-bottom:1px solid rgba(255,255,255,0.07);'>
+                                <div style='font-weight:600;font-size:1.04rem;'>${n.title}</div>
+                                <div style='color:#bbb;font-size:0.98rem;margin:0.2rem 0 0.3rem 0;'>${n.message}</div>
+                                <div style='color:#FF3B30;font-size:0.92rem;'>${n.time}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.focus();
+            document.getElementById('closeNotifModal').onclick = () => modal.remove();
+            modal.addEventListener('keydown', function(e) { if (e.key === 'Escape') modal.remove(); });
+            modal.onclick = function(e) { if (e.target === modal) modal.remove(); };
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const notifIcon = document.querySelector('.notification-icon');
+            if (notifIcon) notifIcon.onclick = showNotificationPopup;
+        });
+    </script>
+</body>
+</html> 
