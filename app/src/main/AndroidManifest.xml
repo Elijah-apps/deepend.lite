@@ -13,12 +13,12 @@
         android:label="depeend"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SuperWebView"
+        android:theme="@style/Theme.WebView"
         tools:targetApi="31">
         <activity
             android:name="com.roozbehzarei.deepend.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.SuperWebView">
+            android:theme="@style/Theme.WebView">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
