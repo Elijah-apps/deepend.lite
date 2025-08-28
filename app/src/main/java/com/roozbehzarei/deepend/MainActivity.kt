@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceError
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
@@ -37,7 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.roozbehzarei.deepend.ui.theme.SuperWebViewTheme
+import com.roozbehzarei.deepend.ui.theme.WebViewTheme
 
 class MainActivity : ComponentActivity() {
 
@@ -46,7 +47,7 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         setContent {
-            SuperWebViewTheme {
+            WebViewTheme {
                 Surface(
                     modifier = Modifier
                         .fillMaxSize()
@@ -106,7 +107,7 @@ private fun ProgressIndicator(progress: Int) {
     AnimatedVisibility(
         modifier = Modifier.fillMaxWidth(), visible = progress in 1..99
     ) {
-        LinearProgressIndicator(progress = { progress.toFloat() / 100 })
+        LinearProgressIndicator(progress = progress.toFloat() / 100f)
     }
 }
 
