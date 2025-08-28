@@ -24,10 +24,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -36,11 +33,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.roozbehzarei.deepend.ui.theme.WebViewTheme
-import kotlinx.coroutines.delay
 
 /**
  * Main activity that hosts the WebView application
@@ -73,28 +68,12 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun MainScreen() {
     var progress by rememberSaveable { mutableIntStateOf(0) }
-    var isRefreshing by rememberSaveable { mutableStateOf(false) }
     var fullScreenView: View? by remember { mutableStateOf(null) }
     var webView: WebView? by remember { mutableStateOf(null) }
     
-    val pullToRefreshState = rememberPullToRefreshState()
-
-    // Handle pull-to-refresh
-    if (pullToRefreshState.isRefreshing) {
-        LaunchedEffect(true) {
-            isRefreshing = true
-            webView?.reload()
-            // Simulate refresh delay
-            delay(1000)
-            isRefreshing = false
-            pullToRefreshState.endRefresh()
-        }
-    }
-
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .nestedScroll(pullToRefreshState.nestedScrollConnection)
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -102,19 +81,12 @@ private fun MainScreen() {
                 .padding(paddingValues)
         ) {
             WebViewer(
-                isRefreshing = isRefreshing,
-                setRefreshed = { isRefreshing = false },
                 updateProgress = { currentProgress -> progress = currentProgress },
                 onViewReceived = { fullScreenView = it },
                 onWebViewCreated = { webView = it }
             )
             
             ProgressIndicator(progress)
-            
-            PullToRefreshContainer(
-                modifier = Modifier.align(Alignment.TopCenter),
-                state = pullToRefreshState,
-            )
         }
     }
 
@@ -152,8 +124,6 @@ private fun ProgressIndicator(progress: Int) {
 @Composable
 private fun WebViewer(
     modifier: Modifier = Modifier,
-    isRefreshing: Boolean,
-    setRefreshed: () -> Unit,
     updateProgress: (Int) -> Unit,
     onViewReceived: (View?) -> Unit,
     onWebViewCreated: (WebView) -> Unit
@@ -228,10 +198,6 @@ private fun WebViewer(
         },
         update = { view ->
             webView = view
-            if (isRefreshing) {
-                view.reload()
-                setRefreshed()
-            }
         }
     )
 }
