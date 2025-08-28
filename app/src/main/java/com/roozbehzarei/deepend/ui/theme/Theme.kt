@@ -17,6 +17,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
+/**
+ * Data class representing a color family with all semantic color roles
+ */
+@Immutable
+data class ColorFamily(
+    val color: Color,
+    val onColor: Color,
+    val colorContainer: Color,
+    val onColorContainer: Color
+)
+
+/**
+ * Light theme color scheme - Standard contrast
+ */
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
     onPrimary = onPrimaryLight,
@@ -45,9 +59,12 @@ private val lightScheme = lightColorScheme(
     scrim = scrimLight,
     inverseSurface = inverseSurfaceLight,
     inverseOnSurface = inverseOnSurfaceLight,
-    inversePrimary = inversePrimaryLight
+    inversePrimary = inversePrimaryLight,
 )
 
+/**
+ * Dark theme color scheme - Standard contrast
+ */
 private val darkScheme = darkColorScheme(
     primary = primaryDark,
     onPrimary = onPrimaryDark,
@@ -76,9 +93,12 @@ private val darkScheme = darkColorScheme(
     scrim = scrimDark,
     inverseSurface = inverseSurfaceDark,
     inverseOnSurface = inverseOnSurfaceDark,
-    inversePrimary = inversePrimaryDark
+    inversePrimary = inversePrimaryDark,
 )
 
+/**
+ * Light theme color scheme - Medium contrast
+ */
 private val mediumContrastLightColorScheme = lightColorScheme(
     primary = primaryLightMediumContrast,
     onPrimary = onPrimaryLightMediumContrast,
@@ -107,9 +127,12 @@ private val mediumContrastLightColorScheme = lightColorScheme(
     scrim = scrimLightMediumContrast,
     inverseSurface = inverseSurfaceLightMediumContrast,
     inverseOnSurface = inverseOnSurfaceLightMediumContrast,
-    inversePrimary = inversePrimaryLightMediumContrast
+    inversePrimary = inversePrimaryLightMediumContrast,
 )
 
+/**
+ * Light theme color scheme - High contrast
+ */
 private val highContrastLightColorScheme = lightColorScheme(
     primary = primaryLightHighContrast,
     onPrimary = onPrimaryLightHighContrast,
@@ -138,9 +161,12 @@ private val highContrastLightColorScheme = lightColorScheme(
     scrim = scrimLightHighContrast,
     inverseSurface = inverseSurfaceLightHighContrast,
     inverseOnSurface = inverseOnSurfaceLightHighContrast,
-    inversePrimary = inversePrimaryLightHighContrast
+    inversePrimary = inversePrimaryLightHighContrast,
 )
 
+/**
+ * Dark theme color scheme - Medium contrast
+ */
 private val mediumContrastDarkColorScheme = darkColorScheme(
     primary = primaryDarkMediumContrast,
     onPrimary = onPrimaryDarkMediumContrast,
@@ -169,9 +195,12 @@ private val mediumContrastDarkColorScheme = darkColorScheme(
     scrim = scrimDarkMediumContrast,
     inverseSurface = inverseSurfaceDarkMediumContrast,
     inverseOnSurface = inverseOnSurfaceDarkMediumContrast,
-    inversePrimary = inversePrimaryDarkMediumContrast
+    inversePrimary = inversePrimaryDarkMediumContrast,
 )
 
+/**
+ * Dark theme color scheme - High contrast
+ */
 private val highContrastDarkColorScheme = darkColorScheme(
     primary = primaryDarkHighContrast,
     onPrimary = onPrimaryDarkHighContrast,
@@ -200,42 +229,68 @@ private val highContrastDarkColorScheme = darkColorScheme(
     scrim = scrimDarkHighContrast,
     inverseSurface = inverseSurfaceDarkHighContrast,
     inverseOnSurface = inverseOnSurfaceDarkHighContrast,
-    inversePrimary = inversePrimaryDarkHighContrast
+    inversePrimary = inversePrimaryDarkHighContrast,
 )
 
-@Immutable
-data class ColorFamily(
-    val color: Color, val onColor: Color, val colorContainer: Color, val onColorContainer: Color
-)
+/**
+ * Enum class representing different contrast levels
+ */
+enum class ContrastLevel {
+    STANDARD,
+    MEDIUM,
+    HIGH
+}
 
+/**
+ * Helper function to get the appropriate color scheme based on theme and contrast
+ */
+private fun getColorScheme(
+    darkTheme: Boolean,
+    contrastLevel: ContrastLevel
+) = when {
+    darkTheme && contrastLevel == ContrastLevel.HIGH -> highContrastDarkColorScheme
+    darkTheme && contrastLevel == ContrastLevel.MEDIUM -> mediumContrastDarkColorScheme
+    darkTheme -> darkScheme
+    !darkTheme && contrastLevel == ContrastLevel.HIGH -> highContrastLightColorScheme
+    !darkTheme && contrastLevel == ContrastLevel.MEDIUM -> mediumContrastLightColorScheme
+    else -> lightScheme
+}
 
-
+/**
+ * Main theme composable for the WebView app
+ *
+ * @param darkTheme Whether to use dark theme. Defaults to system setting
+ * @param dynamicColor Whether to use dynamic colors (Material You). Available on Android 12+
+ * @param contrastLevel The contrast level to use for accessibility
+ * @param content The content to theme
+ */
 @Composable
 fun WebViewTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true, content: @Composable () -> Unit
+    dynamicColor: Boolean = true,
+    contrastLevel: ContrastLevel = ContrastLevel.STANDARD,
+    content: @Composable () -> Unit
 ) {
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-
-        darkTheme -> darkScheme
-        else -> lightScheme
+        else -> getColorScheme(darkTheme, contrastLevel)
     }
+    
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.background.toArgb()
+            window.statusBarColor = colorScheme.primary.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }
 
     MaterialTheme(
-        colorScheme = colorScheme, typography = Typography, content = content
+        colorScheme = colorScheme,
+        typography = Typography,
+        content = content
     )
 }
-
