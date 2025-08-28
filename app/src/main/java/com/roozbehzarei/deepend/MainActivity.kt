@@ -2,7 +2,7 @@ package com.roozbehzarei.deepend
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Bitmap
+
 import android.os.Build
 import android.os.Bundle
 import android.view.View
