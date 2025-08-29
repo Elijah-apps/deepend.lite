@@ -16,6 +16,10 @@
     
     <!-- Custom CSS -->
     <link href="styles.css" rel="stylesheet" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase/config.js"></script>
+    <script src="supabase/supabase-client.js"></script>
+    <script src="register-form.js" defer></script>
 </head>
 <body>
     <div class="auth-container">
@@ -96,48 +100,5 @@
 
     <!-- FontAwesome JS -->
     <script src="assets/fontawesome/all.js" type="text/javascript"></script>
-
-    <!-- Custom JS -->
-    <script>
-        // Toggle password visibility
-        function togglePassword(inputId, iconId) {
-            const passwordInput = document.getElementById(inputId);
-            const passwordIcon = document.getElementById(iconId);
-            
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                passwordIcon.classList.remove('fa-eye');
-                passwordIcon.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                passwordIcon.classList.remove('fa-eye-slash');
-                passwordIcon.classList.add('fa-eye');
-            }
-        }
-
-        // Handle form submission
-        document.getElementById('registerForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const fullName = document.getElementById('fullName').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const terms = document.getElementById('terms').checked;
-            
-            // Validate passwords match
-            if (password !== confirmPassword) {
-                alert('Passwords do not match!');
-                return;
-            }
-            
-            if (fullName && email && phone && password && terms) {
-                // Simulate successful registration
-                alert('Account created successfully!');
-                window.location.href = 'index.html';
-            }
-        });
-    </script>
 </body>
-</html> 
+</html>

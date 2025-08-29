@@ -12,6 +12,7 @@
     <link href="assets/fontawesome/all.css" rel="stylesheet" type="text/css">
     <!-- Custom CSS -->
     <link href="styles.css" rel="stylesheet" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         body { background: #18181c; color: #fff; font-family: 'Open Sans', 'Roboto', sans-serif; }
         .glass-card {
@@ -161,7 +162,19 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- FontAwesome JS -->
     <script src="assets/fontawesome/all.js" type="text/javascript"></script>
-    <script>
+    <script type="module">
+        import { SUPABASE_URL, SUPABASE_ANON_KEY } from './supabase/config.js';
+
+        const supabase = axios.create({
+            baseURL: `${SUPABASE_URL}/rest/v1`,
+            headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=minimal'
+            }
+        });
+
         // Get URL params for summary
         function getParam(name) {
             const url = new URL(window.location.href);
@@ -207,7 +220,7 @@
             }
             updateSummary();
         };
-        document.getElementById('bookingForm').onsubmit = function(e) {
+        document.getElementById('bookingForm').onsubmit = async function(e) {
             e.preventDefault();
             // Validate dates
             const checkIn = document.getElementById('checkIn').value;
@@ -216,17 +229,59 @@
                 alert('Please select valid check-in and check-out dates.');
                 return;
             }
+
             document.getElementById('confirmBookingBtn').disabled = true;
             document.getElementById('confirmBookingBtn').textContent = 'Processing...';
-            setTimeout(() => {
-                alert('Booking confirmed! (Demo)');
+
+            const guestName = document.getElementById('guestName').value;
+            const guestEmail = document.getElementById('guestEmail').value;
+            const guestPhone = document.getElementById('guestPhone').value;
+            const numGuests = parseInt(document.getElementById('numGuests').value);
+            const specialRequests = document.getElementById('specialRequests').value;
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            const totalAmount = parseFloat(document.getElementById('totalAmount').textContent.replace('
+        updateSummary();
+    </script>
+</body>
+</html> , ''));
+
+            const productId = getParam('productId'); // Assuming product ID is passed as URL param
+            const userId = localStorage.getItem('deepend_user_id'); // Assuming user ID is stored in localStorage
+
+            const bookingData = {
+                user_id: userId,
+                product_id: productId, // This would be the hotel room ID, movie ID, etc.
+                total_amount: totalAmount,
+                status: 'pending', // Initial status
+                guest_name: guestName,
+                guest_email: guestEmail,
+                guest_phone: guestPhone,
+                check_in_date: checkIn,
+                check_out_date: checkOut,
+                num_guests: numGuests,
+                special_requests: specialRequests,
+                payment_method: paymentMethod,
+                // Add other relevant fields as needed
+            };
+
+            try {
+                const { data, error } = await supabase.from('orders').insert([bookingData]);
+                if (error) throw error;
+
+                console.log('Booking confirmed!', data);
+                alert('Booking confirmed!');
+                // Optionally, store order ID for tracking
+                localStorage.setItem('lastOrderId', data[0].id);
+                localStorage.setItem('lastOrderTime', new Date().toISOString());
+                localStorage.setItem('lastOrderTotal', totalAmount);
+
+                window.location.href = 'order-success.html'; // Redirect to success page
+            } catch (error) {
+                console.error('Error confirming booking:', error.message);
+                alert('Error confirming booking. Please try again.');
                 document.getElementById('confirmBookingBtn').disabled = false;
                 document.getElementById('confirmBookingBtn').textContent = 'Confirm Booking';
-                document.getElementById('bookingForm').reset();
-                document.getElementById('couponMsg').textContent = '';
-                couponDiscount = 0;
-                updateSummary();
-            }, 1200);
+            }
         };
         updateSummary();
     </script>

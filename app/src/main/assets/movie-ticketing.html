@@ -262,6 +262,10 @@
             box-shadow: 0 4px 15px rgba(255,59,48,0.3);
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase/config.js"></script>
+    <script src="supabase/supabase-client.js"></script>
+    <script src="products.js" defer></script>
 </head>
 <body>
     <div class="container-fluid px-3 py-3">
@@ -434,144 +438,5 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- FontAwesome JS -->
     <script src="assets/fontawesome/all.js"></script>
-    <script>
-        // Cinema Slider functionality
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.cinema-slide');
-        const indicators = document.querySelectorAll('.cinema-indicator');
-        const sliderTrack = document.getElementById('cinemaSliderTrack');
-        const prevBtn = document.getElementById('cinemaPrevBtn');
-        const nextBtn = document.getElementById('cinemaNextBtn');
-
-        function updateSlider() {
-            sliderTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
-            
-            // Update indicators
-            indicators.forEach((indicator, index) => {
-                indicator.classList.toggle('active', index === currentSlide);
-            });
-        }
-
-        function nextSlide() {
-            currentSlide = (currentSlide + 1) % slides.length;
-            updateSlider();
-        }
-
-        function prevSlide() {
-            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-            updateSlider();
-        }
-
-        // Event listeners for slider
-        if (prevBtn && nextBtn) {
-            prevBtn.addEventListener('click', prevSlide);
-            nextBtn.addEventListener('click', nextSlide);
-        }
-
-        // Indicator clicks
-        indicators.forEach((indicator, index) => {
-            indicator.addEventListener('click', () => {
-                currentSlide = index;
-                updateSlider();
-            });
-        });
-
-        // Auto-slide every 5 seconds
-        setInterval(nextSlide, 5000);
-
-        // Movie filter functionality
-        const filterBtns = document.querySelectorAll('.movie-filter-btn');
-        const movieCards = document.querySelectorAll('.movie-card');
-        const selectedMovieInput = document.getElementById('selectedMovie');
-        let selectedMovie = 'The Batman';
-        let currentFilter = 'now-showing';
-        
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const filter = btn.getAttribute('data-filter');
-                
-                // Update active button
-                filterBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                
-                // Filter movies
-                movieCards.forEach(card => {
-                    const category = card.getAttribute('data-category');
-                    if (filter === 'all' || category === filter) {
-                        card.classList.remove('hidden');
-                    } else {
-                        card.classList.add('hidden');
-                    }
-                });
-                
-                currentFilter = filter;
-            });
-        });
-        
-        // Movie selection
-        movieCards.forEach(card => {
-            card.addEventListener('click', () => {
-                movieCards.forEach(c => c.classList.remove('active'));
-                card.classList.add('active');
-                selectedMovie = card.getAttribute('data-movie');
-                selectedMovieInput.value = selectedMovie;
-            });
-        });
-        
-        // Set default date to today
-        const movieDateInput = document.getElementById('movieDate');
-        const today = new Date();
-        movieDateInput.value = today.toISOString().split('T')[0];
-        
-        // Seat map generation
-        const seatMap = document.getElementById('seatMap');
-        const rows = 6;
-        const seatsPerRow = 10;
-        const occupiedSeats = [3, 4, 12, 13, 25, 26, 40]; // Example occupied seats
-        let selectedSeats = [];
-        
-        function renderSeats() {
-            seatMap.innerHTML = '';
-            let seatNumber = 1;
-            for (let r = 0; r < rows; r++) {
-                const rowDiv = document.createElement('div');
-                rowDiv.className = 'seat-row';
-                for (let s = 0; s < seatsPerRow; s++) {
-                    const seatDiv = document.createElement('div');
-                    seatDiv.className = 'seat';
-                    seatDiv.textContent = seatNumber;
-                    if (occupiedSeats.includes(seatNumber)) {
-                        seatDiv.classList.add('occupied');
-                    } else if (selectedSeats.includes(seatNumber)) {
-                        seatDiv.classList.add('selected');
-                    }
-                    seatDiv.addEventListener('click', () => {
-                        if (seatDiv.classList.contains('occupied')) return;
-                        if (seatDiv.classList.contains('selected')) {
-                            selectedSeats = selectedSeats.filter(n => n !== seatNumber);
-                            seatDiv.classList.remove('selected');
-                        } else {
-                            selectedSeats.push(seatNumber);
-                            seatDiv.classList.add('selected');
-                        }
-                        document.getElementById('reserveBtn').disabled = selectedSeats.length === 0;
-                    });
-                    rowDiv.appendChild(seatDiv);
-                    seatNumber++;
-                }
-                seatMap.appendChild(rowDiv);
-            }
-        }
-        renderSeats();
-        
-        // Reserve button
-        document.getElementById('reserveBtn').addEventListener('click', () => {
-            if (selectedSeats.length === 0) return;
-            alert(`You have reserved seat(s): ${selectedSeats.join(', ')} for "${selectedMovie}" on ${movieDateInput.value} at ${document.getElementById('movieTime').value}`);
-            selectedSeats = [];
-            renderSeats();
-            document.getElementById('reserveBtn').disabled = true;
-        });
-    </script>
 </body>
-</html> 
+</html>

@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/fontawesome/all.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         body { background: linear-gradient(135deg, #23232a 0%, #18181b 100%); color: #fff; font-family: 'Roboto', sans-serif; min-height: 100vh; }
         .settings-container { max-width: 440px; margin: 48px auto; background: rgba(30,30,34,0.7); border-radius: 22px; box-shadow: 0 8px 32px rgba(0,0,0,0.45); padding: 2.7rem 2.2rem; backdrop-filter: blur(18px); border: 1.5px solid rgba(255,255,255,0.08); position: relative; }
@@ -53,7 +54,19 @@
         </div>
     </div>
     <script src="assets/fontawesome/all.js"></script>
-    <script>
+    <script type="module">
+        import { SUPABASE_URL, SUPABASE_ANON_KEY } from './supabase/config.js';
+
+        const supabase = axios.create({
+            baseURL: `${SUPABASE_URL}/rest/v1`,
+            headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=minimal'
+            }
+        });
+
         // Notification Popup
         function showNotificationPopup() {
             const notifications = [
@@ -104,10 +117,27 @@
             `;
             document.body.appendChild(modalBg);
             modalBg.querySelector('.no').onclick = () => modalBg.remove();
-            modalBg.querySelector('.yes').onclick = function() {
-                localStorage.clear();
-                modalBg.querySelector('.confirm-modal').innerHTML = '<h5 style="color:#43e97b;">Profile deleted!</h5><p>Redirecting to home...</p>';
-                setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+            modalBg.querySelector('.yes').onclick = async function() {
+                const userId = localStorage.getItem('deepend_user_id'); // Assuming user ID is stored here
+                if (userId) {
+                    try {
+                        const { error } = await supabase.from('users').delete().eq('id', userId);
+                        if (error) throw error;
+                        console.log('User data deleted from Supabase.');
+                        localStorage.clear();
+                        modalBg.querySelector('.confirm-modal').innerHTML = '<h5 style="color:#43e97b;">Profile deleted!</h5><p>Redirecting to home...</p>';
+                        setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+                    } catch (error) {
+                        console.error('Error deleting user from Supabase:', error.message);
+                        modalBg.querySelector('.confirm-modal').innerHTML = '<h5 style="color:#FF3B30;">Error!</h5><p>Could not delete profile.</p>';
+                        setTimeout(() => { modalBg.remove(); }, 1500);
+                    }
+                } else {
+                    console.warn('No user ID found in localStorage. Deleting local data only.');
+                    localStorage.clear();
+                    modalBg.querySelector('.confirm-modal').innerHTML = '<h5 style="color:#43e97b;">Profile deleted!</h5><p>Redirecting to home...</p>';
+                    setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+                }
             };
         };
     </script>

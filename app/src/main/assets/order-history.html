@@ -24,6 +24,10 @@
         .no-orders { color: #aaa; font-size: 1.01rem; margin-bottom: 1.2rem; text-align: center; }
         @media (max-width: 600px) { .history-container { padding: 1.2rem 0.5rem; } }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase/config.js"></script>
+    <script src="supabase/supabase-client.js"></script>
+    <script src="order-history.js" defer></script>
 </head>
 <body>
     <div class="history-container">
@@ -32,30 +36,5 @@
         <div class="order-list" id="orderList"></div>
     </div>
     <script src="assets/fontawesome/all.js"></script>
-    <script>
-        function renderOrders() {
-            const orderList = document.getElementById('orderList');
-            let orders = JSON.parse(localStorage.getItem('deepend_orders') || '[]');
-            if (orders.length === 0) {
-                orderList.innerHTML = '<div class="no-orders">No orders yet.</div>';
-                return;
-            }
-            orderList.innerHTML = '';
-            orders.slice().reverse().forEach(order => {
-                const date = new Date(order.id ? Number(order.id) : Date.now());
-                const timeStr = date.toLocaleString();
-                orderList.innerHTML += `
-                    <div class="order-item">
-                        <div class="order-info">
-                            <div class="order-number">Order #${order.id || 'N/A'}</div>
-                            <div class="order-note">${order.note || ''}</div>
-                        </div>
-                        <div class="order-time">${timeStr}</div>
-                    </div>
-                `;
-            });
-        }
-        renderOrders();
-    </script>
 </body>
-</html> 
+</html>

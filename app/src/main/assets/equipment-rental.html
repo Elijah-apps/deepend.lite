@@ -16,6 +16,7 @@
     
     <!-- Custom CSS -->
     <link href="styles.css" rel="stylesheet" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     
     <style>
         /* Equipment Rental Specific Styles */
@@ -379,6 +380,10 @@
             color: #FF3B30;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase/config.js"></script>
+    <script src="supabase/supabase-client.js"></script>
+    <script src="products.js" defer></script>
 </head>
 <body>
     <div class="container-fluid px-3 py-3">
@@ -549,148 +554,18 @@
         <div class="row mb-4">
             <div class="col">
                 <h2 class="equipment-section-title">Popular Equipment</h2>
-                <div class="meals-grid">
-                    <!-- Equipment Card 1 -->
-                    <div class="meal-card">
-                        <div class="meal-image">
-                            <img src="https://picsum.photos/400/300?random=73" alt="Shure SM58">
-                            <span class="meal-time">Audio</span>
-                            <span class="meal-rating">
-                                <i class="fa-regular fa-star"></i>
-                                4.9
-                            </span>
-                        </div>
-                        <div class="meal-content">
-                            <h3 class="meal-title">Shure SM58 Microphone</h3>
-                            <p class="meal-description">Professional vocal microphone</p>
-                            <div class="meal-footer">
-                                <span class="meal-price">$15/day</span>
-                                <button class="add-to-cart-btn">
-                                    <i class="fa-regular fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Equipment Card 2 -->
-                    <div class="meal-card">
-                        <div class="meal-image">
-                            <img src="https://picsum.photos/400/300?random=74" alt="Fender Stratocaster">
-                            <span class="meal-time">Instrument</span>
-                            <span class="meal-rating">
-                                <i class="fa-regular fa-star"></i>
-                                4.8
-                            </span>
-                        </div>
-                        <div class="meal-content">
-                            <h3 class="meal-title">Fender Stratocaster</h3>
-                            <p class="meal-description">Electric guitar for recording</p>
-                            <div class="meal-footer">
-                                <span class="meal-price">$25/day</span>
-                                <button class="add-to-cart-btn">
-                                    <i class="fa-regular fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Equipment Card 3 -->
-                    <div class="meal-card">
-                        <div class="meal-image">
-                            <img src="https://picsum.photos/400/300?random=75" alt="LED Panel">
-                            <span class="meal-time">Lighting</span>
-                            <span class="meal-rating">
-                                <i class="fa-regular fa-star"></i>
-                                4.7
-                            </span>
-                        </div>
-                        <div class="meal-content">
-                            <h3 class="meal-title">LED Panel Light</h3>
-                            <p class="meal-description">Professional lighting for videos</p>
-                            <div class="meal-footer">
-                                <span class="meal-price">$20/day</span>
-                                <button class="add-to-cart-btn">
-                                    <i class="fa-regular fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Equipment Card 4 -->
-                    <div class="meal-card">
-                        <div class="meal-image">
-                            <img src="https://picsum.photos/400/300?random=76" alt="Audio Interface">
-                            <span class="meal-time">Studio</span>
-                            <span class="meal-rating">
-                                <i class="fa-regular fa-star"></i>
-                                4.6
-                            </span>
-                        </div>
-                        <div class="meal-content">
-                            <h3 class="meal-title">Focusrite Audio Interface</h3>
-                            <p class="meal-description">Professional audio interface</p>
-                            <div class="meal-footer">
-                                <span class="meal-price">$30/day</span>
-                                <button class="add-to-cart-btn">
-                                    <i class="fa-regular fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="meals-grid" id="popularEquipmentGrid">
+                    <!-- Equipment will be dynamically populated here -->
                 </div>
             </div>
         </div>
-
-
 
         <!-- Premium Equipment Section -->
         <div class="row mb-4">
             <div class="col">
                 <h2 class="equipment-section-title">Premium Equipment</h2>
-                <div class="meals-grid">
-                    <!-- Premium Equipment Card 1 -->
-                    <div class="meal-card">
-                        <div class="meal-image">
-                            <img src="https://picsum.photos/400/300?random=80" alt="Neumann U87">
-                            <span class="meal-time">Premium</span>
-                            <span class="meal-rating">
-                                <i class="fa-regular fa-star"></i>
-                                5.0
-                            </span>
-                        </div>
-                        <div class="meal-content">
-                            <h3 class="meal-title">Neumann U87 Microphone</h3>
-                            <p class="meal-description">Professional studio condenser mic</p>
-                            <div class="meal-footer">
-                                <span class="meal-price">$50/day</span>
-                                <button class="add-to-cart-btn">
-                                    <i class="fa-regular fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Premium Equipment Card 2 -->
-                    <div class="meal-card">
-                        <div class="meal-image">
-                            <img src="https://picsum.photos/400/300?random=81" alt="Gibson Les Paul">
-                            <span class="meal-time">Premium</span>
-                            <span class="meal-rating">
-                                <i class="fa-regular fa-star"></i>
-                                4.9
-                            </span>
-                        </div>
-                        <div class="meal-content">
-                            <h3 class="meal-title">Gibson Les Paul Guitar</h3>
-                            <p class="meal-description">Classic electric guitar</p>
-                            <div class="meal-footer">
-                                <span class="meal-price">$40/day</span>
-                                <button class="add-to-cart-btn">
-                                    <i class="fa-regular fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="meals-grid" id="premiumEquipmentGrid">
+                    <!-- Equipment will be dynamically populated here -->
                 </div>
             </div>
         </div>
@@ -829,144 +704,5 @@
 
     <!-- FontAwesome JS -->
     <script src="assets/fontawesome/all.js" type="text/javascript"></script>
-
-    <!-- Custom JS -->
-    <script>
-        // Equipment Slider functionality
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.equipment-slide');
-        const indicators = document.querySelectorAll('.equipment-indicator');
-        const sliderTrack = document.getElementById('equipmentSliderTrack');
-        const prevBtn = document.getElementById('equipmentPrevBtn');
-        const nextBtn = document.getElementById('equipmentNextBtn');
-
-        function updateSlider() {
-            sliderTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
-            
-            // Update indicators
-            indicators.forEach((indicator, index) => {
-                indicator.classList.toggle('active', index === currentSlide);
-            });
-        }
-
-        function nextSlide() {
-            currentSlide = (currentSlide + 1) % slides.length;
-            updateSlider();
-        }
-
-        function prevSlide() {
-            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-            updateSlider();
-        }
-
-        // Event listeners for slider
-        if (prevBtn && nextBtn) {
-            prevBtn.addEventListener('click', prevSlide);
-            nextBtn.addEventListener('click', nextSlide);
-        }
-
-        // Indicator clicks
-        indicators.forEach((indicator, index) => {
-            indicator.addEventListener('click', () => {
-                currentSlide = index;
-                updateSlider();
-            });
-        });
-
-        // Auto-slide every 5 seconds
-        setInterval(nextSlide, 5000);
-
-        // Get all navigation items
-        const navItems = document.querySelectorAll('.nav-item');
-        
-        // Add click event listener to each nav item
-        navItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                // Remove active class from all items
-                navItems.forEach(nav => nav.classList.remove('active'));
-                
-                // Add active class to clicked item
-                item.classList.add('active');
-                
-                // Optional: Add smooth animation class
-                item.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-            });
-        });
-
-        // Category button click handler
-        const categoryBtns = document.querySelectorAll('.equipment-category-btn');
-        categoryBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                categoryBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-            });
-        });
-
-        // Add to cart animation & booking modal logic
-        const addToCartBtns = document.querySelectorAll('.add-to-cart-btn, .equipment-rent-btn');
-        addToCartBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                btn.style.transform = 'scale(0.8)';
-                setTimeout(() => {
-                    btn.style.transform = 'scale(1)';
-                }, 100);
-                // Booking modal logic
-                const card = btn.closest('.meal-card');
-                if(card) {
-                    const equipmentName = card.querySelector('.meal-title')?.textContent || '';
-                    document.getElementById('bookingEquipmentName').value = equipmentName;
-                    // Set default rental dates
-                    const today = new Date();
-                    const tomorrow = new Date(today);
-                    tomorrow.setDate(tomorrow.getDate() + 1);
-                    document.getElementById('bookingStartDate').value = today.toISOString().split('T')[0];
-                    document.getElementById('bookingEndDate').value = tomorrow.toISOString().split('T')[0];
-                    // Show modal
-                    const modal = new bootstrap.Modal(document.getElementById('equipmentBookingModal'));
-                    modal.show();
-                }
-            });
-        });
-
-        // Booking form submission
-        document.getElementById('equipmentBookingForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            // Optionally, collect form data here
-            // Show success message
-            const modalBody = this.closest('.modal-content').querySelector('.modal-body');
-            modalBody.innerHTML = `<div class='text-center py-4'><i class='fa-solid fa-check-circle' style='font-size:2.5rem;color:#4CAF50;'></i><h5 class='mt-3'>Rental Confirmed!</h5><p>Your equipment rental has been received.<br>We look forward to serving you!</p></div>`;
-            // Optionally, hide modal after 2 seconds
-            setTimeout(() => {
-                const modal = bootstrap.Modal.getInstance(document.getElementById('equipmentBookingModal'));
-                modal.hide();
-                // Reset form after closing
-                setTimeout(()=>window.location.reload(), 600);
-            }, 2000);
-        });
-
-        // Price range handler
-        const priceRange = document.getElementById('priceRange');
-        if (priceRange) {
-            priceRange.addEventListener('input', (e) => {
-                const value = e.target.value;
-                document.querySelector('.price-labels span:last-child').textContent = `$${value}`;
-            });
-        }
-
-        // Set default rental dates
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        
-        const pickupDateInput = document.querySelector('input[type="date"]:first-of-type');
-        const returnDateInput = document.querySelector('input[type="date"]:last-of-type');
-        
-        if (pickupDateInput) {
-            pickupDateInput.value = today.toISOString().split('T')[0];
-        }
-        if (returnDateInput) {
-            returnDateInput.value = tomorrow.toISOString().split('T')[0];
-        }
-    </script>
 </body>
-</html> 
+</html>

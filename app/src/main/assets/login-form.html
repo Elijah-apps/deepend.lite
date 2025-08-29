@@ -152,6 +152,10 @@
             color: white;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase/config.js"></script>
+    <script src="supabase/supabase-client.js"></script>
+    <script src="login-form.js" defer></script>
 </head>
 <body>
     <div class="auth-container">
@@ -185,55 +189,5 @@
 
     <!-- FontAwesome JS -->
     <script src="assets/fontawesome/all.js" type="text/javascript"></script>
-    
-    <!-- Custom JS -->
-    <script>
-        class LoginFormManager {
-            constructor() {
-                this.loginForm = document.getElementById('login-form');
-                this.rememberMe = document.getElementById('remember-me');
-                this.emailInput = document.getElementById('email');
-                this.passwordInput = document.getElementById('password');
-                this.init();
-            }
-
-            init() {
-                this.setupBackButton();
-                this.loginForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    this.handleLogin();
-                });
-            }
-
-            setupBackButton() {
-                const backButton = document.createElement('button');
-                backButton.className = 'back-btn';
-                backButton.innerHTML = '<i class="fa-solid fa-arrow-left"></i> Back';
-                backButton.addEventListener('click', () => {
-                    window.history.back();
-                });
-                document.body.appendChild(backButton);
-            }
-
-            handleLogin() {
-                const email = this.emailInput.value;
-                const password = this.passwordInput.value;
-
-                if (this.rememberMe.checked) {
-                    localStorage.setItem('userCredentials', JSON.stringify({ email, password }));
-                }
-
-                // Simulate a login process
-                setTimeout(() => {
-                    // Redirect to the main app page on successful login
-                    window.location.href = 'index.html';
-                }, 1000);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            new LoginFormManager();
-        });
-    </script>
 </body>
 </html>
