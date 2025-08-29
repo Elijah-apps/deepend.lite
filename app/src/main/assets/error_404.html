@@ -3,33 +3,369 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Not Found</title>
+    <title>Screen Not Found</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .particle:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { left: 20%; animation-delay: 1s; }
+        .particle:nth-child(3) { left: 30%; animation-delay: 2s; }
+        .particle:nth-child(4) { left: 40%; animation-delay: 3s; }
+        .particle:nth-child(5) { left: 50%; animation-delay: 4s; }
+        .particle:nth-child(6) { left: 60%; animation-delay: 5s; }
+        .particle:nth-child(7) { left: 70%; animation-delay: 1.5s; }
+        .particle:nth-child(8) { left: 80%; animation-delay: 2.5s; }
+        .particle:nth-child(9) { left: 90%; animation-delay: 3.5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+        }
+
+        /* Glass morphism container */
+        .container {
+            position: relative;
+            z-index: 2;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-        .container {
             text-align: center;
+            padding: 2rem;
         }
-        h1 {
-            color: #333;
+
+        .glass-card {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 4rem 3rem;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            animation: slideUp 1s ease-out;
         }
-        p {
-            color: #666;
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Glitch effect for 404 */
+        .error-code {
+            font-size: clamp(4rem, 12vw, 8rem);
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            position: relative;
+            letter-spacing: 0.1em;
+            animation: glitch 2s infinite;
+        }
+
+        .error-code::before,
+        .error-code::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .error-code::before {
+            color: #ff0040;
+            z-index: -1;
+            animation: glitchBefore 2s infinite;
+        }
+
+        .error-code::after {
+            color: #00ffff;
+            z-index: -2;
+            animation: glitchAfter 2s infinite;
+        }
+
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+
+        @keyframes glitchBefore {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(2px, -2px); }
+            40% { transform: translate(2px, 2px); }
+            60% { transform: translate(-2px, -2px); }
+            80% { transform: translate(-2px, 2px); }
+        }
+
+        @keyframes glitchAfter {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+
+        .title {
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s ease-out 0.5s both;
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 3vw, 1.25rem);
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            animation: fadeIn 1s ease-out 0.7s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Interactive button */
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: none;
+            cursor: pointer;
+            animation: fadeIn 1s ease-out 0.9s both;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #ff5252, #d63031);
+        }
+
+        .cta-button:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        /* Floating icons */
+        .floating-icon {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.1);
+            font-size: 2rem;
+            animation: floatIcon 8s ease-in-out infinite;
+        }
+
+        .icon-1 { top: 20%; left: 15%; animation-delay: 0s; }
+        .icon-2 { top: 30%; right: 20%; animation-delay: 2s; }
+        .icon-3 { bottom: 30%; left: 10%; animation-delay: 4s; }
+        .icon-4 { bottom: 20%; right: 15%; animation-delay: 6s; }
+
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .glass-card {
+                padding: 3rem 2rem;
+                margin: 1rem;
+            }
+            
+            .floating-icon {
+                display: none;
+            }
+        }
+
+        /* Pulsing glow effect */
+        .glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            animation: pulse 4s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.1; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Mobile App Error</h1>
-        <p>The requested page could not be found.</p>
-        <p>If the problem persists, please contact the developer.</p>
+    <!-- Animated background particles -->
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
     </div>
+
+    <!-- Floating decorative icons -->
+    <div class="floating-icon icon-1">📱</div>
+    <div class="floating-icon icon-2">💫</div>
+    <div class="floating-icon icon-3">🔍</div>
+    <div class="floating-icon icon-4">✨</div>
+
+    <!-- Pulsing glow background -->
+    <div class="glow"></div>
+
+    <div class="container">
+        <div class="glass-card">
+            <div class="error-code" data-text="404">404</div>
+            <h1 class="title">Screen Not Found</h1>
+            <p class="subtitle">
+                Oops! The screen you're looking for seems to have vanished into the digital void. 
+                It might be taking a coffee break or exploring new dimensions.
+            </p>
+            <button class="cta-button" onclick="goHome()">
+                <span>🏠</span>
+                Take Me Home
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function goHome() {
+            // Add a little animation before going back
+            const button = document.querySelector('.cta-button');
+            button.style.transform = 'scale(0.95)';
+            
+            setTimeout(() => {
+                // In a real app, this would navigate to your home screen
+                // For demo purposes, we'll just show a message
+                button.innerHTML = '<span>✓</span> Going Home...';
+                button.style.background = 'linear-gradient(45deg, #00b894, #00a085)';
+                
+                setTimeout(() => {
+                    window.history.back();
+                }, 1000);
+            }, 150);
+        }
+
+        // Add some random sparkle effects
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.style.position = 'absolute';
+            sparkle.style.width = '6px';
+            sparkle.style.height = '6px';
+            sparkle.style.background = 'white';
+            sparkle.style.borderRadius = '50%';
+            sparkle.style.pointerEvents = 'none';
+            sparkle.style.left = Math.random() * window.innerWidth + 'px';
+            sparkle.style.top = Math.random() * window.innerHeight + 'px';
+            sparkle.style.animation = 'sparkle 1.5s ease-out forwards';
+            sparkle.style.zIndex = '10';
+
+            document.body.appendChild(sparkle);
+
+            setTimeout(() => {
+                sparkle.remove();
+            }, 1500);
+        }
+
+        // Add sparkle animation
+        const sparkleStyle = document.createElement('style');
+        sparkleStyle.textContent = `
+            @keyframes sparkle {
+                0% { transform: scale(0) rotate(0deg); opacity: 1; }
+                50% { transform: scale(1) rotate(180deg); opacity: 1; }
+                100% { transform: scale(0) rotate(360deg); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(sparkleStyle);
+
+        // Create sparkles periodically
+        setInterval(createSparkle, 2000);
+
+        // Add mouse interaction
+        document.addEventListener('mousemove', (e) => {
+            if (Math.random() < 0.02) {
+                const sparkle = document.createElement('div');
+                sparkle.style.position = 'absolute';
+                sparkle.style.width = '4px';
+                sparkle.style.height = '4px';
+                sparkle.style.background = 'rgba(255, 255, 255, 0.6)';
+                sparkle.style.borderRadius = '50%';
+                sparkle.style.pointerEvents = 'none';
+                sparkle.style.left = e.clientX + 'px';
+                sparkle.style.top = e.clientY + 'px';
+                sparkle.style.animation = 'sparkle 0.8s ease-out forwards';
+                sparkle.style.zIndex = '10';
+
+                document.body.appendChild(sparkle);
+
+                setTimeout(() => {
+                    sparkle.remove();
+                }, 800);
+            }
+        });
+    </script>
 </body>
 </html>

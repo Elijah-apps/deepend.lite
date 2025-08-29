@@ -171,8 +171,8 @@ private fun WebViewer(
                     javaScriptEnabled = true
                     domStorageEnabled = true
                     databaseEnabled = true
-                    setSupportZoom(true)
-                    builtInZoomControls = true
+                    setSupportZoom(false) // Disable zooming
+                    builtInZoomControls = false // Hide zoom controls
                     displayZoomControls = false
                     loadWithOverviewMode = true
                     useWideViewPort = true
@@ -191,7 +191,7 @@ private fun WebViewer(
                 }
                 
                 // Load initial URL
-                loadUrl("file:///android_asset/auth.html")
+                loadUrl("file:///android_asset/intro.html")
                 webView = this
                 onWebViewCreated(this)
             }
